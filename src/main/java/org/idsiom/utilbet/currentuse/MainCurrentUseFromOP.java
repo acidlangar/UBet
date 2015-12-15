@@ -22,6 +22,9 @@ import org.idsiom.utilbet.currentuse.interlocutor.IOddsPortalCurrentUseInterlocu
 import org.idsiom.utilbet.currentuse.interlocutor.OddsPortalInterCurrentUseImpl;
 import org.idsiom.utilbet.currentuse.bo.ListaPartSeri;
 
+/*
+ * MainCurrentUseFromOP
+ * */
 public class MainCurrentUseFromOP {
 	
 	static Logger logger = Logger.getLogger(MainCurrentUseFromOP.class);
