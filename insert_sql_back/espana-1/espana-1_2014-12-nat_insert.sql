@@ -1,0 +1,33 @@
+USE ID_BT
+GO
+
+--insert into ...
+--1 Ath.Bilbao  -  Espanyol 1 68% 1,72 1,47 1X 89% 1,16 1,12
+INSERT INTO [ID_BT].[dbo].[PRONOSTICO_M] ([Liga],[Fecha],[NomEqL],[NomEqV],[Pronostico],[PorcConfianza],[PagoPaginas],[PagoCalculado],[Acierto]) VALUES ('espana-1', '22/11/2014', 'Ath.Bilbao', 'Espanyol', '1', 68,  CONVERT(NUMERIC(3,2),REPLACE('1,72', ',', '.')),  CONVERT(NUMERIC(3,2),REPLACE('1,47', ',', '.')), 1)
+--insert into ...
+--2 Barcelona  -  Sevilla 1 67% 1,28 1,49 12 89% 1,15 1,12
+INSERT INTO [ID_BT].[dbo].[PRONOSTICO_M] ([Liga],[Fecha],[NomEqL],[NomEqV],[Pronostico],[PorcConfianza],[PagoPaginas],[PagoCalculado],[Acierto]) VALUES ('espana-1', '22/11/2014', 'Barcelona', 'Sevilla', '1', 67,  CONVERT(NUMERIC(3,2),REPLACE('1,28', ',', '.')),  CONVERT(NUMERIC(3,2),REPLACE('1,49', ',', '.')), 1)
+--insert into ...
+--3 Atl.Madrid  -  Málaga 1 66% 1,39 1,52 1X 90% 1,05 1,11
+INSERT INTO [ID_BT].[dbo].[PRONOSTICO_M] ([Liga],[Fecha],[NomEqL],[NomEqV],[Pronostico],[PorcConfianza],[PagoPaginas],[PagoCalculado],[Acierto]) VALUES ('espana-1', '22/11/2014', 'Atl.Madrid', 'Málaga', '1', 66,  CONVERT(NUMERIC(3,2),REPLACE('1,39', ',', '.')),  CONVERT(NUMERIC(3,2),REPLACE('1,52', ',', '.')), 1)
+--insert into ...
+--4 Villarreal  -  Getafe 1 62% 1,39 1,61 12 88% 1,16 1,14
+INSERT INTO [ID_BT].[dbo].[PRONOSTICO_M] ([Liga],[Fecha],[NomEqL],[NomEqV],[Pronostico],[PorcConfianza],[PagoPaginas],[PagoCalculado],[Acierto]) VALUES ('espana-1', '22/11/2014', 'Villarreal', 'Getafe', '1', 62,  CONVERT(NUMERIC(3,2),REPLACE('1,39', ',', '.')),  CONVERT(NUMERIC(3,2),REPLACE('1,61', ',', '.')), 1)
+--insert into ...
+--5 R.Vallecano  -  Celta 2 60% 2,62 1,67 12 93% 1,34 1,08
+INSERT INTO [ID_BT].[dbo].[PRONOSTICO_M] ([Liga],[Fecha],[NomEqL],[NomEqV],[Pronostico],[PorcConfianza],[PagoPaginas],[PagoCalculado],[Acierto]) VALUES ('espana-1', '22/11/2014', 'R.Vallecano', 'Celta', '2', 60,  CONVERT(NUMERIC(3,2),REPLACE('2,62', ',', '.')),  CONVERT(NUMERIC(3,2),REPLACE('1,67', ',', '.')), 0)
+--insert into ...
+--6 Granada  -  Almería 1 57% 2,09 1,75 12 96% 1,35 1,04
+INSERT INTO [ID_BT].[dbo].[PRONOSTICO_M] ([Liga],[Fecha],[NomEqL],[NomEqV],[Pronostico],[PorcConfianza],[PagoPaginas],[PagoCalculado],[Acierto]) VALUES ('espana-1', '22/11/2014', 'Granada', 'Almería', '1', 57,  CONVERT(NUMERIC(3,2),REPLACE('2,09', ',', '.')),  CONVERT(NUMERIC(3,2),REPLACE('1,75', ',', '.')), 0)
+--insert into ...
+--7 Eibar  -  Real Madrid 2 52% 1,25 1,92 12 83% 1,15 1,20
+INSERT INTO [ID_BT].[dbo].[PRONOSTICO_M] ([Liga],[Fecha],[NomEqL],[NomEqV],[Pronostico],[PorcConfianza],[PagoPaginas],[PagoCalculado],[Acierto]) VALUES ('espana-1', '22/11/2014', 'Eibar', 'Real Madrid', '2', 52,  CONVERT(NUMERIC(3,2),REPLACE('1,25', ',', '.')),  CONVERT(NUMERIC(3,2),REPLACE('1,92', ',', '.')), 1)
+--insert into ...
+--8 Dep.Coruña  -  R.Sociedad 1 50% 3,38 2,00 1X 83% 1,66 1,20
+INSERT INTO [ID_BT].[dbo].[PRONOSTICO_M] ([Liga],[Fecha],[NomEqL],[NomEqV],[Pronostico],[PorcConfianza],[PagoPaginas],[PagoCalculado],[Acierto]) VALUES ('espana-1', '22/11/2014', 'Dep.Coruña', 'R.Sociedad', '1', 50,  CONVERT(NUMERIC(3,2),REPLACE('3,38', ',', '.')),  CONVERT(NUMERIC(3,2),REPLACE('2,00', ',', '.')), 0)
+--insert into ...
+--9 Levante  -  Valencia 1 47% 5,31 2,13 12 80% 1,25 1,25
+INSERT INTO [ID_BT].[dbo].[PRONOSTICO_M] ([Liga],[Fecha],[NomEqL],[NomEqV],[Pronostico],[PorcConfianza],[PagoPaginas],[PagoCalculado],[Acierto]) VALUES ('espana-1', '22/11/2014', 'Levante', 'Valencia', '1', 47,  CONVERT(NUMERIC(3,2),REPLACE('5,31', ',', '.')),  CONVERT(NUMERIC(3,2),REPLACE('2,13', ',', '.')), 1)
+--insert into ...
+--10 Elche  -  Córdoba 2 46% 4,24 2,17 12 78% 1,36 1,28
+INSERT INTO [ID_BT].[dbo].[PRONOSTICO_M] ([Liga],[Fecha],[NomEqL],[NomEqV],[Pronostico],[PorcConfianza],[PagoPaginas],[PagoCalculado],[Acierto]) VALUES ('espana-1', '22/11/2014', 'Elche', 'Córdoba', '2', 46,  CONVERT(NUMERIC(3,2),REPLACE('4,24', ',', '.')),  CONVERT(NUMERIC(3,2),REPLACE('2,17', ',', '.')), 0)

@@ -1,0 +1,10 @@
+M1. Visitantes constantes
+M2. Combinacion con disversas probabilidades, para subconjunto de todos los escenarios, con ganancia con una victoria
+M3. Combinación de tres empates y una derrota
+M4. Visitantes, con progresión aritmética al perder.
+M5. Empates, con progresión aritmética al perder
+M6. Combinación de tres empates y una derrota, con progresión aritmética al perder
+M7. Juegos trámite, directas a favorito y siempre buscando minimizar el riesgo, solo apuesto directo y ya. Por ejemplo, 
+pero trato de buscar eso, por ejemplo ahorita el parma está en quiebra, lleva meses así. Siempre apuesto en contra.
+M8. En base al rendimiento de los equipos, hacer las apuestas, por ejemplo, en los últimos 8 encuentros cómo estuvo
+el rendimiento del equipo.

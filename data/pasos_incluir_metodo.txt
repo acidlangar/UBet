@@ -1,0 +1,9 @@
+
+PASOS PARA INCLUIR UN MÉTODO.
+	- Desarrollado en excel primeramente.
+	- Luego probado con los datos pasados en el ranking
+	de métodos
+	- Luego puesto en producción, dependiendo del tema
+	la puesta en producción puede incluir el uso de 
+	herramientas
+

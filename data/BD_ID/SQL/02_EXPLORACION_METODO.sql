@@ -1,0 +1,91 @@
+-- Param entrada: Fecha, lg, limPag, limPorc, RendObj (5%), PararJuegosRespaldo (2J)
+--
+-- PASOS:
+--    Se utilizaran varios procs, 
+--    proc1. Cursor de parada con objetivo cumplido (RESULTANTE_METODO), 
+--           Cursor de peor escenario (RESULTANTE_METODO)
+--
+--  PROC1: *** Parada con objetivo cumplido  ***
+--
+--       SALIDA: Tabla:: RESULTANTE_METODO 
+--               Campos de Tabla:: 
+--                   Escenario ; (1-Ordenamiento Random; 2-Fallidos juntos)
+--                   PorcResultante ; (100%-Significa duplicar disponible; 200%-Dos veces el disponible;
+--                                     -100%-Bancarota; -50%-Perdida de la mitad del disponible)
+--                   PorcMaxUsado ; (100%-En algún momento se puso en riesgo completamente;
+--                                    25%-Solo una cuarta parte del disponible se puso en riesgo)
+--                   CantTotaJuegos ; (Cantidad total de los juegos seleccionados para la fecha)
+--                   CantJuegosParticipados ; (De los juegos necesarios, cuantos fue necesario jugar)
+--                   CantTotalDesaciertos ;  (Cantidad total de desaciertos en todos los seleccionados)
+--                   CantTotalDesaciertosParticipados ; (Cantidad de desaciertos participados)
+--
+--       PASOS PROC1:
+--          VARIABLES: 
+--                   vEscenario 
+--                   vPorcResultante 
+--                   vPorcMaxUsado 
+--                   vCantTotaJuegos 
+--                   vCantJuegosParticipados 
+--                   vCantTotalDesaciertos 
+--                   vCantTotalDesaciertosParticipados 
+--                   vObjConseguido ; (0-FALSE 1-TRUE)
+--                   vDisponible ;
+--                   vSeguirParticipando ; (Variable de control del algoritmo
+--                                          que permite saber si se seguira 
+--                                          participando o no. Se deja de participar
+--                                          bien por lograr el obj, o bien por
+--                                          no tener disponible)
+--                   vDisponibleOriginal ; 
+--                   vAcumuladoPerdido ; (Corresponde al Acumulado, por seguidilla de
+--                                        derrotas)
+--                   vPorcMaxUsado ; 
+--			1. Armar el cursor de los g seleccionados, con el orden random.    
+--          2. Inicializar las variables
+--               vEscenario = Random
+--               vObjConseguido = FALSE
+--               vDisponible = 100 
+--               vSeguirParticipando = TRUE 	 
+--               vAcumuladoPerdido = 0
+--               vPorcMaxUsado = 0
+--               vDisponibleOriginal = vDisponible
+--               Demas variables en vacio
+--			3. For cada g, segun el orden      
+--               vCantTotaJuegos = vCantTotaJuegos + 1
+--               IF g.Acierto = 0 Then vCantTotalDesaciertos = vCantTotalDesaciertos + 1 ENDIF
+--
+--               Calculo el monto de ap (MonAp=(RendObj+vAcumuladoPerdido)/(g.Mult-1))
+--               
+--               IF vObjConseguido == FALSE AND vDisponible >= MonAp
+--                   vCantJuegosParticipados = vCantJuegosParticipados + 1
+--
+--					 vSeguirParticipando = TRUE 	                    
+--
+--                   vPorcMaxUsado = (MonAp*100)/vDisponibleOriginal
+--
+--                   Lo ap
+--                   vDisponible = vDisponible+(MonAp*((g.Acierto*J8)-1))
+--
+--                   If g.Acierto = 1
+--                      vAcumuladoPerdido = 0
+--                      vObjConseguido = TRUE
+--                      
+--                   ELSE
+--                      vObjConseguido = FALSE
+--                      CantTotalDesaciertosParticipados = CantTotalDesaciertosParticipados + 1
+--                   END IF 
+--               ELSE
+--                   vSeguirParticipando = FALSE 	
+--               ENDIF
+--
+--
+--            END FOR
+--            vPorcResultante = ((vDisponible-vDisponibleOriginal)*100)/vDisponibleOriginal      
+--
+--
+--            Hacer el insert de las variables en la tabla correspondiente.
+--
+--          . Repetir el proceso anterior con los g ordenamos primeramente con los perdedores.
+--
+--    
+--    
+ 

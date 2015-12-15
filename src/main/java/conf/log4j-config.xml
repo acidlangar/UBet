@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE log4j:configuration SYSTEM "dtds/log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%n%d{yyyy-MM-dd HH:mm:ss} [%-5p] [%l] %n%m%n" />
+		</layout>
+	</appender>
+
+	<appender name="infolog" class="org.apache.log4j.RollingFileAppender">
+		<param name="File"	value="../PERSONAL/logs/UBet/ubet.log" />
+		<param name="Threshold" value="INFO" />
+		<param name="MaxFileSize" value="1500KB" />
+		<param name="MaxBackupIndex" value="5" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%n%d{yyyy-MM-dd HH:mm:ss} [%-5p] %m " />
+		</layout>
+	</appender>
+
+	<appender name="detail" class="org.apache.log4j.RollingFileAppender">
+		<param name="File"	value="../PERSONAL/logs/UBet/ubet-errores.log" />
+		<param name="Threshold" value="ERROR" />
+		<param name="MaxFileSize" value="1500KB" />
+		<param name="MaxBackupIndex" value="5" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%n%d{yyyy-MM-dd HH:mm:ss} [%-5p] [%l] %n%m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="debuglog" class="org.apache.log4j.RollingFileAppender">
+		<param name="File"	value="../PERSONAL/logs/UBet/ubet-debug.log" />
+		<param name="Threshold" value="DEBUG" />
+		<param name="MaxFileSize" value="1500KB" />
+		<param name="MaxBackupIndex" value="5" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%n%d{yyyy-MM-dd HH:mm:ss} [%-5p] %m ::::::::::::::::::::::::::::  [%l] " />
+		</layout>
+	</appender>
+	
+	<appender name="sql" class="org.apache.log4j.RollingFileAppender">
+		<param name="File"	value="../PERSONAL/logs/UBet/ps.sql" />
+		<param name="Threshold" value="ERROR" />
+		<param name="MaxFileSize" value="1500KB" />
+		<param name="MaxBackupIndex" value="5" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%n%m%n" />
+		</layout>
+	</appender>
+	
+
+	<root>
+		<priority value="debug"></priority>   
+		<appender-ref ref="console"></appender-ref>
+		<appender-ref ref="infolog"></appender-ref>
+		<appender-ref ref="detail"></appender-ref>
+		<appender-ref ref="sql"></appender-ref>
+		<appender-ref ref="debuglog"></appender-ref>
+	</root>
+
+</log4j:configuration>  

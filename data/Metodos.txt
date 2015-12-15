@@ -1,0 +1,7 @@
+1. Metodo run variante Martingale (Isaac)
+2. Rateform (Edgar)
+3. Score Prediction (Edgar)
+4. Footyforecast (Edgar)
+5. Goal Supremacy (Isaac)
+6. Empates basado en Goal Supremacy (Isaac)
+7. Metodo run variante stake 1 (Isaac)

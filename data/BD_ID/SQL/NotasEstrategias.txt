@@ -1,0 +1,24 @@
+Posibles ayudas interesantes:
+http://es.slideshare.net/asabater/agustin-sabater-pineiro-pfc
+
+
+github.com/asabater/Data-mining-with-Jmeter
+
+[ESTE PARECE SER MUCHO MÁS ÚTIL QUE EL ANTERIOR]
+http://blazemeter.com/blog/using-xpath-extractor-jmeter-0
+
+[PROXIMAMENTE PROBAR]
+http://community.blazemeter.com/knowledgebase/articles/256525-using-blazemeter-s-jenkins-plugin-behind-a-corpora
+
+
+EN EL PROCESO DE CARGA MASIVA DE INFO
+- A partir de la lectura de los htmls, hacer la creación de los insert más importantes, de las tablas principales.
+		- Hacer los insert del histórico de la liga española
+- Definición del esquema de trabajo y de los ambientes de producción, y de desarrollo.
+- Obtención del acierto o no del pronostico
+- Conversión de los eqs
+- Obtención de las ligas
+
+
+
+

@@ -1,0 +1,225 @@
+Sub MacroCalPorc1()
+'
+' Realiza el primer calculo de los porcentajes
+'
+
+'
+    ActiveCell.FormulaR1C1 = "=RC[-9]+R[2]C[-2]"
+    Range("J7").Select
+    ActiveCell.FormulaR1C1 = "=RC[-9]+RC[-2]"
+    Range("J8").Select
+    ActiveCell.FormulaR1C1 = "=RC[-9]+R[-2]C[-2]"
+    Range("K6").Select
+    ActiveCell.FormulaR1C1 = "=RC[-1]/2"
+    Range("K6").Select
+    Selection.AutoFill Destination:=Range("K6:K8"), Type:=xlFillDefault
+    Range("K6:K8").Select
+    Range("I12").Select
+    ActiveCell.FormulaR1C1 = "L"
+    Range("I13").Select
+    ActiveCell.FormulaR1C1 = "V"
+    Range("J12").Select
+    ActiveCell.FormulaR1C1 = "=RC[-9]-R[1]C[-9]"
+    Range("J13").Select
+    ActiveCell.FormulaR1C1 = "=R[-1]C[-5]-RC[-5]"
+    Range("J14").Select
+    ActiveCell.FormulaR1C1 = "=R[-2]C-R[-1]C"
+    Range("J14").Select
+End Sub
+
+
+Sub MixPorcGSupremacy()
+'
+' Realiza el calculo final de las probabilidades, hace el mix entre los porcentajes
+' de la subrutina anterior con los porcentajes dados por el G Supremacy
+'
+
+'
+    ActiveCell.FormulaR1C1 = "=RC[-1]+RC[-3]"
+    Range("N6").Select
+    Selection.AutoFill Destination:=Range("N6:N8"), Type:=xlFillDefault
+    Range("N6:N8").Select
+    Range("O6").Select
+    ActiveCell.FormulaR1C1 = "=RC[-1]/2"
+    Range("O6").Select
+    Selection.AutoFill Destination:=Range("O6:O8"), Type:=xlFillDefault
+    Range("O6:O8").Select
+    Range("P6").Select
+    ActiveCell.FormulaR1C1 = "L"
+    Range("P7").Select
+    ActiveCell.FormulaR1C1 = "X"
+    Range("P8").Select
+    ActiveCell.FormulaR1C1 = "V"
+    Range("O6:P8").Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 65535
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+End Sub
+
+
+
+Sub CalConfianza()
+'
+' Se encarga de realizar el calculo de la confianza.
+' El punto de inicio de esta subrutina, corresponde a una columna debajo de los
+' porcentajes
+'
+
+'
+    ActiveCell.FormulaR1C1 = "Selección"
+    Range("O12").Select
+    ActiveCell.FormulaR1C1 = "=MAX(R[-6]C:R[-4]C)"
+    Range("P12").Select
+    ActiveCell.FormulaR1C1 = "=VLOOKUP(RC[-1],R[-6]C[-1]:R[-4]C,2,FALSE)"
+    Range("N14").Select
+    ActiveCell.FormulaR1C1 = "ValMin"
+    Range("O14").Select
+    ActiveCell.FormulaR1C1 = "35"
+    Range("N15").Select
+    ActiveCell.FormulaR1C1 = "Base"
+    Range("O15").Select
+    ActiveCell.FormulaR1C1 = "0"
+    Range("N16").Select
+    ActiveCell.FormulaR1C1 = "ValDiv"
+    Range("O16").Select
+    ActiveCell.FormulaR1C1 = "10"
+    Range("N17").Select
+    ActiveCell.FormulaR1C1 = "Confianza"
+    Range("O17").Select
+    ActiveCell.FormulaR1C1 = "=(((R[-5]C*100)-R[-3]C)/R[-1]C)+R[-2]C"
+    Range("N17:O17").Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 15773696
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    Range("N12:P12").Select
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 15773696
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+    Selection.Borders(xlDiagonalDown).LineStyle = xlNone
+    Selection.Borders(xlDiagonalUp).LineStyle = xlNone
+    With Selection.Borders(xlEdgeLeft)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeTop)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeBottom)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlEdgeRight)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideVertical)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+    With Selection.Borders(xlInsideHorizontal)
+        .LineStyle = xlContinuous
+        .ColorIndex = 0
+        .TintAndShade = 0
+        .Weight = xlThin
+    End With
+End Sub
+

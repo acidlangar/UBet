@@ -1,0 +1,1 @@
+http://stackoverflow.com/questions/24550742/eclipse-luna-git-checkout-ssl-fails
