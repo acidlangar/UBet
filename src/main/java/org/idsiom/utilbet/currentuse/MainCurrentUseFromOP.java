@@ -6,11 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -93,37 +89,95 @@ public class MainCurrentUseFromOP {
 		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		
-		HSSFSheet sheet = workbook.createSheet("PartidosCurrentSheet");
-		 
-		Map<Long, Object[]> data = new HashMap<Long, Object[]>();
-		Long clave = 1L;
+		HSSFSheet sheetLocal50 = workbook.createSheet("Local 50%");
+		
+		HSSFSheet sheetVisitante50 = workbook.createSheet("Visitante 50%");
+		
+		HSSFSheet sheetLocalParejos = workbook.createSheet("Local Parejos");
+		
+		HSSFSheet sheetVisitanteParejos = workbook.createSheet("Visitante Parejos");
+		
+		HSSFSheet sheetOtros = workbook.createSheet("Otros");
+
+		int rowLocal50 = 0, rowVisitante50 = 0, rowLocalParejos = 0,
+				rowVisitanteParejos = 0, rowOtros = 0;
 		
 		for (CurrentPOddsPortal item : listaPs) {
+
+			int cellnum = 0;
+			Row row = null;
 			
-			data.put(clave++, new Object[] {item.getFecha(), item.getCountry(), 
+			if ("O".equalsIgnoreCase(item.getrStr())) {
+				
+				row = sheetOtros.createRow(rowOtros++);
+			}
+			else if ((item.getC1() >= 1.7 && item.getC1() <=2) && (item.getcX() > item.getC1() && item.getcX() < item.getC2()) ) {
+				
+				row = sheetLocal50.createRow(rowLocal50++);
+			}
+			else if ((item.getC2() >= 1.7 && item.getC2() <=2) && (item.getcX() > item.getC2() && item.getcX() < item.getC1()) ) {
+				
+				row = sheetVisitante50.createRow(rowVisitante50++);
+			}
+			else if ((item.getC1() > 2 && item.getcX() > 2 && item.getC2() > 2) && (item.getC2() > item.getC1() && item.getC2() < item.getcX()) ) {
+				
+				row = sheetLocalParejos.createRow(rowLocalParejos++);
+			}
+			else if ((item.getC1() > 2 && item.getcX() > 2 && item.getC2() > 2) && (item.getC1() > item.getC2() && item.getC1() < item.getcX()) ) {
+				
+				row = sheetVisitanteParejos.createRow(rowVisitanteParejos++);
+			}
+			else {
+				
+				row = sheetOtros.createRow(rowOtros++);
+			}
+			
+			Object[] datos = new Object[] {item.getFecha(), item.getCountry(), 
 					item.getEquipos(), item.getgL()+"-"+item.getgV(), 
-					item.getResultFinal(), item.getC1(), item.getcX(), item.getC2()});
+					item.getResultFinal(), item.getC1(), item.getcX(), item.getC2(),
+					item.getrStr()};
+
+			// Columna para partido ocurrido o no
+			Cell cellA = row.createCell(cellnum++);
+			if (item.getrStr() != null && !item.getrStr().isEmpty() && !"O".equalsIgnoreCase(item.getrStr())) {
+				cellA.setCellValue("1");
+			}
+			else {				
+				cellA.setCellValue("0");
+			}
+
+			// Columnas para datos de los partidos
+			for (int i=0; i < datos.length; i++) {
+
+				Cell cell = row.createCell(cellnum++);
+				
+		        if(datos[i] instanceof Date) {
+		            cell.setCellValue((Date)datos[i]);
+		        }
+		        else if(datos[i] instanceof Boolean) {
+		            cell.setCellValue((Boolean)datos[i]);
+		        }
+		        else if(datos[i] instanceof String) {
+		            cell.setCellValue((String)datos[i]);
+		        }
+		        else if(datos[i] instanceof Double) {
+		            cell.setCellValue((Double)datos[i]);
+		        }
+			}
+			
+			// Columnas para resultado de partido
+			if (item.getrStr() != null && !item.getrStr().isEmpty() && !"O".equalsIgnoreCase(item.getrStr())) {
+				
+				Cell cellK = row.createCell(cellnum++);
+				Cell cellL = row.createCell(cellnum++);
+				Cell cellM = row.createCell(cellnum++);
+				
+				cellK.setCellValue("1".equalsIgnoreCase(item.getrStr()) ? 1 : 0);
+				cellL.setCellValue("X".equalsIgnoreCase(item.getrStr()) ? 1 : 0);
+				cellM.setCellValue("2".equalsIgnoreCase(item.getrStr()) ? 1 : 0);
+			}
 		}
 		
-		Set<Long> keyset = data.keySet();
-		int rownum = 0;
-		for (Long key : keyset) {
-		    Row row = sheet.createRow(rownum++);
-		    Object [] objArr = data.get(key);
-		    int cellnum = 0;
-		    for (Object obj : objArr) {
-		        Cell cell = row.createCell(cellnum++);
-		        if(obj instanceof Date) 
-		            cell.setCellValue((Date)obj);
-		        else if(obj instanceof Boolean)
-		            cell.setCellValue((Boolean)obj);
-		        else if(obj instanceof String)
-		            cell.setCellValue((String)obj);
-		        else if(obj instanceof Double)
-		            cell.setCellValue((Double)obj);
-		    }
-		}
-		 
 		try {
 		    FileOutputStream out = 
 		            new FileOutputStream(new File(RUTA_ARCHIVO+"\\PartidosCurrent.xls"));
