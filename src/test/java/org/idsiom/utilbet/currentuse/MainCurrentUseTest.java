@@ -29,7 +29,15 @@ public class MainCurrentUseTest {
 			bo.setEquipos( "Equipo1 - Equipo2" );
 			bo.setC1( 2.1D );
 			bo.setcX( 3.2D );
-			bo.setC2( 2.5D );			
+			bo.setC2( 2.5D );
+			try {
+				if (i==1) bo.setrStr("postp.");
+				else if (i==2) bo.setrStr("3:2");
+				else bo.setrStr("2:3");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			partidosResult.add(bo);
 		}

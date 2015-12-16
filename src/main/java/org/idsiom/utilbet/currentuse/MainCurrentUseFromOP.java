@@ -107,7 +107,7 @@ public class MainCurrentUseFromOP {
 			int cellnum = 0;
 			Row row = null;
 			
-			if ("O".equalsIgnoreCase(item.getrStr())) {
+			if ("O".equals(item.getResultFinal())) {
 				
 				row = sheetOtros.createRow(rowOtros++);
 			}
@@ -133,17 +133,16 @@ public class MainCurrentUseFromOP {
 			}
 			
 			Object[] datos = new Object[] {item.getFecha(), item.getCountry(), 
-					item.getEquipos(), item.getgL()+"-"+item.getgV(), 
-					item.getResultFinal(), item.getC1(), item.getcX(), item.getC2(),
-					item.getrStr()};
+					item.getEquipos(), item.getrStr(), item.getC1(), 
+					item.getcX(), item.getC2(), item.getResultFinal()};
 
 			// Columna para partido ocurrido o no
 			Cell cellA = row.createCell(cellnum++);
-			if (item.getrStr() != null && !item.getrStr().isEmpty() && !"O".equalsIgnoreCase(item.getrStr())) {
-				cellA.setCellValue("1");
+			if (item.getResultFinal() != 'O') {
+				cellA.setCellValue(1);
 			}
 			else {				
-				cellA.setCellValue("0");
+				cellA.setCellValue(0);
 			}
 
 			// Columnas para datos de los partidos
@@ -160,21 +159,24 @@ public class MainCurrentUseFromOP {
 		        else if(datos[i] instanceof String) {
 		            cell.setCellValue((String)datos[i]);
 		        }
+		        else if(datos[i] instanceof Character) {
+		            cell.setCellValue(String.valueOf(datos[i]));
+		        }
 		        else if(datos[i] instanceof Double) {
 		            cell.setCellValue((Double)datos[i]);
 		        }
 			}
 			
 			// Columnas para resultado de partido
-			if (item.getrStr() != null && !item.getrStr().isEmpty() && !"O".equalsIgnoreCase(item.getrStr())) {
+			if (item.getResultFinal() != 'O') {
 				
 				Cell cellK = row.createCell(cellnum++);
 				Cell cellL = row.createCell(cellnum++);
 				Cell cellM = row.createCell(cellnum++);
 				
-				cellK.setCellValue("1".equalsIgnoreCase(item.getrStr()) ? 1 : 0);
-				cellL.setCellValue("X".equalsIgnoreCase(item.getrStr()) ? 1 : 0);
-				cellM.setCellValue("2".equalsIgnoreCase(item.getrStr()) ? 1 : 0);
+				cellK.setCellValue(item.getResultFinal() == '1' ? 1 : 0);
+				cellL.setCellValue(item.getResultFinal() == 'X' ? 1 : 0);
+				cellM.setCellValue(item.getResultFinal() == '2' ? 1 : 0);
 			}
 		}
 		
