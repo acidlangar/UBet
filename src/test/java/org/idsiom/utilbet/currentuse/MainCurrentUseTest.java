@@ -33,9 +33,8 @@ public class MainCurrentUseTest {
 			try {
 				if (i==1) bo.setrStr("postp.");
 				else if (i==2) bo.setrStr("3:2");
-				else bo.setrStr("2:3");
+				else bo.setrStr("0:0");
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
