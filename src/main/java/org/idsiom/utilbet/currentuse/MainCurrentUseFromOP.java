@@ -138,7 +138,7 @@ public class MainCurrentUseFromOP {
 
 			// Columna para partido ocurrido o no
 			Cell cellA = row.createCell(cellnum++);
-			if (item.getResultFinal() != 'O') {
+			if (item.getResultFinal() == '1' || item.getResultFinal() == '2' || item.getResultFinal() == 'X') {
 				cellA.setCellValue(1);
 			}
 			else {				
