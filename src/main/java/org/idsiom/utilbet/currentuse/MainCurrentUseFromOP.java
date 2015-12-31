@@ -132,7 +132,7 @@ public class MainCurrentUseFromOP {
 				row = sheetOtros.createRow(rowOtros++);
 			}
 			
-			Object[] datos = new Object[] {item.getFecha(), item.getCountry(), 
+			Object[] datos = new Object[] {item.getFecha(), item.getLeague(), 
 					item.getEquipos(), item.getrStr(), item.getC1(), 
 					item.getcX(), item.getC2(), item.getResultFinal()};
 
