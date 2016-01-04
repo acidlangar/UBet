@@ -132,13 +132,13 @@ public class MainCurrentUseFromOP {
 				row = sheetOtros.createRow(rowOtros++);
 			}
 			
-			Object[] datos = new Object[] {item.getFecha(), item.getCountry(), 
+			Object[] datos = new Object[] {item.getFecha(), item.getLeague(), 
 					item.getEquipos(), item.getrStr(), item.getC1(), 
 					item.getcX(), item.getC2(), item.getResultFinal()};
 
 			// Columna para partido ocurrido o no
 			Cell cellA = row.createCell(cellnum++);
-			if (item.getResultFinal() != 'O') {
+			if (item.getResultFinal() == '1' || item.getResultFinal() == '2' || item.getResultFinal() == 'X') {
 				cellA.setCellValue(1);
 			}
 			else {				

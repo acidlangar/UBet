@@ -71,6 +71,11 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		// Todos los tr de la tabla partidos
 		String xPathPag = ".//*[@id='table-matches']/*/*/tr";  // .//*[@id='table-matches']/*/*/tr
 		
+		System.out.println("Indique la fecha de los partidos a importar: ");
+		Scanner in = new Scanner(System.in);
+		String fechaStr = in.next();
+		
+		
 		List<WebElement> listTRs = this.driver.findElements(By.xpath(xPathPag));
 		
 		List<WebElement> listTHs;
@@ -119,18 +124,24 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 				
 				bo.setCountry(pais);
 				bo.setLeague(liga);
+				//bo.setFecha(fechaStr);
 				
 				if(listTDs.size() == 6) {  // Juego planificado
-					bo.setFecha( listTDs.get(0).getText() );
+					bo.setFecha( fechaStr + " " + listTDs.get(0).getText() );
 					bo.setEquipos( listTDs.get(1).getText() );
 					bo.setC1( Double.valueOf(listTDs.get(2).getText()) );
 					bo.setcX( Double.valueOf(listTDs.get(3).getText()) );
 					bo.setC2( Double.valueOf(listTDs.get(4).getText()) );
 					
 				} else if(listTDs.size() == 7) {  // Juego finalizado o post
-					bo.setFecha( listTDs.get(0).getText() );
+					bo.setFecha( fechaStr + " " + listTDs.get(0).getText() );
 					bo.setEquipos( listTDs.get(1).getText() );
-					bo.setrStr( listTDs.get(2).getText() );
+					
+					String horaAux = listTDs.get(0).getText();
+					if( horaAux.contains(":") ) {
+						bo.setrStr( listTDs.get(2).getText() );
+					}
+					
 					if( !listTDs.get(3).getText().trim().equals("-") ) {
 						bo.setC1( Double.valueOf(listTDs.get(3).getText()) );
 						bo.setcX( Double.valueOf(listTDs.get(4).getText()) );
