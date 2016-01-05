@@ -1,6 +1,10 @@
 package org.idsiom.utilbet.currentuse.interlocutor;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,13 +22,19 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 
 	static Logger logger = Logger.getLogger(OddsPortalInterCurrentUseImpl.class);
 	
-	public List<CurrentPOddsPortal> getPs(Integer cantDiasAtras) throws Exception {
+	public List<CurrentPOddsPortal> getPs() throws Exception {
 		String urlBaseInicial = getUrlFinal();
+		boolean pedirentero;
 		this.driver = UtilSelenium.getInstanciaWD();
+		String urlMyMatches = Cons.URL_MYMATCHES_CURRENT; // Guardara el String del URL del dia especifico
+		String fechaDesdeStr;
+		String fechaHastaStr;
+		GregorianCalendar gcFDesde;
+		GregorianCalendar gcFHasta;
+		Scanner in ;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		//GregorianCalendar gc = new GregorianCalendar();
 		
-		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		GregorianCalendar gc = new GregorianCalendar();
-		*/
 		List<CurrentPOddsPortal> resultFinal = new ArrayList<CurrentPOddsPortal>();
 		
 		System.out.println("buscando :: " + urlBaseInicial);
@@ -34,46 +44,77 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		
 		System.out.println("1 para continuar... ");
 
-		int iSeguir;
-		Scanner in = new Scanner(System.in);
+		int iSeguir = 0;
 		
-		iSeguir = in.nextInt();
+		in = new Scanner(System.in);
+		
+		pedirentero = true;
+		while(pedirentero) {
+			try {
+				iSeguir = in.nextInt();
+				pedirentero = false;
+			} catch(java.util.InputMismatchException emm){
+				System.out.println("Error de ingreso de datos, debe ser cero o uno. Linea 1");
+				pedirentero = true;
+			}
+		}
+		
 		seguir = ( iSeguir == 1 );
 		
-		while( seguir ) {
-			resultFinal.addAll( this.getPs() );
+		System.out.println("Ingrese la fecha desde yyyyMMdd: ");
+		fechaDesdeStr = in.next();
+		
+		Date date;
+		try {
+			date = (Date) sdf.parse(fechaDesdeStr);
+			gcFDesde = new GregorianCalendar();
+			gcFDesde.setTime(date);
 			
-			System.out.println("1 para continuar... ");
-			iSeguir = in.nextInt();
-			seguir = ( iSeguir == 1 );
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
 		}
 		
-		/*
-		String url;
-		url = urlBaseInicial + "/" + sdf.format(gc.getTime());
-		resultFinal.addAll( this.getPs(url) );
+		// pedir fecha hasta
+		System.out.println("Ingrese la fecha hasta yyyyMMdd: ");
+		fechaHastaStr = in.next();
 		
-		for(int i = 1; i < cantDiasAtras; i++) {
-			gc.roll(Calendar.DAY_OF_YEAR, false);
-			url = urlBaseInicial + "/" + sdf.format(gc.getTime());
+		try {
+			date = (Date) sdf.parse(fechaHastaStr);
+			gcFHasta = new GregorianCalendar();
+			gcFHasta.setTime(date);
 			
-			resultFinal.addAll( this.getPs(url) );
-			
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
 		}
-		*/
+		
+		System.out.println( "fechaDesde: " + sdf.format(gcFDesde.getTime()) );
+		System.out.println( "fechaHasta: " + sdf.format(gcFHasta.getTime()) );
+		System.out.println( "fechaDesde: " + gcFDesde.getTime().getTime() );
+		System.out.println( "fechaHasta: " + gcFHasta.getTime().getTime() );
+		
+		
+		
+		while( gcFDesde.before(gcFHasta) ) {
+			System.out.println( sdf.format(gcFDesde.getTime()) );
+
+			resultFinal.addAll( this.getPs(sdf.format(gcFDesde.getTime()), urlMyMatches + sdf.format(gcFDesde.getTime()) + "/") );
+
+			gcFDesde.add(GregorianCalendar.DAY_OF_YEAR,1);
+		}
 		
 		
 		return resultFinal;
 	}
 	
 	
-	private List<CurrentPOddsPortal> getPs() throws Exception {
+	private List<CurrentPOddsPortal> getPs(String fechaStr, String urlDay) throws Exception {
+		
+		this.driver.get(urlDay);
+		
 		// Todos los tr de la tabla partidos
 		String xPathPag = ".//*[@id='table-matches']/*/*/tr";  // .//*[@id='table-matches']/*/*/tr
-		
-		System.out.println("Indique la fecha de los partidos a importar: ");
-		Scanner in = new Scanner(System.in);
-		String fechaStr = in.next();
 		
 		
 		List<WebElement> listTRs = this.driver.findElements(By.xpath(xPathPag));
@@ -168,7 +209,7 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 	private String getUrlFinal() {
 		String result = "";
 
-		result = Cons.URL_CURRENT_USE;
+		result = Cons.URL_BASE_CURRENT;
 
 		return result;
 	}
