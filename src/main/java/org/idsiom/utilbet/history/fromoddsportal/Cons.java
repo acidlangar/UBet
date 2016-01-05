@@ -19,7 +19,10 @@ public class Cons {
 	
 	public static final String URL_BASE = "http://www.oddsportal.com/soccer/Z/Z-Z/results/";
 	
-	public static final String URL_CURRENT_USE = "http://www.oddsportal.com/matches/soccer/";
+	public static final String URL_BASE_CURRENT = "http://www.oddsportal.com/matches/soccer/";
+	
+	// http://www.oddsportal.com/matches/my-matches/20160104/
+	public static final String URL_MYMATCHES_CURRENT = "http://www.oddsportal.com/matches/my-matches/";
 	
 	// http://www.oddsportal.com/soccer/usa/mls-2004/results/
 	//http://www.oddsportal.com/soccer/norway/tippeligaen-2004/results/

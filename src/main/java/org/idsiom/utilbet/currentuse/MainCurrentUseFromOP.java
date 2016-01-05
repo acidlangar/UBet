@@ -34,7 +34,7 @@ public class MainCurrentUseFromOP {
 		IOddsPortalCurrentUseInterlocutor interlocutor = new OddsPortalInterCurrentUseImpl();
 		
 		try {
-			listaPs = interlocutor.getPs(3);
+ 			listaPs = interlocutor.getPs();
 		} catch(Exception ex) {
 			logger.error("No fue posible obtener ps ", ex);
 		}
@@ -97,10 +97,14 @@ public class MainCurrentUseFromOP {
 		
 		HSSFSheet sheetVisitanteParejos = workbook.createSheet("Visitante Parejos");
 		
+		HSSFSheet sheetLocal58 = workbook.createSheet("Local 58%");
+		
+		HSSFSheet sheetVisitante58 = workbook.createSheet("Visitante 58%");
+		
 		HSSFSheet sheetOtros = workbook.createSheet("Otros");
 
 		int rowLocal50 = 0, rowVisitante50 = 0, rowLocalParejos = 0,
-				rowVisitanteParejos = 0, rowOtros = 0;
+				rowVisitanteParejos = 0, rowOtros = 0, rowLocal58 = 0, rowVisitante58 = 0;
 		
 		for (CurrentPOddsPortal item : listaPs) {
 
@@ -126,6 +130,14 @@ public class MainCurrentUseFromOP {
 			else if ((item.getC1() > 2 && item.getcX() > 2 && item.getC2() > 2) && (item.getC1() > item.getC2() && item.getC1() < item.getcX()) ) {
 				
 				row = sheetVisitanteParejos.createRow(rowVisitanteParejos++);
+			}
+			else if ((item.getC1() >= 1.47 && item.getC1() <1.7) && (item.getcX() > item.getC1() && item.getcX() < item.getC2()) ) {
+				
+				row = sheetLocal58.createRow(rowLocal58++);
+			}
+			else if ((item.getC2() >= 1.47 && item.getC2() <1.7) && (item.getcX() > item.getC2() && item.getcX() < item.getC1()) ) {
+				
+				row = sheetVisitante58.createRow(rowVisitante58++);
 			}
 			else {
 				
@@ -186,7 +198,8 @@ public class MainCurrentUseFromOP {
 		calcularDesviacion(sheetVisitante50, rowVisitante50, 0.29, 0.33, 0.38);
 		calcularDesviacion(sheetLocalParejos, rowLocalParejos, 0.35, 0.32, 0.33);
 		calcularDesviacion(sheetVisitanteParejos, rowVisitanteParejos, 0.33, 0.32, 0.35);
-		
+		calcularDesviacion(sheetLocal58, rowLocal58, 0.38, 0.33, 0.29);
+		calcularDesviacion(sheetVisitante58, rowVisitante58, 0.29, 0.33, 0.38);
 		
 		try {
 		    FileOutputStream out = 

@@ -6,6 +6,6 @@ import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
 
 public interface IOddsPortalCurrentUseInterlocutor {
 
-	public List<CurrentPOddsPortal> getPs(Integer cantDiasAtras) throws Exception;
+	public List<CurrentPOddsPortal> getPs() throws Exception;
 	
 }
