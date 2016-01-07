@@ -111,84 +111,86 @@ public class MainCurrentUseFromOP {
 			int cellnum = 0;
 			Row row = null;
 			
-			if ("O".equals(item.getResultFinal())) {
+			if (item.getC1() != null) {
+				if ("O".equals(item.getResultFinal())) {
+					
+					row = sheetOtros.createRow(rowOtros++);
+				}
+				else if ((item.getC1() >= 1.7 && item.getC1() <=2) && (item.getcX() > item.getC1() && item.getcX() < item.getC2()) ) {
+					
+					row = sheetLocal50.createRow(rowLocal50++);
+				}
+				else if ((item.getC2() >= 1.7 && item.getC2() <=2) && (item.getcX() > item.getC2() && item.getcX() < item.getC1()) ) {
+					
+					row = sheetVisitante50.createRow(rowVisitante50++);
+				}
+				else if ((item.getC1() > 2 && item.getcX() > 2 && item.getC2() > 2) && (item.getC2() > item.getC1() && item.getC2() < item.getcX()) ) {
+					
+					row = sheetLocalParejos.createRow(rowLocalParejos++);
+				}
+				else if ((item.getC1() > 2 && item.getcX() > 2 && item.getC2() > 2) && (item.getC1() > item.getC2() && item.getC1() < item.getcX()) ) {
+					
+					row = sheetVisitanteParejos.createRow(rowVisitanteParejos++);
+				}
+				else if ((item.getC1() >= 1.47 && item.getC1() <1.7) && (item.getcX() > item.getC1() && item.getcX() < item.getC2()) ) {
+					
+					row = sheetLocal58.createRow(rowLocal58++);
+				}
+				else if ((item.getC2() >= 1.47 && item.getC2() <1.7) && (item.getcX() > item.getC2() && item.getcX() < item.getC1()) ) {
+					
+					row = sheetVisitante58.createRow(rowVisitante58++);
+				}
+				else {
+					
+					row = sheetOtros.createRow(rowOtros++);
+				}
 				
-				row = sheetOtros.createRow(rowOtros++);
-			}
-			else if ((item.getC1() >= 1.7 && item.getC1() <=2) && (item.getcX() > item.getC1() && item.getcX() < item.getC2()) ) {
+				Object[] datos = new Object[] {item.getFecha(), item.getLeague(), 
+						item.getEquipos(), item.getrStr(), item.getC1(), 
+						item.getcX(), item.getC2(), item.getResultFinal()};
+	
+				// Columna para partido ocurrido o no
+				Cell cellA = row.createCell(cellnum++);
+				if (item.getResultFinal() == '1' || item.getResultFinal() == '2' || item.getResultFinal() == 'X') {
+					cellA.setCellValue(1);
+				}
+				else {				
+					cellA.setCellValue(0);
+				}
+	
+				// Columnas para datos de los partidos
+				for (int i=0; i < datos.length; i++) {
+	
+					Cell cell = row.createCell(cellnum++);
+					
+			        if(datos[i] instanceof Date) {
+			            cell.setCellValue((Date)datos[i]);
+			        }
+			        else if(datos[i] instanceof Boolean) {
+			            cell.setCellValue((Boolean)datos[i]);
+			        }
+			        else if(datos[i] instanceof String) {
+			            cell.setCellValue((String)datos[i]);
+			        }
+			        else if(datos[i] instanceof Character) {
+			            cell.setCellValue(String.valueOf(datos[i]));
+			        }
+			        else if(datos[i] instanceof Double) {
+			            cell.setCellValue((Double)datos[i]);
+			        }
+				}
 				
-				row = sheetLocal50.createRow(rowLocal50++);
-			}
-			else if ((item.getC2() >= 1.7 && item.getC2() <=2) && (item.getcX() > item.getC2() && item.getcX() < item.getC1()) ) {
-				
-				row = sheetVisitante50.createRow(rowVisitante50++);
-			}
-			else if ((item.getC1() > 2 && item.getcX() > 2 && item.getC2() > 2) && (item.getC2() > item.getC1() && item.getC2() < item.getcX()) ) {
-				
-				row = sheetLocalParejos.createRow(rowLocalParejos++);
-			}
-			else if ((item.getC1() > 2 && item.getcX() > 2 && item.getC2() > 2) && (item.getC1() > item.getC2() && item.getC1() < item.getcX()) ) {
-				
-				row = sheetVisitanteParejos.createRow(rowVisitanteParejos++);
-			}
-			else if ((item.getC1() >= 1.47 && item.getC1() <1.7) && (item.getcX() > item.getC1() && item.getcX() < item.getC2()) ) {
-				
-				row = sheetLocal58.createRow(rowLocal58++);
-			}
-			else if ((item.getC2() >= 1.47 && item.getC2() <1.7) && (item.getcX() > item.getC2() && item.getcX() < item.getC1()) ) {
-				
-				row = sheetVisitante58.createRow(rowVisitante58++);
-			}
-			else {
-				
-				row = sheetOtros.createRow(rowOtros++);
-			}
-			
-			Object[] datos = new Object[] {item.getFecha(), item.getLeague(), 
-					item.getEquipos(), item.getrStr(), item.getC1(), 
-					item.getcX(), item.getC2(), item.getResultFinal()};
-
-			// Columna para partido ocurrido o no
-			Cell cellA = row.createCell(cellnum++);
-			if (item.getResultFinal() == '1' || item.getResultFinal() == '2' || item.getResultFinal() == 'X') {
-				cellA.setCellValue(1);
-			}
-			else {				
-				cellA.setCellValue(0);
-			}
-
-			// Columnas para datos de los partidos
-			for (int i=0; i < datos.length; i++) {
-
-				Cell cell = row.createCell(cellnum++);
-				
-		        if(datos[i] instanceof Date) {
-		            cell.setCellValue((Date)datos[i]);
-		        }
-		        else if(datos[i] instanceof Boolean) {
-		            cell.setCellValue((Boolean)datos[i]);
-		        }
-		        else if(datos[i] instanceof String) {
-		            cell.setCellValue((String)datos[i]);
-		        }
-		        else if(datos[i] instanceof Character) {
-		            cell.setCellValue(String.valueOf(datos[i]));
-		        }
-		        else if(datos[i] instanceof Double) {
-		            cell.setCellValue((Double)datos[i]);
-		        }
-			}
-			
-			// Columnas para resultado de partido
-			if (item.getResultFinal() != 'O') {
-				
-				Cell cellK = row.createCell(cellnum++);
-				Cell cellL = row.createCell(cellnum++);
-				Cell cellM = row.createCell(cellnum++);
-				
-				cellK.setCellValue(item.getResultFinal() == '1' ? 1 : 0);
-				cellL.setCellValue(item.getResultFinal() == 'X' ? 1 : 0);
-				cellM.setCellValue(item.getResultFinal() == '2' ? 1 : 0);
+				// Columnas para resultado de partido
+				if (item.getResultFinal() != 'O') {
+					
+					Cell cellK = row.createCell(cellnum++);
+					Cell cellL = row.createCell(cellnum++);
+					Cell cellM = row.createCell(cellnum++);
+					
+					cellK.setCellValue(item.getResultFinal() == '1' ? 1 : 0);
+					cellL.setCellValue(item.getResultFinal() == 'X' ? 1 : 0);
+					cellM.setCellValue(item.getResultFinal() == '2' ? 1 : 0);
+				}
 			}
 		}
 		
