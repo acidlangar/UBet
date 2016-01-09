@@ -4,9 +4,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import org.idsiom.utilbet.currentuse.bo.ListaPartSeri;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
@@ -17,6 +19,8 @@ public class MainFromFileCurrentP {
 
 	static Logger logger = Logger.getLogger(MainFromFileCurrentP.class);
 	
+	public static String RUTA_ARCHIVO = "C:\\DEVTOOLS";
+	
 	/**
 	 * @param args
 	 */
@@ -25,7 +29,7 @@ public class MainFromFileCurrentP {
 		
 		System.out.println("Procederemos a leer el archivo serializado!!!");
 		
-		File fichero = new File("../datos/PartidosCurrent.srz");
+		File fichero = new File(RUTA_ARCHIVO + "/PartidosCurrent.srz");
 		if(!fichero.exists()) {
 			System.out.println("El archivo no existe... " + fichero.getAbsolutePath());
 			return;
@@ -49,45 +53,21 @@ public class MainFromFileCurrentP {
 			
 		    if (aux instanceof ListaPartSeri) {
 		    	
-		    	ListaPartSeri lista = (ListaPartSeri)aux;
+		    	ListaPartSeri lAux = (ListaPartSeri)aux;
 		    	
-		    	System.out.println("Cant Partidos = " + lista.getListaPs().size());
-		    	
-		    	
-		    	File ficheroCSV = new File("../datos/PartidosCurrent.csv");
-		    	
-		    	if(ficheroCSV.exists()) {
-		    		ficheroCSV.delete();
-		    	}
-		    	
-				if(!ficheroCSV.exists()) {
-					ficheroCSV.createNewFile();
-					System.out.println("Archivo creado vacio exitosamente :: " + ficheroCSV.getAbsolutePath());
-				}
-		    	
-			    BufferedWriter bw = new BufferedWriter(new FileWriter(ficheroCSV));
+		    	System.out.println("Cant Partidos = " + lAux.getListaPs().size());
 		    	
 		    	
-		    		for(CurrentPOddsPortal p : lista.getListaPs()) {
-		    			
-		    			/*
-		    			try {
-							dao.insertar(p, fileOut);
-						} catch (SQLException e) {
-							logger.error(e,e);
-						} catch (Exception e) {
-							logger.error(e,e);
-						}
-		    			*/
-		    			
-		    			bw.write( p.getCSVFormat() );
-		    			bw.write( "\n" );
-		    			
-		    			System.out.println(" << INSERTADO >>" + p);
-		    			
-		    		}
-		    		
-		    	bw.close();	
+		    	ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fichero));
+				oos.writeObject(lAux);
+				System.out.println(" Archivo creado exitosamente :: " + fichero.getAbsolutePath());
+				
+				//Se escribe directamente en el archivo excel
+				MainCurrentUseFromOP.writeExcelFile(lAux.getListaPs());
+				
+				oos.close();
+				oos = null;
+				lAux = null;
 		    		
 		    } else {
 		    	System.out.println("No corresponde a instancia esperada");
