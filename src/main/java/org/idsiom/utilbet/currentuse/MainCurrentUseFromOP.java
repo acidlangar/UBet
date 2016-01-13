@@ -100,11 +100,23 @@ public class MainCurrentUseFromOP {
 		HSSFSheet sheetLocal58 = workbook.createSheet("Local 58%");
 		
 		HSSFSheet sheetVisitante58 = workbook.createSheet("Visitante 58%");
+
+		HSSFSheet sheetLocalParejos2 = workbook.createSheet("Lo Parejos 2");
+		
+		HSSFSheet sheetVisitanteParejos2 = workbook.createSheet("Vi Parejos 2");
+		
+		HSSFSheet sheetLocSuperFav = workbook.createSheet("LoSuperFav");
+		
+		HSSFSheet sheetLocMuyFav = workbook.createSheet("LoMuyFav");
+		
+		HSSFSheet sheetLocFav = workbook.createSheet("LoFav");
 		
 		HSSFSheet sheetOtros = workbook.createSheet("Otros");
 
 		int rowLocal50 = 0, rowVisitante50 = 0, rowLocalParejos = 0,
-				rowVisitanteParejos = 0, rowOtros = 0, rowLocal58 = 0, rowVisitante58 = 0;
+				rowVisitanteParejos = 0, rowOtros = 0, rowLocal58 = 0, rowVisitante58 = 0,
+						rowLoParejos2 = 0, rowVisParejos2 = 0, rowLoSuperFav = 0,
+						    rowLocMuyFav = 0, rowLocFav = 0;
 		
 		for (CurrentPOddsPortal item : listaPs) {
 
@@ -140,6 +152,27 @@ public class MainCurrentUseFromOP {
 					
 					row = sheetVisitante58.createRow(rowVisitante58++);
 				}
+				else if ((item.getC1() > 2 && item.getcX() > 2 && item.getC2() > 2) && (item.getC2() > item.getC1() && item.getC2() >= item.getcX()) ) {
+									
+						row = sheetLocalParejos2.createRow(rowLoParejos2++);
+				}
+				else if ((item.getC1() > 2 && item.getcX() > 2 && item.getC2() > 2) && (item.getC1() > item.getC2() && item.getC1() >= item.getcX()) ) {
+					
+					row = sheetVisitanteParejos2.createRow(rowVisParejos2++);
+				}
+				else if ((item.getC1() > 1 && item.getC1() <=1.2) && (item.getcX() > item.getC1() && item.getcX() < item.getC2()) ) {
+					
+					row = sheetLocSuperFav.createRow(rowLoSuperFav++);
+				}
+				else if ((item.getC1() > 1.2 && item.getC1() <=1.4) && (item.getcX() > item.getC1() && item.getcX() < item.getC2()) ) {
+					
+					row = sheetLocMuyFav.createRow(rowLocMuyFav++);
+				}
+				else if ((item.getC1() > 1.4 && item.getC1() <1.7) && (item.getcX() > item.getC1() && item.getcX() < item.getC2()) ) {
+	
+					row = sheetLocFav.createRow(rowLocFav++);
+				}
+				
 				else {
 					
 					row = sheetOtros.createRow(rowOtros++);
@@ -202,6 +235,13 @@ public class MainCurrentUseFromOP {
 		calcularDesviacion(sheetVisitanteParejos, rowVisitanteParejos, 0.33, 0.32, 0.35);
 		calcularDesviacion(sheetLocal58, rowLocal58, 0.38, 0.33, 0.29);
 		calcularDesviacion(sheetVisitante58, rowVisitante58, 0.29, 0.33, 0.38);
+		calcularDesviacion(sheetLocalParejos2, rowLoParejos2, 0.35, 0.32, 0.33);
+		calcularDesviacion(sheetVisitanteParejos2, rowVisParejos2, 0.33, 0.32, 0.35);
+		calcularDesviacion(sheetLocSuperFav, rowLoSuperFav, 0.60, 0.30, 0.10);
+		calcularDesviacion(sheetLocMuyFav, rowLocMuyFav, 0.60, 0.30, 0.10);
+		calcularDesviacion(sheetLocFav, rowLocFav, 0.60, 0.30, 0.10);
+		
+		
 		
 		try {
 		    FileOutputStream out = 
