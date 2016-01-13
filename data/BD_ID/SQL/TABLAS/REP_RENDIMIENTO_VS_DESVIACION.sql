@@ -1,0 +1,4 @@
+-- Nombre de tabla: REP_RENDIMIENTO_VS_DESVIACION
+-- Descripcion: Tabla Auxiliar, la misma se limpiara y llenara  cada vez que se ejecute el procedimiento
+--             cal_rendimiento_vs_desviacion. 
+--              Para cada partido que aplique, la tabla tendrá el rendimiento generado, para al final poder sumarizar.
