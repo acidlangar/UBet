@@ -264,195 +264,194 @@ public class MainCurrentUseFromOP {
 		int cantJuegos = rowCount;
 		Row row = sheet.createRow(rowCount++);
 		
-		
-		Cell cellA = row.createCell(cellNum);
-		cellA.setCellFormula("SUM(A1:A"+cantJuegos+")");
-		
-		cellNum = 5;
-		Cell cellF = row.createCell(cellNum);
-		cellF.setCellFormula("AVERAGE(F1:F"+cantJuegos+")");
-		
-		cellNum = 6;
-		Cell cellG = row.createCell(cellNum);
-		cellG.setCellFormula("AVERAGE(G1:G"+cantJuegos+")");
-		
-		cellNum = 7;
-		Cell cellH = row.createCell(cellNum);
-		cellH.setCellFormula("AVERAGE(H1:H"+cantJuegos+")");
-		
-		cellNum = 9;
-		Cell cellJ = row.createCell(cellNum);
-		cellJ.setCellFormula("SUM(J1:J"+cantJuegos+")");
-		
-		cellNum = 10;
-		Cell cellK = row.createCell(cellNum);
-		cellK.setCellFormula("SUM(K1:K"+cantJuegos+")");
-		
-		cellNum = 11;
-		Cell cellL = row.createCell(cellNum);
-		cellL.setCellFormula("SUM(L1:L"+cantJuegos+")");
-		
-		
-		//----------------------->>>>>
-		// Se calculan las inversas de los promedios
-		row = sheet.createRow(rowCount++);
-		
-		cellNum = 5;
-		cellF = row.createCell(cellNum);
-		cellF.setCellFormula("1/F"+(cantJuegos+1));
-		
-		cellNum = 6;
-		cellG = row.createCell(cellNum);
-		cellG.setCellFormula("1/G"+(cantJuegos+1));
-		
-		cellNum = 7;
-		cellH = row.createCell(cellNum);
-		cellH.setCellFormula("1/H"+(cantJuegos+1));
-		
-		cellNum = 3;
-		Cell cellD = row.createCell(cellNum);
-		cellD.setCellFormula("F"+rowCount+" + G"+rowCount + " + H"+(rowCount));
-		
-		cellNum = 2;
-		Cell cellC = row.createCell(cellNum);
-		cellC.setCellFormula("D"+rowCount+" - 1");
-		
-		//----------------------->>>>>
-		// Se estima el overround usado
-		row = sheet.createRow(rowCount++);
-		
-		cellNum = 0;
-		cellA = row.createCell(cellNum);
-		cellA.setCellValue(difOverL);
-		
-		cellNum = 1;
-		Cell cellB = row.createCell(cellNum);
-		cellB.setCellValue(difOverX);
-		
-		cellNum = 2;
-		cellC = row.createCell(cellNum);
-		cellC.setCellValue(difOverV);
-		
-		cellNum = 5;
-		cellF = row.createCell(cellNum);
-		cellF.setCellFormula("A"+rowCount+" * C"+(rowCount-1) );
-		
-		cellNum = 6;
-		cellG = row.createCell(cellNum);
-		cellG.setCellFormula("B"+rowCount+" * C"+(rowCount-1) );
-		
-		cellNum = 7;
-		cellH = row.createCell(cellNum);
-		cellH.setCellFormula("C"+rowCount+" * C"+(rowCount-1) );
-		
-		
-		//----------------------->>>>>
-		// Se calcula la Expectativa
-		row = sheet.createRow(rowCount++); // Se deja intencionalmente una linea intermedio en blanco
-		row = sheet.createRow(rowCount++); 
-		
-		cellNum = 2;
-		cellC = row.createCell(cellNum);
-		cellC.setCellFormula("F"+rowCount+" + G"+rowCount+" + H"+rowCount);
-		
-		cellNum = 3;
-		cellD = row.createCell(cellNum);
-		cellD.setCellValue("Expectativa");
-		
-		cellNum = 5;
-		cellF = row.createCell(cellNum);
-		cellF.setCellFormula("F"+(rowCount-3)+" - F"+(rowCount-2) );
-		
-		cellNum = 6;
-		cellG = row.createCell(cellNum);
-		cellG.setCellFormula("G"+(rowCount-3)+" - G"+(rowCount-2) );
-		
-		cellNum = 7;
-		cellH = row.createCell(cellNum);
-		cellH.setCellFormula("H"+(rowCount-3)+" - H"+(rowCount-2) );
-		
-		cellNum = 9;
-		cellJ = row.createCell(cellNum);
-		cellJ.setCellFormula("F"+(rowCount)+"*A"+(cantJuegos+1));
-		
-		cellNum = 10;
-		cellK = row.createCell(cellNum);
-		cellK.setCellFormula("G"+(rowCount)+"*A"+(cantJuegos+1));
-		
-		cellNum = 11;
-		cellL = row.createCell(cellNum);
-		cellL.setCellFormula("H"+(rowCount)+"*A"+(cantJuegos+1));
-		
-		
-		//--------------------->>>>
-		//-- Se coloca la realidad
-		row = sheet.createRow(rowCount++);
-		
-		cellNum = 2;
-		cellC = row.createCell(cellNum);
-		cellC.setCellFormula("F"+rowCount+" + G"+rowCount+" + H"+rowCount);
-		
-		cellNum = 3;
-		cellD = row.createCell(cellNum);
-		cellD.setCellValue("Realidad");
-		
-		cellNum = 5;
-		cellF = row.createCell(cellNum);
-		cellF.setCellFormula("J"+(cantJuegos+1)+"/A"+(cantJuegos+1));
-		
-		cellNum = 6;
-		cellG = row.createCell(cellNum);
-		cellG.setCellFormula("K"+(cantJuegos+1)+"/A"+(cantJuegos+1));
-		
-		cellNum = 7;
-		cellH = row.createCell(cellNum);
-		cellH.setCellFormula("L"+(cantJuegos+1)+"/A"+(cantJuegos+1));
-		
-		cellNum = 9;
-		cellJ = row.createCell(cellNum);
-		cellJ.setCellFormula("J"+(cantJuegos+1));
-		
-		cellNum = 10;
-		cellK = row.createCell(cellNum);
-		cellK.setCellFormula("K"+(cantJuegos+1));
-		
-		cellNum = 11;
-		cellL = row.createCell(cellNum);
-		cellL.setCellFormula("L"+(cantJuegos+1));
-		
-		//-------------------------->>>>>>>>>>>>>
-		// --- Se Calcula la Desviacion
-		row = sheet.createRow(rowCount++);
-		
-		cellNum = 3;
-		cellD = row.createCell(cellNum);
-		cellD.setCellValue("Desviacion");
-		
-		cellNum = 5;
-		cellF = row.createCell(cellNum);
-		cellF.setCellFormula("F"+(rowCount-1)+" - F"+(rowCount-2));
-		
-		cellNum = 6;
-		cellG = row.createCell(cellNum);
-		cellG.setCellFormula("G"+(rowCount-1)+" - G"+(rowCount-2));
-		
-		cellNum = 7;
-		cellH = row.createCell(cellNum);
-		cellH.setCellFormula("H"+(rowCount-1)+" - H"+(rowCount-2));
-		
-		cellNum = 9;
-		cellJ = row.createCell(cellNum);
-		cellJ.setCellFormula("J"+(rowCount-1)+" - J"+(rowCount-2));
-		
-		cellNum = 10;
-		cellK = row.createCell(cellNum);
-		cellK.setCellFormula("K"+(rowCount-1)+" - K"+(rowCount-2));
-		
-		cellNum = 11;
-		cellL = row.createCell(cellNum);
-		cellL.setCellFormula("L"+(rowCount-1)+" - L"+(rowCount-2));
-		
+		if (cantJuegos > 0) {
+			Cell cellA = row.createCell(cellNum);
+			cellA.setCellFormula("SUM(A1:A"+cantJuegos+")");
+			
+			cellNum = 5;
+			Cell cellF = row.createCell(cellNum);
+			cellF.setCellFormula("AVERAGE(F1:F"+cantJuegos+")");
+			
+			cellNum = 6;
+			Cell cellG = row.createCell(cellNum);
+			cellG.setCellFormula("AVERAGE(G1:G"+cantJuegos+")");
+			
+			cellNum = 7;
+			Cell cellH = row.createCell(cellNum);
+			cellH.setCellFormula("AVERAGE(H1:H"+cantJuegos+")");
+			
+			cellNum = 9;
+			Cell cellJ = row.createCell(cellNum);
+			cellJ.setCellFormula("SUM(J1:J"+cantJuegos+")");
+			
+			cellNum = 10;
+			Cell cellK = row.createCell(cellNum);
+			cellK.setCellFormula("SUM(K1:K"+cantJuegos+")");
+			
+			cellNum = 11;
+			Cell cellL = row.createCell(cellNum);
+			cellL.setCellFormula("SUM(L1:L"+cantJuegos+")");
+			
+			
+			//----------------------->>>>>
+			// Se calculan las inversas de los promedios
+			row = sheet.createRow(rowCount++);
+			
+			cellNum = 5;
+			cellF = row.createCell(cellNum);
+			cellF.setCellFormula("1/F"+(cantJuegos+1));
+			
+			cellNum = 6;
+			cellG = row.createCell(cellNum);
+			cellG.setCellFormula("1/G"+(cantJuegos+1));
+			
+			cellNum = 7;
+			cellH = row.createCell(cellNum);
+			cellH.setCellFormula("1/H"+(cantJuegos+1));
+			
+			cellNum = 3;
+			Cell cellD = row.createCell(cellNum);
+			cellD.setCellFormula("F"+rowCount+" + G"+rowCount + " + H"+(rowCount));
+			
+			cellNum = 2;
+			Cell cellC = row.createCell(cellNum);
+			cellC.setCellFormula("D"+rowCount+" - 1");
+			
+			//----------------------->>>>>
+			// Se estima el overround usado
+			row = sheet.createRow(rowCount++);
+			
+			cellNum = 0;
+			cellA = row.createCell(cellNum);
+			cellA.setCellValue(difOverL);
+			
+			cellNum = 1;
+			Cell cellB = row.createCell(cellNum);
+			cellB.setCellValue(difOverX);
+			
+			cellNum = 2;
+			cellC = row.createCell(cellNum);
+			cellC.setCellValue(difOverV);
+			
+			cellNum = 5;
+			cellF = row.createCell(cellNum);
+			cellF.setCellFormula("A"+rowCount+" * C"+(rowCount-1) );
+			
+			cellNum = 6;
+			cellG = row.createCell(cellNum);
+			cellG.setCellFormula("B"+rowCount+" * C"+(rowCount-1) );
+			
+			cellNum = 7;
+			cellH = row.createCell(cellNum);
+			cellH.setCellFormula("C"+rowCount+" * C"+(rowCount-1) );
+			
+			
+			//----------------------->>>>>
+			// Se calcula la Expectativa
+			row = sheet.createRow(rowCount++); // Se deja intencionalmente una linea intermedio en blanco
+			row = sheet.createRow(rowCount++); 
+			
+			cellNum = 2;
+			cellC = row.createCell(cellNum);
+			cellC.setCellFormula("F"+rowCount+" + G"+rowCount+" + H"+rowCount);
+			
+			cellNum = 3;
+			cellD = row.createCell(cellNum);
+			cellD.setCellValue("Expectativa");
+			
+			cellNum = 5;
+			cellF = row.createCell(cellNum);
+			cellF.setCellFormula("F"+(rowCount-3)+" - F"+(rowCount-2) );
+			
+			cellNum = 6;
+			cellG = row.createCell(cellNum);
+			cellG.setCellFormula("G"+(rowCount-3)+" - G"+(rowCount-2) );
+			
+			cellNum = 7;
+			cellH = row.createCell(cellNum);
+			cellH.setCellFormula("H"+(rowCount-3)+" - H"+(rowCount-2) );
+			
+			cellNum = 9;
+			cellJ = row.createCell(cellNum);
+			cellJ.setCellFormula("F"+(rowCount)+"*A"+(cantJuegos+1));
+			
+			cellNum = 10;
+			cellK = row.createCell(cellNum);
+			cellK.setCellFormula("G"+(rowCount)+"*A"+(cantJuegos+1));
+			
+			cellNum = 11;
+			cellL = row.createCell(cellNum);
+			cellL.setCellFormula("H"+(rowCount)+"*A"+(cantJuegos+1));
+			
+			
+			//--------------------->>>>
+			//-- Se coloca la realidad
+			row = sheet.createRow(rowCount++);
+			
+			cellNum = 2;
+			cellC = row.createCell(cellNum);
+			cellC.setCellFormula("F"+rowCount+" + G"+rowCount+" + H"+rowCount);
+			
+			cellNum = 3;
+			cellD = row.createCell(cellNum);
+			cellD.setCellValue("Realidad");
+			
+			cellNum = 5;
+			cellF = row.createCell(cellNum);
+			cellF.setCellFormula("J"+(cantJuegos+1)+"/A"+(cantJuegos+1));
+			
+			cellNum = 6;
+			cellG = row.createCell(cellNum);
+			cellG.setCellFormula("K"+(cantJuegos+1)+"/A"+(cantJuegos+1));
+			
+			cellNum = 7;
+			cellH = row.createCell(cellNum);
+			cellH.setCellFormula("L"+(cantJuegos+1)+"/A"+(cantJuegos+1));
+			
+			cellNum = 9;
+			cellJ = row.createCell(cellNum);
+			cellJ.setCellFormula("J"+(cantJuegos+1));
+			
+			cellNum = 10;
+			cellK = row.createCell(cellNum);
+			cellK.setCellFormula("K"+(cantJuegos+1));
+			
+			cellNum = 11;
+			cellL = row.createCell(cellNum);
+			cellL.setCellFormula("L"+(cantJuegos+1));
+			
+			//-------------------------->>>>>>>>>>>>>
+			// --- Se Calcula la Desviacion
+			row = sheet.createRow(rowCount++);
+			
+			cellNum = 3;
+			cellD = row.createCell(cellNum);
+			cellD.setCellValue("Desviacion");
+			
+			cellNum = 5;
+			cellF = row.createCell(cellNum);
+			cellF.setCellFormula("F"+(rowCount-1)+" - F"+(rowCount-2));
+			
+			cellNum = 6;
+			cellG = row.createCell(cellNum);
+			cellG.setCellFormula("G"+(rowCount-1)+" - G"+(rowCount-2));
+			
+			cellNum = 7;
+			cellH = row.createCell(cellNum);
+			cellH.setCellFormula("H"+(rowCount-1)+" - H"+(rowCount-2));
+			
+			cellNum = 9;
+			cellJ = row.createCell(cellNum);
+			cellJ.setCellFormula("J"+(rowCount-1)+" - J"+(rowCount-2));
+			
+			cellNum = 10;
+			cellK = row.createCell(cellNum);
+			cellK.setCellFormula("K"+(rowCount-1)+" - K"+(rowCount-2));
+			
+			cellNum = 11;
+			cellL = row.createCell(cellNum);
+			cellL.setCellFormula("L"+(rowCount-1)+" - L"+(rowCount-2));
+		}
 	}
-	
 	
 }
