@@ -37,7 +37,7 @@ public class MainCurrentUseFromOP {
 		
 		
 		try {
- 			listaPs = interlocutor.getPs();
+ 			listaPs = interlocutor.getPs(false);
 		} catch(Exception ex) {
 			logger.error("No fue posible obtener ps ", ex);
 		}

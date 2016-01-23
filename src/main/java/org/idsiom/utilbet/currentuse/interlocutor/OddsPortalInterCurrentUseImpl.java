@@ -25,7 +25,7 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 
 	static Logger logger = Logger.getLogger(OddsPortalInterCurrentUseImpl.class);
 	
-	public ListPartidosSerializable getPs() throws Exception {
+	public ListPartidosSerializable getPs(Boolean reutilizarHistoria) throws Exception {
 		String urlBaseInicial = getUrlFinal();
 		boolean pedirentero;
 		this.driver = UtilSelenium.getInstanciaWD();
@@ -63,20 +63,26 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		}
 		
 		seguir = ( iSeguir == 1 );
-		
-		System.out.println("Ingrese la fecha desde yyyyMMdd: ");
-		fechaDesdeStr = in.next();
-		
 		Date date;
-		try {
-			date = (Date) sdf.parse(fechaDesdeStr);
+		
+		if(reutilizarHistoria) {
 			gcFDesde = new GregorianCalendar();
-			gcFDesde.setTime(date);
+		} else {
+			System.out.println("Ingrese la fecha desde yyyyMMdd: ");
+			fechaDesdeStr = in.next();
 			
-		} catch (ParseException e) {
-			e.printStackTrace();
-			return null;
+			try {
+				date = (Date) sdf.parse(fechaDesdeStr);
+				gcFDesde = new GregorianCalendar();
+				gcFDesde.setTime(date);
+				
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return null;
+			}	
 		}
+		
+		
 		
 		// pedir fecha hasta
 		//System.out.println("Ingrese la fecha hasta yyyyMMdd: ");

@@ -7,6 +7,6 @@ import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
 
 public interface IOddsPortalCurrentUseInterlocutor {
 
-	public ListPartidosSerializable getPs() throws Exception;
+	public ListPartidosSerializable getPs(Boolean reutilizarHistoria) throws Exception;
 	
 }

@@ -9,9 +9,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
+import org.idsiom.utilbet.currentuse.interlocutor.IOddsPortalCurrentUseInterlocutor;
+import org.idsiom.utilbet.currentuse.interlocutor.OddsPortalInterCurrentUseImpl;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -26,6 +30,9 @@ public class MainFromFileCurrentP {
 	 */
 	public static void main(String[] args) {
 		DOMConfigurator.configure("./src/main/java/conf/log4j-config.xml");
+		
+		IOddsPortalCurrentUseInterlocutor interlocutor = new OddsPortalInterCurrentUseImpl();
+		
 		
 		System.out.println("Procederemos a leer el archivo serializado!!!");
 		
@@ -42,28 +49,26 @@ public class MainFromFileCurrentP {
 			Object aux;
 			aux = ois.readObject();
 			           
-			/*
-			try {
-				ConexionBaseDatos.abrirConexion("WKS0316", "1433", "sa", "Accusys123*");
-			} catch (Exception e1) {
-				logger.error(e1,e1);
-				return;
-			}
-			*/
-			
-		    if (aux instanceof ListPartidosSerializable) {
+			if (aux instanceof ListPartidosSerializable) {
 		    	
 		    	ListPartidosSerializable lAux = (ListPartidosSerializable)aux;
 		    	
-		    	System.out.println("Cant Partidos = " + lAux.getListaPs().size());
+		    	System.out.println("Cant Partidos Historia = " + lAux.getPartidosHistory().size());
 		    	
+		    	ListPartidosSerializable lNews = interlocutor.getPs(true);
+		    	
+		    	
+		    	List<CurrentPOddsPortal> listDefinitiva = new ArrayList<CurrentPOddsPortal>();
+		    	
+		    	listDefinitiva.addAll( lAux.getPartidosHistory() );
+		    	listDefinitiva.addAll( lNews.getListaPsHoyFuturo() );
 		    	
 		    	ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fichero));
 				oos.writeObject(lAux);
 				System.out.println(" Archivo creado exitosamente :: " + fichero.getAbsolutePath());
 				
 				//Se escribe directamente en el archivo excel
-				MainCurrentUseFromOP.writeExcelFile(lAux.getListaPs());
+				MainCurrentUseFromOP.writeExcelFile(listDefinitiva);
 				
 				oos.close();
 				oos = null;
@@ -89,6 +94,8 @@ public class MainFromFileCurrentP {
 		} catch (FileNotFoundException e) {
 			logger.error(e,e);
 		} catch (IOException e) {
+			logger.error(e,e);
+		} catch (Exception e) {
 			logger.error(e,e);
 		}
 		
