@@ -3,6 +3,7 @@ package org.idsiom.utilbet.currentuse.interlocutor;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -10,8 +11,10 @@ import java.util.Scanner;
 
 import org.apache.log4j.Logger;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
+import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
 import org.idsiom.utilbet.history.fromoddsportal.Cons;
 import org.idsiom.utilbet.history.fromoddsportal.UtilSelenium;
+import org.idsiom.utilbet.util.UtilFecha;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -22,20 +25,20 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 
 	static Logger logger = Logger.getLogger(OddsPortalInterCurrentUseImpl.class);
 	
-	public List<CurrentPOddsPortal> getPs() throws Exception {
+	public ListPartidosSerializable getPs() throws Exception {
 		String urlBaseInicial = getUrlFinal();
 		boolean pedirentero;
 		this.driver = UtilSelenium.getInstanciaWD();
 		String urlMyMatches = Cons.URL_MYMATCHES_CURRENT; // Guardara el String del URL del dia especifico
 		String fechaDesdeStr;
-		String fechaHastaStr;
+		//String fechaHastaStr;
 		GregorianCalendar gcFDesde;
 		GregorianCalendar gcFHasta;
 		Scanner in ;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		//GregorianCalendar gc = new GregorianCalendar();
 		
-		List<CurrentPOddsPortal> resultFinal = new ArrayList<CurrentPOddsPortal>();
+		ListPartidosSerializable resultFinal = new ListPartidosSerializable();
 		
 		System.out.println("buscando :: " + urlBaseInicial);
 		this.driver.get(urlBaseInicial);
@@ -76,23 +79,31 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		}
 		
 		// pedir fecha hasta
-		System.out.println("Ingrese la fecha hasta yyyyMMdd: ");
-		fechaHastaStr = in.next();
+		//System.out.println("Ingrese la fecha hasta yyyyMMdd: ");
+		//fechaHastaStr = in.next();
 		
 		try {
-			date = (Date) sdf.parse(fechaHastaStr);
+			//date = (Date) sdf.parse(fechaHastaStr);
+			
+			date = UtilFecha.sumarRestarDiasFecha(new Date(), 1);
+			
 			gcFHasta = new GregorianCalendar();
 			gcFHasta.setTime(date);
 			
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 		
 		System.out.println( "fechaDesde: " + sdf.format(gcFDesde.getTime()) );
 		System.out.println( "fechaHasta: " + sdf.format(gcFHasta.getTime()) );
-		System.out.println( "fechaDesde: " + gcFDesde.getTime().getTime() );
-		System.out.println( "fechaHasta: " + gcFHasta.getTime().getTime() );
+		
+		GregorianCalendar gcHoy_0000 = new GregorianCalendar();
+		
+		gcHoy_0000.set(Calendar.HOUR_OF_DAY,0);
+		gcHoy_0000.set(Calendar.MINUTE,0);
+		gcHoy_0000.set(Calendar.SECOND,0);
+		gcHoy_0000.set(Calendar.MILLISECOND,0);
 		
 		
 		List<CurrentPOddsPortal> listAux;
@@ -104,7 +115,14 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 			listAux = this.getPs(sdf.format(gcFDesde.getTime()), urlMyMatches + sdf.format(gcFDesde.getTime()) + "/", makePause);
 			
 			if(listAux.size() > 0) {
-				resultFinal.addAll( listAux );
+				
+				if(gcFDesde.before(gcHoy_0000)) {
+					resultFinal.getPartidosHistory().addAll( listAux );
+				} else {
+					resultFinal.getListaPsHoyFuturo().addAll( listAux );
+				}
+				
+				
 				gcFDesde.add(GregorianCalendar.DAY_OF_YEAR,1);
 				makePause = false;
 			} else {

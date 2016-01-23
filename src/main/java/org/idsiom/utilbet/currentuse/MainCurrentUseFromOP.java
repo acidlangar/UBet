@@ -16,7 +16,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
 import org.idsiom.utilbet.currentuse.interlocutor.IOddsPortalCurrentUseInterlocutor;
 import org.idsiom.utilbet.currentuse.interlocutor.OddsPortalInterCurrentUseImpl;
-import org.idsiom.utilbet.currentuse.bo.ListaPartSeri;
+import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
 
 /*
  * MainCurrentUseFromOP
@@ -29,9 +29,12 @@ public class MainCurrentUseFromOP {
 	public static String RUTA_ARCHIVO = "C:\\DEVTOOLS";
 
 	public static void main(String[] args) {
-		List<CurrentPOddsPortal> listaPs = null;
+		List<CurrentPOddsPortal> listaTodos = null;
 		DOMConfigurator.configure("./src/main/java/conf/log4j-config.xml");
 		IOddsPortalCurrentUseInterlocutor interlocutor = new OddsPortalInterCurrentUseImpl();
+		ListPartidosSerializable listaPs = new ListPartidosSerializable();
+		
+		
 		
 		try {
  			listaPs = interlocutor.getPs();
@@ -41,16 +44,24 @@ public class MainCurrentUseFromOP {
 		
 			
 		if(listaPs != null) {
-			for(CurrentPOddsPortal p : listaPs) {
-				System.out.println("****************");
+			for(CurrentPOddsPortal p : listaPs.getPartidosHistory()) {
+				System.out.println("**********HISTORIA******");
 				System.out.println(p);
 				System.out.println("****************");
 			}
 			
+			for(CurrentPOddsPortal p : listaPs.getListaPsHoyFuturo()) {
+				System.out.println("**********HOY Y FUTURO******");
+				System.out.println(p);
+				System.out.println("****************");
+			}
+			
+			System.out.println("Cant de Historia " + listaPs.getPartidosHistory().size());
+			
+			System.out.println("Cant de Futuro " + listaPs.getListaPsHoyFuturo().size());
+			
 			try {
-				if(listaPs.size() > 0) {
-					ListaPartSeri lAux = new ListaPartSeri();
-					lAux.setListaPs(listaPs);
+				if(listaPs.getPartidosHistory().size() > 0 && listaPs.getListaPsHoyFuturo().size() > 0 ) {
 					
 					File dir = new File(RUTA_ARCHIVO);
 					if(!dir.exists()) {
@@ -69,15 +80,17 @@ public class MainCurrentUseFromOP {
 
 					
 					ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fichero));
-					oos.writeObject(lAux);
+					oos.writeObject(listaPs);
 					System.out.println(" Archivo creado exitosamente :: " + fichero.getAbsolutePath());
 					
 					//Se escribe directamente en el archivo excel
-					writeExcelFile(listaPs);
+					
+					
+					writeExcelFile(listaPs.getListaPs());
 					
 					oos.close();
 					oos = null;
-					lAux = null;
+					listaTodos = null;
 				}	
 			} catch(Exception ex) {
 				logger.error("No fue posible crear el archivo srv "+ "/PartidosCurrent.srz",ex);

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
-import org.idsiom.utilbet.currentuse.bo.ListaPartSeri;
+import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
 import org.junit.Test;
 
 /**
@@ -40,9 +40,9 @@ public class MainCurrentUseTestFromSRZ {
 			Object aux;
 			aux = ois.readObject();
 			           
-			if (aux instanceof ListaPartSeri) {
-				ListaPartSeri lista = (ListaPartSeri)aux;
-				partidosResult = lista.getListaPs();
+			if (aux instanceof ListPartidosSerializable) {
+				ListPartidosSerializable lista = (ListPartidosSerializable)aux;
+				//partidosResult = lista.getListaPs();
 		    }
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

@@ -6,6 +6,7 @@ package org.idsiom.utilbet.currentuse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -28,7 +29,7 @@ public class MainCurrentUse_DateTest {
 	
 	@Test
 	public void testWriteExcel() {
-		
+		/*
 		System.out.println("Prueba date");
 		String fechaDesdeStr;
 		String fechaHastaStr;
@@ -84,7 +85,23 @@ public class MainCurrentUse_DateTest {
 			aux = gcFDesde.before(gcFHasta);
 		}
 		
-		System.out.println("Fin de prueba");
+		System.out.println("Fin pate 1 de la prueba .....  ");
+		
+		*/
+		GregorianCalendar gc = new GregorianCalendar();
+		System.out.println(gc);
+		
+		gc.set(Calendar.HOUR_OF_DAY,0);
+		gc.set(Calendar.MINUTE,0);
+		gc.set(Calendar.SECOND,0);
+		gc.set(Calendar.MILLISECOND,0);
+		
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+		
+		System.out.println( ".. "  + sdf2.format(gc.getTime()) );
+		
+		
+		
 	}
 
 }

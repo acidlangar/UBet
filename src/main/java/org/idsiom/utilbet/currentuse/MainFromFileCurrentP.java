@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.idsiom.utilbet.currentuse.bo.ListaPartSeri;
+import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -51,9 +51,9 @@ public class MainFromFileCurrentP {
 			}
 			*/
 			
-		    if (aux instanceof ListaPartSeri) {
+		    if (aux instanceof ListPartidosSerializable) {
 		    	
-		    	ListaPartSeri lAux = (ListaPartSeri)aux;
+		    	ListPartidosSerializable lAux = (ListPartidosSerializable)aux;
 		    	
 		    	System.out.println("Cant Partidos = " + lAux.getListaPs().size());
 		    	
