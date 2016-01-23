@@ -95,13 +95,30 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		System.out.println( "fechaHasta: " + gcFHasta.getTime().getTime() );
 		
 		
-		
+		List<CurrentPOddsPortal> listAux;
+		int seguirIntAux = 0;
+		Boolean makePause = false;
 		while( gcFDesde.before(gcFHasta) ) {
 			System.out.println( sdf.format(gcFDesde.getTime()) );
 
-			resultFinal.addAll( this.getPs(sdf.format(gcFDesde.getTime()), urlMyMatches + sdf.format(gcFDesde.getTime()) + "/") );
-
-			gcFDesde.add(GregorianCalendar.DAY_OF_YEAR,1);
+			listAux = this.getPs(sdf.format(gcFDesde.getTime()), urlMyMatches + sdf.format(gcFDesde.getTime()) + "/", makePause);
+			
+			if(listAux.size() > 0) {
+				resultFinal.addAll( listAux );
+				gcFDesde.add(GregorianCalendar.DAY_OF_YEAR,1);
+				makePause = false;
+			} else {
+				System.out.println("No se encontraron partidos para la fecha, " + sdf.format(gcFDesde.getTime()) + ", pulse 1 si desea reintentar... ");
+				seguirIntAux = in.nextInt();
+				
+				if(seguirIntAux == 1) {
+					makePause = true;
+				} else {
+					gcFDesde.add(GregorianCalendar.DAY_OF_YEAR,1);
+					makePause = false;
+				}
+			}
+			
 		}
 		
 		
@@ -109,9 +126,17 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 	}
 	
 	
-	private List<CurrentPOddsPortal> getPs(String fechaStr, String urlDay) throws Exception {
+	private List<CurrentPOddsPortal> getPs(String fechaStr, String urlDay, Boolean makePause) throws Exception {
 		
 		this.driver.get(urlDay);
+		
+		if(makePause) {
+			System.out.println("Pulse 1 despues de cargada la pagina, y los partidos");
+			
+			Scanner in = new Scanner(System.in);
+			int i = in.nextInt();
+		}
+		
 		
 		// Todos los tr de la tabla partidos
 		String xPathPag = ".//*[@id='table-matches']/*/*/tr";  // .//*[@id='table-matches']/*/*/tr

@@ -229,9 +229,12 @@ BEGIN
 					   ,[Rendimiento1]
 					   ,[RendimientoX]
 					   ,[Rendimiento2]
-					   ,[Desviacion1]
-					   ,[DesviacionX]
-					   ,[Desviacion2]
+					   ,[DesvCantJuego1]
+					   ,[DesvCantJuegoX]
+					   ,[DesvCantJuego2]
+                       ,[DesvPorcentual1]
+					   ,[DesvPorcentualX]
+					   ,[DesvPorcentual2]
 					   ,[Expectativa1]
 					   ,[ExpectativaX]
 					   ,[Expectativa2]
@@ -248,7 +251,10 @@ BEGIN
 					   ,@vDesv1
 					   ,@vDesvX
 					   ,@vDesv2
-					   ,@vExpectativa1
+                       ,((@vRealidad1*100)/@vExpectativa1)-100
+					   ,((@vRealidadX*100)/@vExpectativaX)-100
+					   ,((@vRealidad2*100)/@vExpectativa2)-100
+                       ,@vExpectativa1
 					   ,@vExpectativaX
 					   ,@vExpectativa2
 					   ,@vRealidad1
