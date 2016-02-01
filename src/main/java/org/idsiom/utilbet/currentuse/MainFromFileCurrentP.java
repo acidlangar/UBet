@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
@@ -16,6 +17,8 @@ import org.idsiom.utilbet.currentuse.interlocutor.IOddsPortalCurrentUseInterlocu
 import org.idsiom.utilbet.currentuse.interlocutor.OddsPortalInterCurrentUseImpl;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
+import org.idsiom.utilbet.history.fromoddsportal.Cons;
+
 
 public class MainFromFileCurrentP {
 
@@ -65,7 +68,12 @@ public class MainFromFileCurrentP {
 
 					listDefinitiva.addAll(lAux.getPartidosHistory());
 					listDefinitiva.addAll(lNews.getListaPsHoyFuturo());
-
+					
+					List<CurrentPOddsPortal> listPNotificar = validarSeguimiento( lNews );
+					if(listPNotificar.size() > 0) {
+						notificar( listPNotificar );
+					}
+						
 					ObjectOutputStream oos = new ObjectOutputStream(
 							new FileOutputStream(fichero));
 					oos.writeObject(lAux);
@@ -96,7 +104,8 @@ public class MainFromFileCurrentP {
 			}
 
 			try {
-				Thread.sleep(60000);
+				// Espera hasta la proxima ejecucion para busqueda del Archivo.
+				Thread.sleep(120000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -104,6 +113,48 @@ public class MainFromFileCurrentP {
 
 		}
 
+	}
+
+	private static void notificar(List<CurrentPOddsPortal> listPNotificar) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private static List<CurrentPOddsPortal> validarSeguimiento(ListPartidosSerializable lNews) {
+		List<CurrentPOddsPortal> proxPartidos = lNews.getListaPsHoyFuturo();
+		List<CurrentPOddsPortal> resultPartidos = new ArrayList<CurrentPOddsPortal>();
+		
+		Boolean existeProximo = false;
+		
+		for(CurrentPOddsPortal p : proxPartidos) {
+			if(p.getType() == Cons.tipoToSeguir) {
+				if(empiezaEnProxMins(p)) {
+					existeProximo = true;
+				}
+				
+				if(existeProximo) {
+					resultPartidos.add(p);
+				}
+				
+			}
+			
+		}
+		
+		return resultPartidos;
+	}
+
+	public static boolean empiezaEnProxMins(CurrentPOddsPortal p) {
+		
+		Long esteMomento = new Date().getTime();
+		
+		if( esteMomento < p.getFechaLong() ) {
+			if((p.getFechaLong() - esteMomento) < 20*60*1000 ) {
+				return true;
+			}
+		}
+		
+		
+		return false;
 	}
 
 }

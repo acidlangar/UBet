@@ -3,6 +3,7 @@ package org.idsiom.utilbet.history.fromoddsportal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.idsiom.utilbet.currentuse.bo.TipoPartidoPorCuotas;
 import org.idsiom.utilbet.history.fromoddsportal.objutil.LgTempObjUtil;
 
 public class Cons {
@@ -46,6 +47,8 @@ public class Cons {
 		
 		return result;
 	}
+	
+	public static final TipoPartidoPorCuotas tipoToSeguir = TipoPartidoPorCuotas.VISITANTE_PAREJOS;
 	
 	
 }

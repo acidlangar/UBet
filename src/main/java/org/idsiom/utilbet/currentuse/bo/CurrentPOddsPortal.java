@@ -311,6 +311,10 @@ public class CurrentPOddsPortal implements Serializable {
 		
 	}
 
+	public TipoPartidoPorCuotas getType() {
+		return TipoPartidoPorCuotas.getClasificacionPorCuotas(c1, cX, c2);
+	}
+
 	
 	
 }
