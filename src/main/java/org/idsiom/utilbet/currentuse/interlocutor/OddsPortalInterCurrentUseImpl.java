@@ -22,13 +22,26 @@ import org.openqa.selenium.WebElement;
 public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInterlocutor {
 
 	private WebDriver driver;
+	
+	private Boolean logeadoPorPrimeraVez;
+	
+	
+	
+	public OddsPortalInterCurrentUseImpl() {
+		this.logeadoPorPrimeraVez = false;
+		this.driver = null;
+	}
 
 	static Logger logger = Logger.getLogger(OddsPortalInterCurrentUseImpl.class);
 	
 	public ListPartidosSerializable getPs(Boolean reutilizarHistoria) throws Exception {
 		String urlBaseInicial = getUrlFinal();
 		boolean pedirentero;
-		this.driver = UtilSelenium.getInstanciaWD();
+		
+		if( this.driver == null ) {
+			this.driver = UtilSelenium.getInstanciaWD();
+		}
+			
 		String urlMyMatches = Cons.URL_MYMATCHES_CURRENT; // Guardara el String del URL del dia especifico
 		String fechaDesdeStr;
 		//String fechaHastaStr;
@@ -39,30 +52,30 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		//GregorianCalendar gc = new GregorianCalendar();
 		
 		ListPartidosSerializable resultFinal = new ListPartidosSerializable();
-		
-		System.out.println("buscando :: " + urlBaseInicial);
-		this.driver.get(urlBaseInicial);
-		
-		boolean seguir = false;
-		
-		System.out.println("1 para continuar... ");
-
-		int iSeguir = 0;
-		
 		in = new Scanner(System.in);
+		if( !this.logeadoPorPrimeraVez ) {
 		
-		pedirentero = true;
-		while(pedirentero) {
-			try {
-				iSeguir = in.nextInt();
-				pedirentero = false;
-			} catch(java.util.InputMismatchException emm){
-				System.out.println("Error de ingreso de datos, debe ser cero o uno. Linea 1");
-				pedirentero = true;
+			System.out.println("buscando :: " + urlBaseInicial);
+			this.driver.get(urlBaseInicial);
+			
+			
+			System.out.println("1 para continuar... ");
+	
+			pedirentero = true;
+			while(pedirentero) {
+				try {
+					in.nextInt();
+					pedirentero = false;
+				} catch(java.util.InputMismatchException emm){
+					System.out.println("Error de ingreso de datos, debe ser cero o uno. Linea 1");
+					pedirentero = true;
+				}
 			}
+			
+			this.logeadoPorPrimeraVez = true;
+		
 		}
 		
-		seguir = ( iSeguir == 1 );
 		Date date;
 		
 		if(reutilizarHistoria) {
@@ -71,35 +84,17 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 			System.out.println("Ingrese la fecha desde yyyyMMdd: ");
 			fechaDesdeStr = in.next();
 			
-			try {
 				date = (Date) sdf.parse(fechaDesdeStr);
 				gcFDesde = new GregorianCalendar();
 				gcFDesde.setTime(date);
 				
-			} catch (ParseException e) {
-				e.printStackTrace();
-				return null;
-			}	
 		}
 		
+		date = UtilFecha.sumarRestarDiasFecha(new Date(), 2);
 		
+		gcFHasta = new GregorianCalendar();
+		gcFHasta.setTime(date);
 		
-		// pedir fecha hasta
-		//System.out.println("Ingrese la fecha hasta yyyyMMdd: ");
-		//fechaHastaStr = in.next();
-		
-		try {
-			//date = (Date) sdf.parse(fechaHastaStr);
-			
-			date = UtilFecha.sumarRestarDiasFecha(new Date(), 1);
-			
-			gcFHasta = new GregorianCalendar();
-			gcFHasta.setTime(date);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
 		
 		System.out.println( "fechaDesde: " + sdf.format(gcFDesde.getTime()) );
 		System.out.println( "fechaHasta: " + sdf.format(gcFHasta.getTime()) );
@@ -133,18 +128,20 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 				makePause = false;
 			} else {
 				System.out.println("No se encontraron partidos para la fecha, " + sdf.format(gcFDesde.getTime()) + ", pulse 1 si desea reintentar... ");
-				seguirIntAux = in.nextInt();
+				//seguirIntAux = in.nextInt();
 				
-				if(seguirIntAux == 1) {
+				//if(seguirIntAux == 1) {
 					makePause = true;
-				} else {
-					gcFDesde.add(GregorianCalendar.DAY_OF_YEAR,1);
-					makePause = false;
-				}
+				//} else {
+				//	gcFDesde.add(GregorianCalendar.DAY_OF_YEAR,1);
+				//	makePause = false;
+				//}
 			}
 			
 		}
 		
+		in.close();
+		in = null;
 		
 		return resultFinal;
 	}

@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -25,11 +27,9 @@ public class MainCurrentUseFromOP {
 	
 	static Logger logger = Logger.getLogger(MainCurrentUseFromOP.class);
 	
-	//public static String RUTA_ARCHIVO = "../datos";
 	public static String RUTA_ARCHIVO = "C:\\DEVTOOLS";
 
 	public static void main(String[] args) {
-		List<CurrentPOddsPortal> listaTodos = null;
 		DOMConfigurator.configure("./src/main/java/conf/log4j-config.xml");
 		IOddsPortalCurrentUseInterlocutor interlocutor = new OddsPortalInterCurrentUseImpl();
 		ListPartidosSerializable listaPs = new ListPartidosSerializable();
@@ -84,13 +84,11 @@ public class MainCurrentUseFromOP {
 					System.out.println(" Archivo creado exitosamente :: " + fichero.getAbsolutePath());
 					
 					//Se escribe directamente en el archivo excel
-					
-					
 					writeExcelFile(listaPs.getListaPs());
 					
 					oos.close();
 					oos = null;
-					listaTodos = null;
+					
 				}	
 			} catch(Exception ex) {
 				logger.error("No fue posible crear el archivo srv "+ "/PartidosCurrent.srz",ex);
@@ -255,9 +253,9 @@ public class MainCurrentUseFromOP {
 		calcularDesviacion(sheetLocFav, rowLocFav, 0.60, 0.30, 0.10);
 		
 		
-		
+		FileOutputStream out;
 		try {
-		    FileOutputStream out = 
+		    out = 
 		            new FileOutputStream(new File(RUTA_ARCHIVO+"\\PartidosCurrent.xls"));
 		    workbook.write(out);
 		    out.close();
@@ -265,6 +263,27 @@ public class MainCurrentUseFromOP {
 		     
 		} catch (FileNotFoundException e) {
 		    e.printStackTrace();
+		    
+		    System.out.println("Sos boludo o sos de Racing???????? CIERRA EL ARCHIVO Y PULSA 1...");
+		    
+		    (new Scanner(System.in)).nextInt();
+		    
+		    
+			try {
+				out = new FileOutputStream(new File(RUTA_ARCHIVO+"\\PartidosCurrent.xls"));
+				
+				workbook.write(out);
+			    out.close();
+			    System.out.println("Excel written successfully..");
+			    
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+		    } catch (IOException e1) {
+			    e1.printStackTrace();
+			}
+		    
+		    
+		    
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}
