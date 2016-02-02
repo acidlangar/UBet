@@ -12,7 +12,9 @@ import javax.mail.internet.MimeMessage;
 
 import java.util.Scanner;
 
-	    	
+	    
+
+
 	
 public class MainSendMail {	
 	
@@ -20,7 +22,7 @@ public class MainSendMail {
 	private Properties properties;
     private Session session;
 
-    private void init() throws IOException {
+    public void init() throws IOException {
     	properties = new Properties();
        
     	ConfigProperties config = new ConfigProperties();
@@ -35,12 +37,12 @@ public class MainSendMail {
     	return this.properties;
     }
     
-    public void send(String destino,String asunto, String mensaje) {
+    public void send(String asunto, String mensaje) {
         
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress((String) properties.get("mail.smtp.mail.sender")));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(destino));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress((String) properties.get("mail.smtp.mail.to")));
             message.setSubject(asunto);
             message.setText(mensaje);
             Transport t = session.getTransport("smtp");
@@ -118,7 +120,7 @@ public class MainSendMail {
 		System.out.println("Con " + (String) main.getProp().get("mail.smtp.user") + "... a " + destino + " con contenido :: " + contenido);
 		
 		
-		main.send(destino, asunto, contenido);
+		main.send(asunto, contenido);
 		
 		
 		in.close();

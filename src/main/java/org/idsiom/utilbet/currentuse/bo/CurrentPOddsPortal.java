@@ -1,6 +1,7 @@
 package org.idsiom.utilbet.currentuse.bo;
 
 import java.io.Serializable;
+import static org.idsiom.utilbet.currentuse.constantes.ConstantesCurrent.MINS_PROXIMIDAD;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,14 +59,21 @@ public class CurrentPOddsPortal implements Serializable {
 	}
 	
 	public Long getFechaLong() {
-		SimpleDateFormat formatter = new SimpleDateFormat("dd MMM YYYY HH:mm", new Locale("en", "EN"));
+		SimpleDateFormat formatter = new SimpleDateFormat("YYYYMMdd HH:mm", new Locale("en", "EN"));
 		
 		try {
-
-            Date date = (Date) formatter.parse(fecha);
-            
-            return date.getTime();
-
+            // En caso que la fecha no cumple con el formato, lo mas probable es que el juego está 
+			// en curso, con una fecha como la siguiente: "20160202 73'"
+			if(fecha.length() != 14) {
+				// Si no cumple el formato, se devuelve un Long que asegure que no se tome en cuenta el juego
+				return (new Date()).getTime() + (3*MINS_PROXIMIDAD * 60 * 1000);
+			} else {
+				// En caso de cumplir el formato, se convierte la fecha y se devuelve la misma
+				Date date = (Date) formatter.parse(fecha);
+	            
+	            return date.getTime();
+			}
+			
         } catch (ParseException e) {
         	logger.error(e,e);
         	return null;

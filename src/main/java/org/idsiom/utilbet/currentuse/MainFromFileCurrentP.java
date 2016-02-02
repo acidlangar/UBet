@@ -18,7 +18,9 @@ import org.idsiom.utilbet.currentuse.interlocutor.OddsPortalInterCurrentUseImpl;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.idsiom.utilbet.history.fromoddsportal.Cons;
+import org.idsiom.utilbet.mail.pruebas.MainSendMail;
 
+import static org.idsiom.utilbet.currentuse.constantes.ConstantesCurrent.MINS_PROXIMIDAD;
 
 public class MainFromFileCurrentP {
 
@@ -116,7 +118,37 @@ public class MainFromFileCurrentP {
 	}
 
 	private static void notificar(List<CurrentPOddsPortal> listPNotificar) {
-		// TODO Auto-generated method stub
+		MainSendMail senderMail = new MainSendMail();
+		try {
+			senderMail.init();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return;
+		}
+		
+		
+		String mensaje;
+		
+		StringBuffer sb = new StringBuffer(512);
+		
+		for(CurrentPOddsPortal p : listPNotificar) {
+			sb.append(p.getFecha());
+			sb.append("   ");
+			sb.append(p.getCountry());
+			sb.append("   ");
+			sb.append(p.getLeague());
+			sb.append("   ");
+			sb.append(p.getEquipos());
+			sb.append("\n\n");
+		}
+		
+		
+		mensaje = sb.toString();
+		sb = null;
+		
+		
+		senderMail.send("Proximos Partidos " + listPNotificar.size(), mensaje);
 		
 	}
 
@@ -148,7 +180,7 @@ public class MainFromFileCurrentP {
 		Long esteMomento = new Date().getTime();
 		
 		if( esteMomento < p.getFechaLong() ) {
-			if((p.getFechaLong() - esteMomento) < 20*60*1000 ) {
+			if((p.getFechaLong() - esteMomento) < MINS_PROXIMIDAD*60*1000 ) {
 				return true;
 			}
 		}
