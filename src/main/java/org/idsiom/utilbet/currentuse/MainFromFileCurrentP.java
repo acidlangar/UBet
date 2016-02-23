@@ -38,8 +38,8 @@ public class MainFromFileCurrentP {
 	public static void main(String[] args) {
 		DOMConfigurator.configure("./src/main/java/conf/log4j-config.xml");
 
-		//IOddsPortalCurrentUseInterlocutor interlocutor = new OddsPortalInterCurrentUseImpl();
-		IOddsPortalCurrentUseInterlocutor interlocutor = new InterlocutorPruebaProximosJuegosImpl();
+	    IOddsPortalCurrentUseInterlocutor interlocutor = new OddsPortalInterCurrentUseImpl();
+		//IOddsPortalCurrentUseInterlocutor interlocutor = new InterlocutorPruebaProximosJuegosImpl();
 		Boolean seguir = true;
 
 		while (seguir) {
