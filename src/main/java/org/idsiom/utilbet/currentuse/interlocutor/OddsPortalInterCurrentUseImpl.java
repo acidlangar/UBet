@@ -149,7 +149,12 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 	
 	private List<CurrentPOddsPortal> getPs(String fechaStr, String urlDay, Boolean makePause) throws Exception {
 		
-		this.driver.get(urlDay);
+		try {
+			this.driver.get(urlDay);
+		} catch(org.openqa.selenium.UnhandledAlertException ex) {
+			System.out.println("Se detecto una Alerta inesperda, se ignorara. - Detalle :: " + ex.getAlertText());
+		}  
+		
 		
 		if(makePause) {
 			System.out.println("Pulse 1 despues de cargada la pagina, y los partidos");
@@ -185,10 +190,6 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 				String aux = tr.getText().trim();
 				String array[] = aux.split("\n»\n");
 				
-				/*
-				tituloAs = tr.findElements(By.tagName("a"));
-				System.out.println( "size = " + tituloAs.size() );
-				*/
 				if( array.length >= 2 ) {
 					pais = array[0].trim();
 					liga = array[1].trim();
@@ -211,7 +212,6 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 				
 				bo.setCountry(pais);
 				bo.setLeague(liga);
-				//bo.setFecha(fechaStr);
 				
 				if(listTDs.size() == 6) {  // Juego planificado
 					bo.setFecha( fechaStr + " " + listTDs.get(0).getText() );
@@ -242,8 +242,8 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 				}
 				
 				partidosResult.add(bo);
-				logger.info("Es un JUEGO y tiene : " + listTDs.size() + " :: bo = " + bo.toString());
-				
+				logger.debug("Es un JUEGO y tiene : " + listTDs.size() + " :: bo = " + bo.toString());
+				logger.info(".");
 			}
 		}
 		

@@ -1,4 +1,4 @@
-package org.idsiom.utilbet.currentuse.bo;
+package  org.idsiom.utilbet.currentuse.bo;
 
 import java.io.Serializable;
 import java.util.ArrayList;

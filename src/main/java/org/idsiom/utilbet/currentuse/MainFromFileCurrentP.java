@@ -7,13 +7,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
 import org.idsiom.utilbet.currentuse.interlocutor.IOddsPortalCurrentUseInterlocutor;
+import org.idsiom.utilbet.currentuse.interlocutor.InterlocutorPruebaProximosJuegosImpl;
 import org.idsiom.utilbet.currentuse.interlocutor.OddsPortalInterCurrentUseImpl;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -34,8 +38,8 @@ public class MainFromFileCurrentP {
 	public static void main(String[] args) {
 		DOMConfigurator.configure("./src/main/java/conf/log4j-config.xml");
 
-		IOddsPortalCurrentUseInterlocutor interlocutor = new OddsPortalInterCurrentUseImpl();
-
+		//IOddsPortalCurrentUseInterlocutor interlocutor = new OddsPortalInterCurrentUseImpl();
+		IOddsPortalCurrentUseInterlocutor interlocutor = new InterlocutorPruebaProximosJuegosImpl();
 		Boolean seguir = true;
 
 		while (seguir) {
@@ -73,7 +77,10 @@ public class MainFromFileCurrentP {
 					
 					List<CurrentPOddsPortal> listPNotificar = validarSeguimiento( lNews );
 					if(listPNotificar.size() > 0) {
+						System.out.println("Entre a la parte de notificar");
 						notificar( listPNotificar );
+					} else {
+						System.out.println("La validacion de notificacion no se ejecuto");
 					}
 						
 					ObjectOutputStream oos = new ObjectOutputStream(
@@ -159,7 +166,13 @@ public class MainFromFileCurrentP {
 		Boolean existeProximo = false;
 		
 		for(CurrentPOddsPortal p : proxPartidos) {
+			System.out.println(p);
+			System.out.println(p.getType());
+			
 			if(p.getType() == Cons.tipoToSeguir) {
+				
+				System.out.println("empiezaEnProxMins(p) = " + empiezaEnProxMins(p));
+				
 				if(empiezaEnProxMins(p)) {
 					existeProximo = true;
 				}
@@ -177,13 +190,27 @@ public class MainFromFileCurrentP {
 
 	public static boolean empiezaEnProxMins(CurrentPOddsPortal p) {
 		
-		Long esteMomento = new Date().getTime();
+		Date now = new Date();
+		Long esteMomento = (now).getTime();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
+		
+		String strNow = sdf.format(now.getTime());
+		String strFPartido = p.getFecha();
+		
+		System.out.println("esteMomento " + strNow        + "   " + esteMomento );
+		System.out.println("partido     " + strFPartido   + "   " + p.getFechaLong());
+        System.out.println(" esteMomento < p.getFechaLong() " + (esteMomento < p.getFechaLong()));
 		
 		if( esteMomento < p.getFechaLong() ) {
+			
+			//System.out.println("resta " + (p.getFechaLong() - esteMomento));
+			System.out.println(MINS_PROXIMIDAD*60*1000);
+			
 			if((p.getFechaLong() - esteMomento) < MINS_PROXIMIDAD*60*1000 ) {
 				return true;
 			}
-		}
+		} 
 		
 		
 		return false;

@@ -59,7 +59,7 @@ public class CurrentPOddsPortal implements Serializable {
 	}
 	
 	public Long getFechaLong() {
-		SimpleDateFormat formatter = new SimpleDateFormat("YYYYMMdd HH:mm", new Locale("en", "EN"));
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd HH:mm");
 		
 		try {
             // En caso que la fecha no cumple con el formato, lo mas probable es que el juego está 
@@ -70,7 +70,6 @@ public class CurrentPOddsPortal implements Serializable {
 			} else {
 				// En caso de cumplir el formato, se convierte la fecha y se devuelve la misma
 				Date date = (Date) formatter.parse(fecha);
-	            
 	            return date.getTime();
 			}
 			
