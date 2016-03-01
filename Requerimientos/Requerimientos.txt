@@ -1,0 +1,9 @@
+//----------------------------->>>>>>
+//--- Cambios a nivel de Código
+- Aprovechamiento de tiempo, cómo hacer mejoras del código a medida que al mismo tiempo se está ejecutando el app
+- El tema de la pause, al cargar la historia la necesidad de darle a 1.
+- El tema del 1 al cargar el seguimiento
+- Un mejor excel que haga la lectura y selección más rápido (Filtro de pestañas, lectura de desviación como lo primero, y renombramiento de archivo, y que 
+el excel, la desviación como porcentaje)
+
+
