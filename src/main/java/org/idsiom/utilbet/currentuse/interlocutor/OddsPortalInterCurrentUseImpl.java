@@ -108,7 +108,6 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		
 		
 		List<CurrentPOddsPortal> listAux;
-		int seguirIntAux = 0;
 		Boolean makePause = false;
 		while( gcFDesde.before(gcFHasta) ) {
 			System.out.println( sdf.format(gcFDesde.getTime()) );
@@ -158,9 +157,18 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		
 		if(makePause) {
 			System.out.println("Pulse 1 despues de cargada la pagina, y los partidos");
-			
+			/*
 			Scanner in = new Scanner(System.in);
 			int i = in.nextInt();
+			*/
+			
+			try {
+				Thread.sleep(3000);
+			} catch(Exception ex) { 
+				// Se deja vacio de manera intencional
+			}
+			
+			
 		}
 		
 		
