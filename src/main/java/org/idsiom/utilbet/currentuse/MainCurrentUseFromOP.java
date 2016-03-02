@@ -266,7 +266,10 @@ public class MainCurrentUseFromOP {
 		    
 		    System.out.println("Sos boludo o sos de Racing???????? CIERRA EL ARCHIVO Y PULSA 1...");
 		    
-		    (new Scanner(System.in)).nextInt();
+		    Scanner sAux = new Scanner(System.in);
+		    Integer iAux = sAux.nextInt();
+		    System.out.println("Usted respondio " + iAux);
+		    sAux.close();
 		    
 		    
 			try {
