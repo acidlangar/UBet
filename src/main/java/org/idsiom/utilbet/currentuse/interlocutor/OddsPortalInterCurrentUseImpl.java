@@ -15,9 +15,15 @@ import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
 import org.idsiom.utilbet.history.fromoddsportal.Cons;
 import org.idsiom.utilbet.history.fromoddsportal.UtilSelenium;
 import org.idsiom.utilbet.util.UtilFecha;
+import org.jboss.netty.handler.timeout.TimeoutException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+
+
 
 public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInterlocutor {
 
@@ -58,7 +64,7 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 			System.out.println("buscando :: " + urlBaseInicial);
 			this.driver.get(urlBaseInicial);
 			
-			
+			/*
 			System.out.println("1 para continuar... ");
 	
 			pedirentero = true;
@@ -71,6 +77,7 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 					pedirentero = true;
 				}
 			}
+			*/
 			
 			this.logeadoPorPrimeraVez = true;
 		
@@ -148,19 +155,36 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 	
 	private List<CurrentPOddsPortal> getPs(String fechaStr, String urlDay, Boolean makePause) throws Exception {
 		
+		List<CurrentPOddsPortal> partidosResult = new ArrayList<CurrentPOddsPortal>();
+		
 		try {
 			this.driver.get(urlDay);
 		} catch(org.openqa.selenium.UnhandledAlertException ex) {
 			System.out.println("Se detecto una Alerta inesperda, se ignorara. - Detalle :: " + ex.getAlertText());
+			
 		}  
 		
+	
+		try { 
+			/*
+			 Buscando manejar time for 
+			 <div id="top-right-social-column">
+				<div id="top-right-social-column-child">
+					<div class="g-plusone" data-href="http://www.oddsportal.com/" data-size="medium"></div>
+					<div class="fb-like" data-href="http://www.facebook.com/OddsPortal" data-layout="button_count" data-action="like" data-show-faces="true" data-share="false" style="margin-top:3px;"></div>
+				</div>
+			</div>
 		
+			 */
+			WebElement myDynamicElement = (new WebDriverWait(this.driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.id("top-right-social-column")));
+		} catch(TimeoutException ex) {
+			ex.printStackTrace();
+			
+			return partidosResult;
+		}
+		/*
 		if(makePause) {
 			System.out.println("Pulse 1 despues de cargada la pagina, y los partidos");
-			/*
-			Scanner in = new Scanner(System.in);
-			int i = in.nextInt();
-			*/
 			
 			try {
 				Thread.sleep(3000);
@@ -169,7 +193,7 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 			}
 			
 			
-		}
+		}*/
 		
 		
 		// Todos los tr de la tabla partidos
@@ -182,7 +206,7 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		List<WebElement> listTDs;
 		
 		
-		List<CurrentPOddsPortal> partidosResult = new ArrayList<CurrentPOddsPortal>();
+		
 		
 		String pais = null;
 		String liga = null;
