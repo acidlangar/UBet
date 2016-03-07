@@ -48,7 +48,6 @@ public class Cons {
 		return result;
 	}
 	
-	public static final TipoPartidoPorCuotas tipoToSeguir = TipoPartidoPorCuotas.VISITANTE_PAREJOS;
 	
 	
 }

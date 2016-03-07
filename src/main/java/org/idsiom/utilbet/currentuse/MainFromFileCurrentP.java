@@ -7,24 +7,21 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
 import org.idsiom.utilbet.currentuse.interlocutor.IOddsPortalCurrentUseInterlocutor;
-import org.idsiom.utilbet.currentuse.interlocutor.InterlocutorPruebaProximosJuegosImpl;
 import org.idsiom.utilbet.currentuse.interlocutor.OddsPortalInterCurrentUseImpl;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.idsiom.utilbet.history.fromoddsportal.Cons;
 import org.idsiom.utilbet.mail.pruebas.MainSendMail;
 
-import static org.idsiom.utilbet.currentuse.constantes.ConstantesCurrent.MINS_PROXIMIDAD;
+import static org.idsiom.utilbet.currentuse.constantes.ConstantesCurrent.*;
 
 public class MainFromFileCurrentP {
 
@@ -38,7 +35,7 @@ public class MainFromFileCurrentP {
 	public static void main(String[] args) {
 		DOMConfigurator.configure("./src/main/java/conf/log4j-config.xml");
 
-	    IOddsPortalCurrentUseInterlocutor interlocutor = new OddsPortalInterCurrentUseImpl();
+	    IOddsPortalCurrentUseInterlocutor interlocutor = OddsPortalInterCurrentUseImpl.getInstance();
 		//IOddsPortalCurrentUseInterlocutor interlocutor = new InterlocutorPruebaProximosJuegosImpl();
 		Boolean seguir = true;
 
@@ -155,7 +152,7 @@ public class MainFromFileCurrentP {
 		sb = null;
 		
 		
-		senderMail.send("Proximos Partidos " + listPNotificar.size(), mensaje);
+		senderMail.send("ESTE SI, NEXT GAMES " + listPNotificar.size() + " - " + RESULT_BUSCADO, mensaje);
 		
 	}
 
@@ -169,7 +166,7 @@ public class MainFromFileCurrentP {
 			System.out.println(p);
 			System.out.println(p.getType());
 			
-			if(p.getType() == Cons.tipoToSeguir) {
+			if(p.getType() == TIPO_TO_SEGUIR) {
 				
 				System.out.println("empiezaEnProxMins(p) = " + empiezaEnProxMins(p));
 				

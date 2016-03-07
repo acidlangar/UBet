@@ -1,6 +1,5 @@
 package org.idsiom.utilbet.currentuse.interlocutor;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8,6 +7,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
@@ -19,8 +19,6 @@ import org.jboss.netty.handler.timeout.TimeoutException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 
@@ -31,22 +29,26 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 	
 	private Boolean logeadoPorPrimeraVez;
 	
+	private static OddsPortalInterCurrentUseImpl instance;
 	
+	public static OddsPortalInterCurrentUseImpl getInstance() {
+		if(instance == null) {
+			instance = new OddsPortalInterCurrentUseImpl(); 
+		}
+		
+		return instance;
+	}
 	
-	public OddsPortalInterCurrentUseImpl() {
+	private OddsPortalInterCurrentUseImpl() {
 		this.logeadoPorPrimeraVez = false;
-		this.driver = null;
+		this.driver = UtilSelenium.getInstanciaWD();
 	}
 
 	static Logger logger = Logger.getLogger(OddsPortalInterCurrentUseImpl.class);
 	
 	public ListPartidosSerializable getPs(Boolean reutilizarHistoria) throws Exception {
 		String urlBaseInicial = getUrlFinal();
-		boolean pedirentero;
 		
-		if( this.driver == null ) {
-			this.driver = UtilSelenium.getInstanciaWD();
-		}
 			
 		String urlMyMatches = Cons.URL_MYMATCHES_CURRENT; // Guardara el String del URL del dia especifico
 		String fechaDesdeStr;
@@ -59,27 +61,22 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		
 		ListPartidosSerializable resultFinal = new ListPartidosSerializable();
 		in = new Scanner(System.in);
-		if( !this.logeadoPorPrimeraVez ) {
+		if( !logeadoPorPrimeraVez ) {
 		
 			System.out.println("buscando :: " + urlBaseInicial);
-			this.driver.get(urlBaseInicial);
+			driver.get(urlBaseInicial);
 			
-			/*
-			System.out.println("1 para continuar... ");
+			
+			System.out.println("Logee primero en OddsPortal, luego 1 para continuar... ");
 	
-			pedirentero = true;
-			while(pedirentero) {
-				try {
-					in.nextInt();
-					pedirentero = false;
-				} catch(java.util.InputMismatchException emm){
-					System.out.println("Error de ingreso de datos, debe ser cero o uno. Linea 1");
-					pedirentero = true;
-				}
+			try {
+				in.nextInt();
+			} catch(java.util.InputMismatchException emm){
+				System.out.println("Error de ingreso de datos, debe ser cero o uno. Linea 1");
 			}
-			*/
+		
 			
-			this.logeadoPorPrimeraVez = true;
+			logeadoPorPrimeraVez = true;
 		
 		}
 		
@@ -157,14 +154,6 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		
 		List<CurrentPOddsPortal> partidosResult = new ArrayList<CurrentPOddsPortal>();
 		
-		try {
-			this.driver.get(urlDay);
-		} catch(org.openqa.selenium.UnhandledAlertException ex) {
-			System.out.println("Se detecto una Alerta inesperda, se ignorara. - Detalle :: " + ex.getAlertText());
-			
-		}  
-		
-	
 		try { 
 			/*
 			 Buscando manejar time for 
@@ -176,12 +165,33 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 			</div>
 		
 			 */
-			WebElement myDynamicElement = (new WebDriverWait(this.driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.id("top-right-social-column")));
+			//WebElement myDynamicElement = (new WebDriverWait(this.driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.id("top-right-social-column")));
+			
+			System.out.println("this.driver.manage().timeouts().toString() = " + driver.manage().timeouts().toString());
+			
+			try {
+				Thread.sleep(3000);
+			} catch(Exception ex) {
+				// No hacer nada intencional
+			}
+			
+			driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
+			
+			
 		} catch(TimeoutException ex) {
 			ex.printStackTrace();
 			
 			return partidosResult;
 		}
+		
+		
+		try {
+			driver.get(urlDay);
+		} catch(org.openqa.selenium.UnhandledAlertException ex) {
+			System.out.println("Se detecto una Alerta inesperda, se ignorara. - Detalle :: " + ex.getAlertText());
+			
+		}
+		
 		/*
 		if(makePause) {
 			System.out.println("Pulse 1 despues de cargada la pagina, y los partidos");
@@ -200,7 +210,7 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		String xPathPag = ".//*[@id='table-matches']/*/*/tr";  // .//*[@id='table-matches']/*/*/tr
 		
 		
-		List<WebElement> listTRs = this.driver.findElements(By.xpath(xPathPag));
+		List<WebElement> listTRs = driver.findElements(By.xpath(xPathPag));
 		
 		List<WebElement> listTHs;
 		List<WebElement> listTDs;

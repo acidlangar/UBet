@@ -31,7 +31,7 @@ public class MainCurrentUseFromOP {
 
 	public static void main(String[] args) {
 		DOMConfigurator.configure("./src/main/java/conf/log4j-config.xml");
-		IOddsPortalCurrentUseInterlocutor interlocutor = new OddsPortalInterCurrentUseImpl();
+		IOddsPortalCurrentUseInterlocutor interlocutor = OddsPortalInterCurrentUseImpl.getInstance();
 		ListPartidosSerializable listaPs = new ListPartidosSerializable();
 		
 		
@@ -94,6 +94,11 @@ public class MainCurrentUseFromOP {
 				logger.error("No fue posible crear el archivo srv "+ "/PartidosCurrent.srz",ex);
 			}
 		}
+		
+		System.out.println("  ----------------          >>>>>>>>>>>>>>>      <<<<<<<<<<<<<<<   ------------");
+		System.out.println("  ----------------          >>>>>>>>>>>>>>>   Se inicializará el seguimiento...   <<<<<<<<<<<<<<<   ------------");
+		System.out.println("  ----------------          >>>>>>>>>>>>>>>      <<<<<<<<<<<<<<<   ------------");
+		MainFromFileCurrentP.main(args);
 	}
 
 	public static void writeExcelFile(List<CurrentPOddsPortal> listaPs) {
@@ -261,6 +266,20 @@ public class MainCurrentUseFromOP {
 		    out.close();
 		    System.out.println("Excel written successfully..");
 		     
+		    
+		    workbook.removeSheetAt(11);
+		    workbook.removeSheetAt(10);
+		    workbook.removeSheetAt(9);
+		    workbook.removeSheetAt(8);
+		    
+		    
+		    out = 
+		            new FileOutputStream(new File(RUTA_ARCHIVO+"\\Simple_PartidosCurrent.xls"));
+		    workbook.write(out);
+		    out.close();
+		    System.out.println("Excel written successfully..");
+		    
+		    
 		} catch (FileNotFoundException e) {
 		    e.printStackTrace();
 		    
