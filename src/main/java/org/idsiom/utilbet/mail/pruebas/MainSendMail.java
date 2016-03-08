@@ -10,32 +10,21 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import java.util.Scanner;
-
-	    
-
+import org.idsiom.utilbet.currentuse.util.UtilProperties;
 
 	
 public class MainSendMail {	
 	
 	
+	private UtilProperties utilProperties;
+	private Session session;
 	private Properties properties;
-    private Session session;
-
-    public void init() throws IOException {
-    	properties = new Properties();
-       
-    	ConfigProperties config = new ConfigProperties();
-    	
-		properties = config.getPropValues();
-		
-    	
-    	session = Session.getDefaultInstance(properties);
-    }
-    
-    public Properties getProp() {
-    	return this.properties;
-    }
+	
+	public MainSendMail() throws IOException {
+		utilProperties = UtilProperties.getInstance();
+		this.session = utilProperties.getSession();
+		this.properties = utilProperties.getProp();
+	}
     
     public void send(String asunto, String mensaje) {
         
@@ -68,7 +57,7 @@ public class MainSendMail {
         }
     }
 
-	
+	/*
 	public static void main(String[] args) {
 		String asunto = "CORREO DE PRUEBA";
 		String contenido = "Isaac eres el mejor!!!";
@@ -128,6 +117,6 @@ public class MainSendMail {
 		System.out.println("Bye Bye");
 		
 
-	}
+	}*/
 
 }

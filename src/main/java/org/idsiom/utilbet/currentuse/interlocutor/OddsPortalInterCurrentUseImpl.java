@@ -1,5 +1,6 @@
 package org.idsiom.utilbet.currentuse.interlocutor;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -12,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
 import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
+import org.idsiom.utilbet.currentuse.util.UtilProperties;
 import org.idsiom.utilbet.history.fromoddsportal.Cons;
 import org.idsiom.utilbet.history.fromoddsportal.UtilSelenium;
 import org.idsiom.utilbet.util.UtilFecha;
@@ -27,11 +29,10 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 
 	private WebDriver driver;
 	
-	private Boolean logeadoPorPrimeraVez;
 	
 	private static OddsPortalInterCurrentUseImpl instance;
 	
-	public static OddsPortalInterCurrentUseImpl getInstance() {
+	public static OddsPortalInterCurrentUseImpl getInstance() throws IOException {
 		if(instance == null) {
 			instance = new OddsPortalInterCurrentUseImpl(); 
 		}
@@ -39,15 +40,34 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		return instance;
 	}
 	
-	private OddsPortalInterCurrentUseImpl() {
-		this.logeadoPorPrimeraVez = false;
+	private OddsPortalInterCurrentUseImpl() throws IOException {
 		this.driver = UtilSelenium.getInstanciaWD();
+		
+		String urlBaseInicial = getUrlFinal();
+		System.out.println("buscando :: " + urlBaseInicial);
+		driver.get(urlBaseInicial);
+		
+		UtilProperties utilProperties = UtilProperties.getInstance(); 
+		
+		// Proceder a logear contra OddsPortal
+		// login-username, login-password, button with name = login-submit
+		WebElement loginOddPortal = driver.findElement(By.id("login-username"));
+		System.out.println("Login de Oddsportal :: " + utilProperties.getProp().getProperty("oddsportal.user"));
+		loginOddPortal.sendKeys( utilProperties.getProp().getProperty("oddsportal.user") );
+		
+		WebElement pwdOddPortal = driver.findElement(By.id("login-password"));
+		pwdOddPortal.sendKeys( utilProperties.getProp().getProperty("oddsportal.pwd") );
+		
+		WebElement buttonOddPortal = driver.findElement(By.name("login-submit"));
+		buttonOddPortal.click();
+		
+		
 	}
 
 	static Logger logger = Logger.getLogger(OddsPortalInterCurrentUseImpl.class);
 	
 	public ListPartidosSerializable getPs(Boolean reutilizarHistoria) throws Exception {
-		String urlBaseInicial = getUrlFinal();
+		
 		
 			
 		String urlMyMatches = Cons.URL_MYMATCHES_CURRENT; // Guardara el String del URL del dia especifico
@@ -61,24 +81,7 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		
 		ListPartidosSerializable resultFinal = new ListPartidosSerializable();
 		in = new Scanner(System.in);
-		if( !logeadoPorPrimeraVez ) {
 		
-			System.out.println("buscando :: " + urlBaseInicial);
-			driver.get(urlBaseInicial);
-			
-			
-			System.out.println("Logee primero en OddsPortal, luego 1 para continuar... ");
-	
-			try {
-				in.nextInt();
-			} catch(java.util.InputMismatchException emm){
-				System.out.println("Error de ingreso de datos, debe ser cero o uno. Linea 1");
-			}
-		
-			
-			logeadoPorPrimeraVez = true;
-		
-		}
 		
 		Date date;
 		

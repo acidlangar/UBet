@@ -15,7 +15,9 @@ import java.util.List;
 import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
 import org.idsiom.utilbet.currentuse.interlocutor.IOddsPortalCurrentUseInterlocutor;
+import org.idsiom.utilbet.currentuse.interlocutor.IPyckioInterlocutor;
 import org.idsiom.utilbet.currentuse.interlocutor.OddsPortalInterCurrentUseImpl;
+import org.idsiom.utilbet.currentuse.interlocutor.PickioInterlocutorImpl;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.idsiom.utilbet.history.fromoddsportal.Cons;
@@ -31,11 +33,15 @@ public class MainFromFileCurrentP {
 
 	/**
 	 * @param args
+	 * @throws IOException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		DOMConfigurator.configure("./src/main/java/conf/log4j-config.xml");
 
 	    IOddsPortalCurrentUseInterlocutor interlocutor = OddsPortalInterCurrentUseImpl.getInstance();
+	    IPyckioInterlocutor interlocutorPyckio = PickioInterlocutorImpl.getInstance();
+	    
+	    
 		//IOddsPortalCurrentUseInterlocutor interlocutor = new InterlocutorPruebaProximosJuegosImpl();
 		Boolean seguir = true;
 
@@ -122,9 +128,9 @@ public class MainFromFileCurrentP {
 	}
 
 	private static void notificar(List<CurrentPOddsPortal> listPNotificar) {
-		MainSendMail senderMail = new MainSendMail();
+		MainSendMail senderMail; 
 		try {
-			senderMail.init();
+			senderMail = new MainSendMail();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

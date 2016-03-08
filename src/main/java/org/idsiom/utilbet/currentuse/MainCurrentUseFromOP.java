@@ -29,7 +29,7 @@ public class MainCurrentUseFromOP {
 	
 	public static String RUTA_ARCHIVO = "C:\\DEVTOOLS";
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		DOMConfigurator.configure("./src/main/java/conf/log4j-config.xml");
 		IOddsPortalCurrentUseInterlocutor interlocutor = OddsPortalInterCurrentUseImpl.getInstance();
 		ListPartidosSerializable listaPs = new ListPartidosSerializable();
