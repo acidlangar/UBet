@@ -1,4 +1,10 @@
 //----------------------------->>>>>>
+//--- Nueva Prioridad
+- Hacer que a nivel del Seguimiento, y del paso inicial, se logee automaticamente en ambas paginas. En Pyckio solamente a nivel del Seguimiento.
+
+
+
+//----------------------------->>>>>>
 //--- Cambios a nivel de Código
 - Resolver el tema de que se queda esperando por el facebook
 - Aprovechamiento de tiempo, cómo hacer mejoras del código a medida que al mismo tiempo se está ejecutando el app
