@@ -1,7 +1,9 @@
 //----------------------------->>>>>>
 //--- Nueva Prioridad
-- Hacer que a nivel del Seguimiento, y del paso inicial, se logee automaticamente en ambas paginas. En Pyckio solamente a nivel del Seguimiento.
+- Revisar las aproximaciones del Algoritmo de Distancia de Palabras:
+https://es.wikipedia.org/wiki/Distancia_de_Levenshtein
 
+Buscar en base a las dos listas de partidos, que se asocien por iguales.
 
 
 //----------------------------->>>>>>
