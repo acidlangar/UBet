@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
+import org.idsiom.utilbet.currentuse.bo.ResultadoPartidoBO;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
 import org.idsiom.utilbet.currentuse.interlocutor.IOddsPortalCurrentUseInterlocutor;
 import org.idsiom.utilbet.currentuse.interlocutor.IPyckioInterlocutor;
@@ -20,7 +21,6 @@ import org.idsiom.utilbet.currentuse.interlocutor.OddsPortalInterCurrentUseImpl;
 import org.idsiom.utilbet.currentuse.interlocutor.PickioInterlocutorImpl;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.idsiom.utilbet.history.fromoddsportal.Cons;
 import org.idsiom.utilbet.mail.pruebas.MainSendMail;
 
 import static org.idsiom.utilbet.currentuse.constantes.ConstantesCurrent.*;
@@ -30,6 +30,8 @@ public class MainFromFileCurrentP {
 	static Logger logger = Logger.getLogger(MainFromFileCurrentP.class);
 
 	public static String RUTA_ARCHIVO = "C:\\DEVTOOLS";
+	
+	private static IPyckioInterlocutor interlocutorPyckio;
 
 	/**
 	 * @param args
@@ -39,7 +41,7 @@ public class MainFromFileCurrentP {
 		DOMConfigurator.configure("./src/main/java/conf/log4j-config.xml");
 
 	    IOddsPortalCurrentUseInterlocutor interlocutor = OddsPortalInterCurrentUseImpl.getInstance();
-	    IPyckioInterlocutor interlocutorPyckio = PickioInterlocutorImpl.getInstance();
+	    interlocutorPyckio = PickioInterlocutorImpl.getInstance();
 	    
 	    
 		//IOddsPortalCurrentUseInterlocutor interlocutor = new InterlocutorPruebaProximosJuegosImpl();
@@ -80,6 +82,8 @@ public class MainFromFileCurrentP {
 					
 					List<CurrentPOddsPortal> listPNotificar = validarSeguimiento( lNews );
 					if(listPNotificar.size() > 0) {
+						prepararPycks(listPNotificar);
+						
 						System.out.println("Entre a la parte de notificar");
 						notificar( listPNotificar );
 					} else {
@@ -125,6 +129,19 @@ public class MainFromFileCurrentP {
 
 		}
 
+	}
+
+	private static void prepararPycks(List<CurrentPOddsPortal> listPNotificar) {
+		// TODO Auto-generated method stub
+		//interlocutorPyckio
+		
+		// Si el partido esta dentro de los proximos 20min, procedemos
+		for(CurrentPOddsPortal pOP : listPNotificar) { 
+			if(empiezaEnProxMins(pOP)) {
+				interlocutorPyckio.montarPick(pOP,ResultadoPartidoBO.LOCAL,3);
+			}
+		}
+		
 	}
 
 	private static void notificar(List<CurrentPOddsPortal> listPNotificar) {

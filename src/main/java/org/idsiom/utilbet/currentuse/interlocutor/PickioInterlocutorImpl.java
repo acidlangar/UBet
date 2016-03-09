@@ -1,7 +1,11 @@
 package org.idsiom.utilbet.currentuse.interlocutor;
 
 import java.io.IOException;
+import java.util.List;
 
+import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
+import org.idsiom.utilbet.currentuse.bo.PartidoPyckioBO;
+import org.idsiom.utilbet.currentuse.bo.ResultadoPartidoBO;
 import org.idsiom.utilbet.currentuse.util.UtilProperties;
 import org.idsiom.utilbet.history.fromoddsportal.UtilSelenium;
 import org.openqa.selenium.By;
@@ -53,6 +57,16 @@ id pwd
 
 btn-signin
 		 */
+	}
+
+	public void montarPick(CurrentPOddsPortal pOP, ResultadoPartidoBO local, int i) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public List<PartidoPyckioBO> getPartidosPorHora(Long momento) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
