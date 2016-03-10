@@ -1,6 +1,7 @@
 package org.idsiom.utilbet.currentuse.interlocutor;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
@@ -33,6 +34,14 @@ public class PickioInterlocutorImpl implements IPyckioInterlocutor {
 		driver.get(PAGE_SIGNIN_PYCKIO);
 		
 		UtilProperties utilProperties = UtilProperties.getInstance(); 
+	
+		//
+		// Aceptar cookies
+		WebElement buttonCookies = driver.findElement(By.className("cookiesplease-accept"));
+		if(buttonCookies != null) {
+			buttonCookies.click();
+		}
+		
 		
 		// Proceder a logear contra Pyckio
 		// 
@@ -65,8 +74,60 @@ btn-signin
 	}
 
 	public List<PartidoPyckioBO> getPartidosPorHora(Long momento) {
-		// TODO Auto-generated method stub
-		return null;
+		List<PartidoPyckioBO> listPartidos = new ArrayList<PartidoPyckioBO>();
+		
+		System.out.println("Inicio del Metodo");
+		
+		// click on js-todaygames 
+		/*WebElement weTodayGames = this.driver.findElement(By.className("js-todaygames"));
+		
+		System.out.println("weTodayGames=" + weTodayGames.getText());
+		
+		weTodayGames.click();
+		
+		*/
+		
+		driver.get("https://pyckio.com/i/#!home/todaygames");
+		
+		
+		
+		//String xPathPag = "id('mytimeline')/x:div/x:div[2]/x:div/x:table/x:tbody/x:tr[td[2]/img[@data-original-title='soccer']]"; //  id('mytimeline')/x:div/x:div[2]/x:div/x:table/x:tbody/x:tr[td[2]/img[@data-original-title='soccer']]
+		String xPathPag = ".//*[@id='mytimeline']/div/div[2]/div/table/tbody/tr[td[2]/img[@data-original-title='soccer']]"; 
+		//String xPathPag = ".//*[@id='mytimeline']";
+		
+		try {
+			Thread.sleep(6000);
+		} catch(Exception ex) {
+			
+		}
+		
+		System.out.println("Justo antes de la llamada xPath");
+		
+		//System.out.println( this.driver.findElement(By.xpath(xPathPag)).getText()  );
+		
+		
+		List<WebElement> listTRs = this.driver.findElements(By.xpath(xPathPag));
+		System.out.println("paso ");
+		
+		List<WebElement> listTDs;
+		
+		
+		for(WebElement tr : listTRs) {
+			System.out.println("__________>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " );
+			System.out.println("__________ " );
+			System.out.println("__________ " );
+			listTDs = tr.findElements(By.tagName("td"));
+			
+			System.out.println("fecha :: " + listTDs.get(0).getText());
+			System.out.println("Pais :: " + listTDs.get(2).getText());
+			System.out.println("liga :: " + listTDs.get(3).getText());
+			System.out.println("Equipos :: " + listTDs.get(4).getText());
+			
+		}
+		
+		System.out.println("Fin del Metodo");
+		
+		return listPartidos;
 	}
 
 }
