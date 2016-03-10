@@ -1,10 +1,5 @@
 package org.idsiom.utilbet.currentuse.bo;
 
-import static org.idsiom.utilbet.currentuse.constantes.ConstantesCurrent.MINS_PROXIMIDAD;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class PartidoPyckioBO {
      private String fechaStr;
@@ -91,7 +86,28 @@ public class PartidoPyckioBO {
 		this.equipoVisitante = equipoVisitante;
 	}
      
-     
+	@Override
+    public String toString() {
+		String result;
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("<fecha = ");
+		sb.append(this.fechaStr);
+		sb.append(", pais = ");
+		sb.append(this.pais);
+		sb.append(", liga = ");
+		sb.append(this.liga);
+		sb.append(", EqLocal = ");
+		sb.append(this.equipoLocal);
+		sb.append(", EqVisitante = ");
+		sb.append(this.equipoVisitante);
+		sb.append(">");
+		
+		result = sb.toString();
+		sb = null;
+		
+		return result;
+    }
      
      
      

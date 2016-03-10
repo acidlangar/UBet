@@ -101,15 +101,11 @@ btn-signin
 			
 		}
 		
-		System.out.println("Justo antes de la llamada xPath");
-		
-		//System.out.println( this.driver.findElement(By.xpath(xPathPag)).getText()  );
-		
-		
 		List<WebElement> listTRs = this.driver.findElements(By.xpath(xPathPag));
 		System.out.println("paso ");
 		
 		List<WebElement> listTDs;
+		PartidoPyckioBO p;
 		
 		
 		for(WebElement tr : listTRs) {
@@ -118,14 +114,17 @@ btn-signin
 			System.out.println("__________ " );
 			listTDs = tr.findElements(By.tagName("td"));
 			
-			System.out.println("fecha :: " + listTDs.get(0).getText());
-			System.out.println("Pais :: " + listTDs.get(2).getText());
-			System.out.println("liga :: " + listTDs.get(3).getText());
-			System.out.println("Equipos :: " + listTDs.get(4).getText());
+			String equipos = listTDs.get(4).getText();
+			p = new PartidoPyckioBO();
 			
+			p.setFechaStr(listTDs.get(0).getText());
+			p.setPais( listTDs.get(2).findElement(By.tagName("img")).getAttribute("alt") );
+			p.setLiga(listTDs.get(3).getText());
+			p.setEquipoLocal( equipos.split("-")[0].trim() );
+			p.setEquipoVisitante( equipos.split("-")[1].trim() );
+			
+			listPartidos.add(p);
 		}
-		
-		System.out.println("Fin del Metodo");
 		
 		return listPartidos;
 	}
