@@ -3,7 +3,7 @@ package org.idsiom.utilbet.currentuse.constantes;
 import org.idsiom.utilbet.currentuse.bo.TipoPartidoPorCuotas;
 
 public class ConstantesCurrent {
-	public final static int MINS_PROXIMIDAD = 20; 
+	public final static int MINS_PROXIMIDAD = 60; 
 	
 	public static final TipoPartidoPorCuotas TIPO_TO_SEGUIR = TipoPartidoPorCuotas.LOCAL_PAREJOS_2;
 

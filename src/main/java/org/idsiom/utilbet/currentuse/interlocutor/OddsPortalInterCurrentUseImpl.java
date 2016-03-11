@@ -66,6 +66,10 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 
 	static Logger logger = Logger.getLogger(OddsPortalInterCurrentUseImpl.class);
 	
+	/*
+	 * Si el boolean es true, la fecha desde es hoy, en caso contrario la que indique el usuario
+	 * @see org.idsiom.utilbet.currentuse.interlocutor.IOddsPortalCurrentUseInterlocutor#getPs(java.lang.Boolean)
+	 */
 	public ListPartidosSerializable getPs(Boolean reutilizarHistoria) throws Exception {
 		
 		
@@ -100,7 +104,7 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		date = UtilFecha.sumarRestarDiasFecha(new Date(), 2);
 		
 		gcFHasta = new GregorianCalendar();
-		gcFHasta.setTime(date);
+		//gcFHasta.setTime(date);
 		
 		
 		System.out.println( "fechaDesde: " + sdf.format(gcFDesde.getTime()) );
@@ -227,9 +231,7 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		
 		for(WebElement tr : listTRs) {
 			listTHs = tr.findElements(By.tagName("th"));
-			System.out.println(" ");
 			if(listTHs != null && listTHs.size() > 0) {
-				logger.info("Es un TITULO y tiene : " + listTHs.size() + "   ::  " + tr.getText());
 				
 				//  
 				String aux = tr.getText().trim();
@@ -250,8 +252,6 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 				
 			} else {
 				listTDs = tr.findElements(By.tagName("td"));
-				System.out.println("Es un JUEGO y tiene : " + listTDs.size());
-				System.out.println(tr.getText());
 				
 				bo = new CurrentPOddsPortal();
 				
@@ -287,8 +287,6 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 				}
 				
 				partidosResult.add(bo);
-				logger.debug("Es un JUEGO y tiene : " + listTDs.size() + " :: bo = " + bo.toString());
-				logger.info(".");
 			}
 		}
 		
