@@ -1,8 +1,11 @@
 package org.idsiom.utilbet.currentuse.bo;
 
+import java.io.Serializable;
 
-public class PartidoPyckioBO {
-     private String fechaStr;
+public class PartidoPyckioBO implements Serializable {
+    private static final long serialVersionUID = 6171090211553693547L;
+
+	private String fechaStr;
      
      private String deporte;
      
