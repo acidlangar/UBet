@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
@@ -23,6 +24,31 @@ import org.junit.Test;
 
 public class TestInterlocutorPyckio {
 
+	public void testCompareFehas() {
+		System.out.println("Inicio de prueba");
+		try {
+			
+		
+		CurrentPOddsPortal p = new CurrentPOddsPortal();
+		p.setFecha("20160312 21:38");
+		System.out.println(p.getFecha() + " RESP FINAL  " + String.valueOf(empiezaEnProxMins(p)).toUpperCase());
+		
+		
+		p.setFecha("20160312 21:45");
+		System.out.println(p.getFecha() + " RESP FINAL  " + String.valueOf(empiezaEnProxMins(p)).toUpperCase());
+		
+		p.setFecha("20160312 22:45");
+		System.out.println(p.getFecha() + " RESP FINAL  " + String.valueOf(empiezaEnProxMins(p)).toUpperCase());
+		
+		p.setFecha("20160312 23:45");
+		System.out.println(p.getFecha() + " RESP FINAL  " + String.valueOf(empiezaEnProxMins(p)).toUpperCase());
+		
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	
 	@Test
 	public void testProxPartidos() throws Exception {
 		Boolean useSerializables = false;
@@ -37,9 +63,9 @@ public class TestInterlocutorPyckio {
 		List<CurrentPOddsPortal> listOP;
 		
 		if(!useSerializables) {
-			PickioInterlocutorImpl inter =  PickioInterlocutorImpl.getInstance();
+			/*PickioInterlocutorImpl inter =  PickioInterlocutorImpl.getInstance();
 			list = inter.getPartidosPorHora(0L);
-			
+			*/
 			OddsPortalInterCurrentUseImpl interOP = OddsPortalInterCurrentUseImpl.getInstance();
 			ListPartidosSerializable listSer = interOP.getPs(true);
 			
@@ -61,7 +87,7 @@ public class TestInterlocutorPyckio {
 			System.out.println("qq[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[-------------   " + listSer_2.getListaPsHoyFuturo().size());
 			
 			ListPartidosSerializablePyckio listPIO = new ListPartidosSerializablePyckio();
-			listPIO.setPartidos(list);
+			//listPIO.setPartidos(list);
 			guardarSerializadoP(listPIO);
 			
 		} else {
@@ -70,6 +96,7 @@ public class TestInterlocutorPyckio {
 			
 		}
 		
+		/*
 	 	System.out.println("LISTA PYCKIO " + list.size());
 		for(PartidoPyckioBO p : list) {
 			System.out.println("__________>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " );
@@ -79,7 +106,7 @@ public class TestInterlocutorPyckio {
 			System.out.println(" " );
 			
 		}
-		
+		*/
 		System.out.println("LISTA ODDSPORTAL " + listOP.size());
 		for(CurrentPOddsPortal pop : listOP) {
 			System.out.println( pop.toString()  );
@@ -108,25 +135,22 @@ public class TestInterlocutorPyckio {
 
 	public static boolean empiezaEnProxMins(CurrentPOddsPortal p) {
 		
-		Date now = new Date();
-		Long esteMomento = (now).getTime();
+		GregorianCalendar now = new GregorianCalendar();
+		GregorianCalendar momentoHasta = new GregorianCalendar();
 
+		momentoHasta.add(GregorianCalendar.MINUTE, MINS_PROXIMIDAD);
+		
+		/*
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
+		System.out.println("  --------------->>>>>>>>>>> ");
+		System.out.println("partidoFecha     " + sdf.format( p.getFechaGC().getTime() ));
+        System.out.println("Momento Desde :: " + sdf.format(now.getTime())  + " ;   Momento Hasta :: " + sdf.format(momentoHasta.getTime()) );
+        System.out.println("C1 :: " + now.before(p.getFechaGC()) );
+        System.out.println("C2 :: " + p.getFechaGC().before(momentoHasta) );
+        System.out.println("  --->>>>>>>>>>> ");
+		*/
 		
-		String strNow = sdf.format(now.getTime());
-		String strFPartido = p.getFecha();
-		
-		System.out.println("   ");
-		System.out.println("   ");
-		System.out.println("esteMomento " + strNow        + "   " + esteMomento );
-		System.out.println("partido     " + strFPartido   + "   " + p.getFechaLong());
-        System.out.println(" esteMomento < p.getFechaLong() " + (esteMomento < p.getFechaLong()));
-        System.out.println("esteMomento + (MINS_PROXIMIDAD*60*1000) = " + (esteMomento + (MINS_PROXIMIDAD*60*1000)) );
-        System.out.println( esteMomento < p.getFechaLong()); 
-        System.out.println(p.getFechaLong()  < esteMomento + (MINS_PROXIMIDAD*60*1000) );
-        
-		
-		if( esteMomento < p.getFechaLong() && (p.getFechaLong()  < esteMomento + (MINS_PROXIMIDAD*60*1000) )) {
+		if( now.before(p.getFechaGC()) && p.getFechaGC().before(momentoHasta)) {
 				return true;
 		} 
 		

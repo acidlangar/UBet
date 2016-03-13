@@ -6,9 +6,11 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+
 
 public class CurrentPOddsPortal implements Serializable {
 	/**
@@ -56,6 +58,32 @@ public class CurrentPOddsPortal implements Serializable {
 
 	public String getFecha() {
 		return fecha;
+	}
+	
+	public GregorianCalendar getFechaGC() {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd HH:mm");
+		GregorianCalendar result = new GregorianCalendar();
+		
+		
+		try {
+            // En caso que la fecha no cumple con el formato, lo mas probable es que el juego está 
+			// en curso, con una fecha como la siguiente: "20160202 73'"
+			if(fecha.length() != 14) {
+				// Si no cumple el formato, se devuelve un Long que asegure que no se tome en cuenta el juego
+				result.setTimeInMillis((new Date()).getTime() + (3*MINS_PROXIMIDAD * 60 * 1000));
+				return result;
+			} else {
+				// En caso de cumplir el formato, se convierte la fecha y se devuelve la misma
+				Date date = (Date) formatter.parse(fecha);
+				result.setTime(date);
+				
+				return result;
+			}
+			
+        } catch (ParseException e) {
+        	logger.error(e,e);
+        	return null;
+        }
 	}
 	
 	public Long getFechaLong() {

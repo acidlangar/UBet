@@ -5,6 +5,9 @@ https://es.wikipedia.org/wiki/Distancia_de_Levenshtein
 
 Buscar en base a las dos listas de partidos, que se asocien por iguales.
 
+http://stackoverflow.com/questions/5709204/random-element-is-no-longer-attached-to-the-dom-staleelementreferenceexception
+
+
 
 //----------------------------->>>>>>
 //--- Cambios a nivel de Código
