@@ -1,6 +1,12 @@
 package org.idsiom.utilbet.currentuse.bo;
 
+import static org.idsiom.utilbet.currentuse.constantes.ConstantesCurrent.MINS_PROXIMIDAD;
+
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class PartidoPyckioBO implements Serializable {
     private static final long serialVersionUID = 6171090211553693547L;
@@ -111,6 +117,38 @@ public class PartidoPyckioBO implements Serializable {
 		
 		return result;
     }
+
+	public GregorianCalendar getFechaGC() {
+		//SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd HH:mm");
+		//EEEE MMMM d HH:mm:ss z yyyy
+		//15 Mar 14:30
+		SimpleDateFormat formatter = new SimpleDateFormat("dd MMM HH:mm");
+		GregorianCalendar result = new GregorianCalendar();
+		
+		
+		try {
+            // En caso que la fecha no cumple con el formato, lo mas probable es que el juego está 
+			// en curso, con una fecha como la siguiente: "20160202 73'"
+			if(fechaStr.length() != 12) {
+				// Si no cumple el formato, se devuelve un Long que asegure que no se tome en cuenta el juego
+				result.setTimeInMillis((new Date()).getTime() + (3*MINS_PROXIMIDAD * 60 * 1000));
+				return result;
+			} else {
+				// En caso de cumplir el formato, se convierte la fecha y se devuelve la misma
+				Date date = (Date) formatter.parse(fechaStr);
+				
+				result.setTime(date);
+				result.set(GregorianCalendar.YEAR, (new GregorianCalendar()).get(GregorianCalendar.YEAR));
+				
+				return result;
+			}
+			
+        } catch (ParseException e) {
+        	//logger.error(e,e);
+        	e.printStackTrace();
+        	return null;
+        }
+	}
      
      
      

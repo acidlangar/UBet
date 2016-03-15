@@ -23,7 +23,7 @@ import org.idsiom.utilbet.currentuse.interlocutor.PickioInterlocutorImpl;
 public class MainTest {
 
 	public static void main(String[] args) {
-		Boolean useSerializables = false;
+		Boolean useSerializables = true;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
 		Date now = new Date();
 		Long esteMomento = (now).getTime();
@@ -100,13 +100,52 @@ public class MainTest {
 			}
 
 			System.out.println("LISTA ODDSPORTAL " + listOP.size());
+			PartidoPyckioBO pEquivalente;
 			for (CurrentPOddsPortal pop : listOP) {
-				System.out.println(pop.toString());
+				System.out.println("ODDSPORTAL = " + pop.toString());
+				
+				pEquivalente = findTraduction( list, pop );
+				System.out.println("      EQUIVALENTE PYCKIO = " + pEquivalente);
 			}
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	private static PartidoPyckioBO findTraduction(List<PartidoPyckioBO> list,
+			CurrentPOddsPortal pop) {
+		
+		List<PartidoPyckioBO> listHora_Pais = filtrarPorHora_Pais( list, pop );
+		
+		
+		if(listHora_Pais.size() == 1) {
+			return listHora_Pais.get(0);
+		} 
+		
+		return null;
+	}
+
+	private static List<PartidoPyckioBO> filtrarPorHora_Pais(
+			List<PartidoPyckioBO> list, CurrentPOddsPortal pop) {
+		List<PartidoPyckioBO> listHora_Pais = new ArrayList<PartidoPyckioBO>();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
+		String fechaOP;
+		String fechaPIO;
+		
+		for(PartidoPyckioBO ppio : list) {
+			fechaOP = sdf.format(pop.getFechaGC().getTime());
+			fechaPIO = sdf.format(ppio.getFechaGC().getTime());
+			System.out.println("op = " + fechaOP + "   ppio = " + fechaPIO + "  ppio : " + ppio.getPais());
+			
+			if(fechaOP.equals(fechaPIO) && pop.getCountry().equals( ppio.getPais() )) {
+				listHora_Pais.add(ppio);
+				System.out.println("Eureka!!");
+			}
+		}
+		
+		return listHora_Pais;
 	}
 
 	private static List<CurrentPOddsPortal> validarSeguimiento(ListPartidosSerializable lNews) {
