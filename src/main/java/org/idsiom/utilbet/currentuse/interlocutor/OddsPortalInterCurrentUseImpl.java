@@ -202,7 +202,9 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 
 							if (listTHs != null && listTHs.size() > 0) {
 
-								//
+								liga = null;
+								pais = null;
+
 								String aux = tr.getText().trim();
 								
 								System.out.println("<<<<<<<<<<<<<<<<<<<<<<         aux :: " + aux);

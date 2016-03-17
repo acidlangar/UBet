@@ -9,6 +9,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -121,7 +123,7 @@ public class MainTest {
 
 	private static PartidoPyckioBO findTraduction(List<PartidoPyckioBO> list,
 			CurrentPOddsPortal pop) {
-		
+		PartidoPyckioBO result = null;
 		List<PartidoPyckioBO> listHora_Pais = filtrarPorHora_Pais( list, pop );
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
@@ -138,11 +140,30 @@ public class MainTest {
 			if( pio.getEquipoLocal().trim().equals(pop.getEquipoLocal().trim())
 					|| pio.getEquipoVisitante().trim().equals(pop.getEquipoVisitante().trim())
 					) {
-				return pio;
+				result = pio;
 			}
 		}
 		
-		return null;
+		
+		if( listHora_Pais.size() > 0 && result == null ) {
+			// Obtener el más parecido
+			result = obtenerElMasParecido(listHora_Pais, pop);
+		}
+		
+		
+		return result;
+	}
+
+	private static PartidoPyckioBO obtenerElMasParecido(
+			List<PartidoPyckioBO> listHora_Pais, CurrentPOddsPortal pop) {
+
+		for(PartidoPyckioBO ppio : listHora_Pais) {
+			ppio.calValDistancia(pop);
+		}
+		
+		Collections.sort(listHora_Pais);
+		
+		return listHora_Pais.get(0);
 	}
 
 	private static List<PartidoPyckioBO> filtrarPorHora_Pais(

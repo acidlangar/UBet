@@ -8,7 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class PartidoPyckioBO implements Serializable {
+import org.idsiom.utilbet.currentuse.util.LevenshteinDistance;
+
+public class PartidoPyckioBO implements Serializable, Comparable<PartidoPyckioBO> {
     private static final long serialVersionUID = 6171090211553693547L;
 
 	private String fechaStr;
@@ -22,6 +24,8 @@ public class PartidoPyckioBO implements Serializable {
      private String equipoLocal;
      
      private String equipoVisitante;
+     
+     private Integer valueDist;
      
      /*
      public Long getFechaLong() {
@@ -94,7 +98,15 @@ public class PartidoPyckioBO implements Serializable {
 	public void setEquipoVisitante(String equipoVisitante) {
 		this.equipoVisitante = equipoVisitante;
 	}
-     
+	
+	public Integer getValueDist() {
+		return valueDist;
+	}
+
+	public void setValueDist(Integer valueDist) {
+		this.valueDist = valueDist;
+	}
+
 	@Override
     public String toString() {
 		String result;
@@ -148,6 +160,26 @@ public class PartidoPyckioBO implements Serializable {
         	e.printStackTrace();
         	return null;
         }
+	}
+
+	public int compareTo(PartidoPyckioBO arg0) {
+		
+		int otherVal = arg0.getValueDist();
+		
+		//ascending order
+		return this.valueDist - otherVal;
+		
+		//descending order
+		//return otherVal - this.valueDist;
+	}
+
+	public void calValDistancia(CurrentPOddsPortal pop) {
+		int distanciaLocal, distanciaVisitante;
+		
+		distanciaLocal = LevenshteinDistance.computeLevenshteinDistance(this.equipoLocal.trim(), pop.getEquipoLocal().trim());
+		distanciaVisitante = LevenshteinDistance.computeLevenshteinDistance(this.equipoVisitante.trim(), pop.getEquipoVisitante().trim());
+		
+		this.valueDist = distanciaLocal + distanciaVisitante;
 	}
      
      
