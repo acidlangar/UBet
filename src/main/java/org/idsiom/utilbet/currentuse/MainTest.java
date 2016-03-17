@@ -75,10 +75,12 @@ public class MainTest {
 				listSer_2.setListaPsHoyFuturo(listOP);
 				guardarSerializadoOP(listSer);
 
+				/*
 				System.out.println(
 						"qq[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[-------------   "
 								+ listSer_2.getListaPsHoyFuturo().size());
-
+				 */
+				
 				ListPartidosSerializablePyckio listPIO = new ListPartidosSerializablePyckio();
 				listPIO.setPartidos(list);
 				guardarSerializadoP(listPIO);
@@ -105,7 +107,11 @@ public class MainTest {
 				System.out.println("ODDSPORTAL = " + pop.toString());
 				
 				pEquivalente = findTraduction( list, pop );
-				System.out.println("      EQUIVALENTE PYCKIO = " + pEquivalente);
+				System.out.println("       " );
+				System.out.println("     *******     ******   EQUIVALENTE PYCKIO = " + pEquivalente);
+				System.out.println("       " );
+				System.out.println("       " );
+				System.out.println("       " );
 			}
 
 		} catch (Exception ex) {
@@ -119,17 +125,19 @@ public class MainTest {
 		List<PartidoPyckioBO> listHora_Pais = filtrarPorHora_Pais( list, pop );
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
-		String fechaOP;
-		String fechaPIO;
+		//String fechaOP;
+		//String fechaPIO;
 		
-		System.out.println(pop);
-		System.out.println("oddsPortal LOCAL = " + pop.getEquipoLocal());
+		//System.out.println(pop);
+		//System.out.println("oddsPortal LOCAL = " + pop.getEquipoLocal());
 		
 		for(PartidoPyckioBO pio : listHora_Pais) {
-			fechaOP = sdf.format(pop.getFechaGC().getTime());
-			fechaPIO = sdf.format(pio.getFechaGC().getTime());
-			System.out.println("op = " + fechaOP + "   ppio = " + fechaPIO + "  ppio : " + pio.getPais() + "   Local = " + pio.getEquipoLocal() );
-			if( pio.getEquipoLocal().trim().equals(pop.getEquipoLocal().trim()) ) {
+			//fechaOP = sdf.format(pop.getFechaGC().getTime());
+			//fechaPIO = sdf.format(pio.getFechaGC().getTime());
+			//System.out.println("op = " + fechaOP + "   ppio = " + fechaPIO + "  ppio : " + pio.getPais() + "   Local = " + pio.getEquipoLocal() );
+			if( pio.getEquipoLocal().trim().equals(pop.getEquipoLocal().trim())
+					|| pio.getEquipoVisitante().trim().equals(pop.getEquipoVisitante().trim())
+					) {
 				return pio;
 			}
 		}
