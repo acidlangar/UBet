@@ -118,10 +118,21 @@ public class MainTest {
 		
 		List<PartidoPyckioBO> listHora_Pais = filtrarPorHora_Pais( list, pop );
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
+		String fechaOP;
+		String fechaPIO;
 		
-		if(listHora_Pais.size() == 1) {
-			return listHora_Pais.get(0);
-		} 
+		System.out.println(pop);
+		System.out.println("oddsPortal LOCAL = " + pop.getEquipoLocal());
+		
+		for(PartidoPyckioBO pio : listHora_Pais) {
+			fechaOP = sdf.format(pop.getFechaGC().getTime());
+			fechaPIO = sdf.format(pio.getFechaGC().getTime());
+			System.out.println("op = " + fechaOP + "   ppio = " + fechaPIO + "  ppio : " + pio.getPais() + "   Local = " + pio.getEquipoLocal() );
+			if( pio.getEquipoLocal().trim().equals(pop.getEquipoLocal().trim()) ) {
+				return pio;
+			}
+		}
 		
 		return null;
 	}
@@ -137,11 +148,10 @@ public class MainTest {
 		for(PartidoPyckioBO ppio : list) {
 			fechaOP = sdf.format(pop.getFechaGC().getTime());
 			fechaPIO = sdf.format(ppio.getFechaGC().getTime());
-			System.out.println("op = " + fechaOP + "   ppio = " + fechaPIO + "  ppio : " + ppio.getPais());
+			//System.out.println("op = " + fechaOP + "   ppio = " + fechaPIO + "  ppio : " + ppio.getPais() );
 			
 			if(fechaOP.equals(fechaPIO) && pop.getCountry().equals( ppio.getPais() )) {
 				listHora_Pais.add(ppio);
-				System.out.println("Eureka!!");
 			}
 		}
 		

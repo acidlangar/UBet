@@ -133,7 +133,16 @@ public class CurrentPOddsPortal implements Serializable {
 		return f;
 
 	}
+	
+	public String getEquipoLocal() {
+		return this.equipos.split("-")[0];
+	}
 
+	
+	public String getEquipoVisitante() {
+		return this.equipos.split("-")[1];
+	}
+	
 	public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}

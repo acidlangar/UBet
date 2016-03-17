@@ -204,6 +204,9 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 
 								//
 								String aux = tr.getText().trim();
+								
+								System.out.println("<<<<<<<<<<<<<<<<<<<<<<         aux :: " + aux);
+								
 								String array[] = aux.split("\nÂ»\n");
 
 								if (array.length >= 2) {
@@ -215,6 +218,20 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 									liga = null;
 									pais = null;
 								}
+								
+								
+								if( pais == null && liga != null && liga.trim().length() > 0 ) {
+									String array2[] = liga.split("»");
+									
+									System.out.println("   ");
+									System.out.println("!!!!!!!     Entre en if . array2.len" + array2.length );
+									
+									
+									pais = array2[1].trim();
+									liga = array2[2].trim();
+								}
+								
+								System.out.println("<<<<<<<<<<<<<<<<<<<<<<         liga :: " + liga + "    , pais :: " + pais);
 
 							} else {
 								listTDs = tr.findElements(By.tagName("td"));
