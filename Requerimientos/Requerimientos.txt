@@ -1,13 +1,6 @@
 //----------------------------->>>>>>
 //--- Nueva Prioridad
-- Revisar las aproximaciones del Algoritmo de Distancia de Palabras:
-https://es.wikipedia.org/wiki/Distancia_de_Levenshtein
-
-Buscar en base a las dos listas de partidos, que se asocien por iguales.
-
-http://stackoverflow.com/questions/5709204/random-element-is-no-longer-attached-to-the-dom-staleelementreferenceexception
-
-
+- PSeudoLenguaje para el manejo del Stake
 
 //----------------------------->>>>>>
 //--- Cambios a nivel de Código

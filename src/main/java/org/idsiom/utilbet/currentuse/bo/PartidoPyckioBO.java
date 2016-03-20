@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.idsiom.utilbet.currentuse.util.LevenshteinDistance;
+import org.openqa.selenium.WebElement;
 
 public class PartidoPyckioBO implements Serializable, Comparable<PartidoPyckioBO> {
     private static final long serialVersionUID = 6171090211553693547L;
@@ -26,6 +27,8 @@ public class PartidoPyckioBO implements Serializable, Comparable<PartidoPyckioBO
      private String equipoVisitante;
      
      private Integer valueDist;
+
+	private WebElement webElement;
      
      /*
      public Long getFechaLong() {
@@ -180,6 +183,15 @@ public class PartidoPyckioBO implements Serializable, Comparable<PartidoPyckioBO
 		distanciaVisitante = LevenshteinDistance.computeLevenshteinDistance(this.equipoVisitante.trim(), pop.getEquipoVisitante().trim());
 		
 		this.valueDist = distanciaLocal + distanciaVisitante;
+	}
+
+	public void setWebElement(WebElement tr) {
+		this.webElement = tr;
+		
+	}
+
+	public WebElement getWebElement() {
+		return webElement;
 	}
      
      

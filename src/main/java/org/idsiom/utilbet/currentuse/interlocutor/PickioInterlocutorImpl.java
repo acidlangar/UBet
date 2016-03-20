@@ -1,7 +1,9 @@
 package org.idsiom.utilbet.currentuse.interlocutor;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
@@ -18,6 +20,8 @@ public class PickioInterlocutorImpl implements IPyckioInterlocutor {
 	
 	private static PickioInterlocutorImpl instance;
 	private WebDriver driver;
+	
+	private List<PartidoPyckioBO> listPartidos;
 	
 	public static PickioInterlocutorImpl getInstance() throws IOException {
 		if (instance == null) {
@@ -68,28 +72,62 @@ btn-signin
 		 */
 	}
 
-	public void montarPick(CurrentPOddsPortal pOP, ResultadoPartidoBO local, int i) {
-		// TODO Auto-generated method stub
+	public void montarPick(CurrentPOddsPortal pOP, ResultadoPartidoBO resultBuscado, int i) throws Exception {
+		PartidoPyckioBO partidoPIO = this.findTraduction(listPartidos, pOP);
+		
+		this.montarPick(partidoPIO, resultBuscado, i);
+	}
+	
+	public void montarPick(PartidoPyckioBO partidoPIO, ResultadoPartidoBO resultBuscado, int i) throws Exception {
+		
+		WebElement seleccion = partidoPIO.getWebElement().findElements(By.tagName("td")).get(4);
+		WebElement seleccionA = seleccion.findElement(By.tagName("a"));
+		System.out.println(" seleccion = " + seleccionA.getText());
+		
+		try {
+			Thread.sleep(3000);
+		} catch(Exception ex) {
+			// no hacer nada
+		}
+		
+		seleccionA.click();
+		
+		try {
+			Thread.sleep(3000);
+		} catch(Exception ex) {
+			// no hacer nada
+		}
+		
+		int iAux;
+		if(resultBuscado.equals(ResultadoPartidoBO.LOCAL)) {
+			iAux = 1;
+		} else if(resultBuscado.equals(ResultadoPartidoBO.VISITANTE)) {
+			iAux = 2;
+		} else {
+			iAux = 3;
+		}
+		
+		// Buscar por XPath las tres barras... id('1X2')/x:table/x:tbody/x:tr/x:td[2]
+		String xPath = ".//*[@id='1X2']/table/tbody/tr[" + iAux + "]/td[2]";
+		WebElement barraStakeSeleccionada = driver.findElement(By.xpath(xPath));
+		
+		System.out.println("barraStakeSeleccionada = " + barraStakeSeleccionada.getText());
+		
+		// div/x:label[1]
+		xPath = "div/label[" + i + "]";
+		barraStakeSeleccionada.findElement(By.xpath(xPath)).click();
+		
+		// btn btn-default js-sendtwip
+		xPath = "//*[@id='event']/div/div/div[2]/div[3]/form/button";
+		driver.findElement(By.xpath(xPath)).click();
+		
 		
 	}
 
 	public List<PartidoPyckioBO> getPartidosPorHora(Long momento) {
-		List<PartidoPyckioBO> listPartidos = new ArrayList<PartidoPyckioBO>();
-		
-		System.out.println("Inicio del Metodo");
-		
-		// click on js-todaygames 
-		/*WebElement weTodayGames = this.driver.findElement(By.className("js-todaygames"));
-		
-		System.out.println("weTodayGames=" + weTodayGames.getText());
-		
-		weTodayGames.click();
-		
-		*/
+		listPartidos = new ArrayList<PartidoPyckioBO>();
 		
 		driver.get("https://pyckio.com/i/#!home/todaygames");
-		
-		
 		
 		//String xPathPag = "id('mytimeline')/x:div/x:div[2]/x:div/x:table/x:tbody/x:tr[td[2]/img[@data-original-title='soccer']]"; //  id('mytimeline')/x:div/x:div[2]/x:div/x:table/x:tbody/x:tr[td[2]/img[@data-original-title='soccer']]
 		String xPathPag = ".//*[@id='mytimeline']/div/div[2]/div/table/tbody/tr[td[2]/img[@data-original-title='soccer']]"; 
@@ -122,11 +160,81 @@ btn-signin
 			p.setLiga(listTDs.get(3).getText());
 			p.setEquipoLocal( equipos.split("-")[0].trim() );
 			p.setEquipoVisitante( equipos.split("-")[1].trim() );
+			p.setWebElement(tr);
 			
 			listPartidos.add(p);
 		}
 		
 		return listPartidos;
 	}
+	
+	public PartidoPyckioBO findTraduction(List<PartidoPyckioBO> list,
+			CurrentPOddsPortal pop) {
+		PartidoPyckioBO result = null;
+		List<PartidoPyckioBO> listHora_Pais = filtrarPorHora_Pais( list, pop );
+		
+		//SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
+		//String fechaOP;
+		//String fechaPIO;
+		
+		//System.out.println(pop);
+		//System.out.println("oddsPortal LOCAL = " + pop.getEquipoLocal());
+		
+		for(PartidoPyckioBO pio : listHora_Pais) {
+			//fechaOP = sdf.format(pop.getFechaGC().getTime());
+			//fechaPIO = sdf.format(pio.getFechaGC().getTime());
+			//System.out.println("op = " + fechaOP + "   ppio = " + fechaPIO + "  ppio : " + pio.getPais() + "   Local = " + pio.getEquipoLocal() );
+			if( pio.getEquipoLocal().trim().equals(pop.getEquipoLocal().trim())
+					|| pio.getEquipoVisitante().trim().equals(pop.getEquipoVisitante().trim())
+					) {
+				result = pio;
+			}
+		}
+		
+		
+		if( listHora_Pais.size() > 0 && result == null ) {
+			// Obtener el más parecido
+			result = obtenerElMasParecido(listHora_Pais, pop);
+		}
+		
+		
+		return result;
+	}
+
+	private static PartidoPyckioBO obtenerElMasParecido(
+			List<PartidoPyckioBO> listHora_Pais, CurrentPOddsPortal pop) {
+
+		for(PartidoPyckioBO ppio : listHora_Pais) {
+			ppio.calValDistancia(pop);
+		}
+		
+		Collections.sort(listHora_Pais);
+		
+		return listHora_Pais.get(0);
+	}
+
+	private static List<PartidoPyckioBO> filtrarPorHora_Pais(
+			List<PartidoPyckioBO> list, CurrentPOddsPortal pop) {
+		List<PartidoPyckioBO> listHora_Pais = new ArrayList<PartidoPyckioBO>();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
+		String fechaOP;
+		String fechaPIO;
+		
+		for(PartidoPyckioBO ppio : list) {
+			fechaOP = sdf.format(pop.getFechaGC().getTime());
+			fechaPIO = sdf.format(ppio.getFechaGC().getTime());
+			//System.out.println("op = " + fechaOP + "   ppio = " + fechaPIO + "  ppio : " + ppio.getPais() );
+			
+			if(fechaOP.equals(fechaPIO) && pop.getCountry().equals( ppio.getPais() )) {
+				listHora_Pais.add(ppio);
+			}
+		}
+		
+		return listHora_Pais;
+	}
+	
+	
+	
 
 }

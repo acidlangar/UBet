@@ -138,7 +138,12 @@ public class MainFromFileCurrentP {
 		// Si el partido esta dentro de los proximos 20min, procedemos
 		for(CurrentPOddsPortal pOP : listPNotificar) { 
 			if(empiezaEnProxMins(pOP)) {
-				interlocutorPyckio.montarPick(pOP,ResultadoPartidoBO.LOCAL,3);
+				try {
+					interlocutorPyckio.montarPick(pOP,ResultadoPartidoBO.LOCAL,3);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		

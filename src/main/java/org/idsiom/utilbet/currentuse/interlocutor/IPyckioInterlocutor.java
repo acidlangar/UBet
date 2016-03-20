@@ -11,9 +11,14 @@ public interface IPyckioInterlocutor {
 	
 	public void iniciarSesion(String usuario, String clave);
 
-	public void montarPick(CurrentPOddsPortal pOP, ResultadoPartidoBO local, int i);
+	public void montarPick(CurrentPOddsPortal pOP, ResultadoPartidoBO local, int i) throws Exception;
+	
+	public void montarPick(PartidoPyckioBO pIO, ResultadoPartidoBO local, int i) throws Exception;
 	
 	public List<PartidoPyckioBO> getPartidosPorHora(Long momento);
+	
+	public PartidoPyckioBO findTraduction(List<PartidoPyckioBO> list,
+			CurrentPOddsPortal pop);
 	
 	/*
      2) traducirA_PickIO(DefPO_OddsPortal)
@@ -22,3 +27,5 @@ public interface IPyckioInterlocutor {
      5) consultarPicksActivos()
      */
 }
+
+
