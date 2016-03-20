@@ -2,33 +2,54 @@ CONTEXTO: La aplicación está en modo seguimiento, y previo análisis humano, se e
        se va a buscar.
 
 ALGORITMO:
-       - Con cierta frecuencia buscar los partidos en Oddsportal, como lo hace en la actualidad.
+       1- Con cierta frecuencia buscar los partidos en Oddsportal, como lo hace en la actualidad.
        
        Escenario: No hay perdidas acumuladas, ni juegos seleccionados en curso.
-       - Si encuentra uno o varios juegos que están próximos a iniciar y pertenecen a la pestaña seleccionada:
-              - Elegir un juego para jugar.
-                    - Será el juego más próximo a iniciar, en caso a tener varios al mismo tiempo, seleccionar el de menor cuota.
-                    - Si dos juegos tienen la misma Cuota, seleccionar el get(0) del ArrayList.
+       2- Si encuentra uno o varios juegos que están próximos a iniciar y pertenecen a la pestaña seleccionada:
+              2.1- Elegir un juego para jugar.
+                    2.1.1- Será el juego más próximo a iniciar, en caso a tener varios al mismo tiempo, seleccionar el de menor cuota.
+                    2.1.2- Si dos juegos tienen la misma Cuota, seleccionar el get(0) del ArrayList.
                     
-              - Elegir el primer Stake como stake 1.
+              2.2- Elegir el primer Stake como stake 1.
               
-              - Si el pick fue activado de manera exitosa. 
+              2.3- Si el pick fue activado de manera exitosa. 
               
-              - Guardar en un archivo Excel / (El mismo u otro) / Que se apostó en el juego, y el stake del juego, y el acumulado de perdidas/ganancias.
+              2.4- Guardar en un archivo Excel / (El mismo u otro) / Que se apostó en el juego, y el stake del juego, y el acumulado de perdidas/ganancias.
               
-              - Dormir la aplicación hasta 10min despues de haber terminado el juego.
+              2.5- Dormir la aplicación hasta 10min despues de haber terminado el juego.
               
         Escenario: Previamente, se inició la apuesta en un juego.
-        - Analizando el Excel, y el oddsportal, determinar si el juego anterior se ganó o perdió. Calcular las perdidas/ganancias acumuladas.
+        3- Analizando el Excel, y el oddsportal, determinar si el juego anterior se ganó o perdió. Calcular las perdidas/ganancias acumuladas.
         
-        - En caso de contar con ganancias, detener la aplicación.
+        4- En caso de contar con ganancias, detener la aplicación.
         
-        - En caso de aumento de perdidas. Seguir con la ejecución periódica, hasta encontrar un próximo juego que cumpla con las caracteristicas anteriores.
+        5- En caso de aumento de perdidas. Seguir con la ejecución periódica, hasta encontrar un próximo juego que cumpla con las caracteristicas anteriores.
         
-        - Al encontrar el juego, se debe calcular el Stake.
+        6- Al encontrar el juego, se debe calcular el Stake.
         
-        - Stake = min( (int) [(PerdidasAcumuladas + 1) / (Cuota - 1) ], 10)
+        7- Stake = min( (int) [(PerdidasAcumuladas + 1) / (Cuota - 1) ], 10)
 
-        - Repeat the process        
+        8- Repeat the process        
         
         
+  ETAPAS DE IMPLEMENTACION:
+  1era:
+  	- Crear la clase que genere y lea el archivo de configuracion de ganancias y perdidas.
+  	- Sacar el manejo actual de la clase y tener en una sola clase el manejo de los Excel.
+  	- Punto 3
+  	- Crear archivo de configuracion para indicar el type pestaña, y el resultado buscado
+  	- Puntos 2.1 y sus sub-puntos
+  	- Punto 2.2 
+  
+  2da:
+    - 2.3 (Leer el mensaje dado por la WEB luego de montar el Pyck)
+    - 2.4
+    - 2.5
+    - 4
+    - 5,6,7
+  	
+  3era:      
+    - Generar excel inicial bajo el modo historia
+    - Hacer analisis humano, y configurar el properties
+    - Probar la ejecución y hacer las correcciones necesarias.
+            
