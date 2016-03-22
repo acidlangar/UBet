@@ -1,5 +1,7 @@
 package org.idsiom.utilbet.currentuse;
 
+
+import static org.idsiom.utilbet.currentuse.constantes.ConstantesCurrent.RUTA_ARCHIVO;
 import static org.idsiom.utilbet.currentuse.constantes.ConstantesCurrent.MINS_PROXIMIDAD;
 
 import java.io.File;
@@ -18,7 +20,6 @@ import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
 import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializablePyckio;
 import org.idsiom.utilbet.currentuse.bo.PartidoPyckioBO;
 import org.idsiom.utilbet.currentuse.interlocutor.OddsPortalInterCurrentUseImpl;
-import org.idsiom.utilbet.currentuse.interlocutor.PickioInterlocutorImpl;
 import org.junit.Test;
 
 
@@ -160,7 +161,7 @@ public class TestInterlocutorPyckio {
 	private ListPartidosSerializable leerSerializadoOP() {
 		ListPartidosSerializable result = null;
 		
-		File fichero = new File(MainCurrentUseFromOP.RUTA_ARCHIVO + "/Test_Partidos_OP.srz");
+		File fichero = new File(RUTA_ARCHIVO + "/Test_Partidos_OP.srz");
 		if (!fichero.exists()) {
 			System.out.println("El archivo no existe... "
 					+ fichero.getAbsolutePath());
@@ -190,7 +191,7 @@ public class TestInterlocutorPyckio {
 	private ListPartidosSerializablePyckio leerSerializadoP() {
 		ListPartidosSerializablePyckio result = null;
 		
-		File fichero = new File(MainCurrentUseFromOP.RUTA_ARCHIVO + "/Test_Partidos_P.srz");
+		File fichero = new File(RUTA_ARCHIVO + "/Test_Partidos_P.srz");
 		if (!fichero.exists()) {
 			System.out.println("El archivo no existe... "
 					+ fichero.getAbsolutePath());
@@ -220,7 +221,7 @@ public class TestInterlocutorPyckio {
 	}
 	
 	private void guardarSerializadoOP(ListPartidosSerializable listSer) {
-		File dir = new File(MainCurrentUseFromOP.RUTA_ARCHIVO);
+		File dir = new File(RUTA_ARCHIVO);
 		if(!dir.exists()) {
 			dir.mkdir();
 		}
@@ -249,7 +250,7 @@ public class TestInterlocutorPyckio {
 	
 	
 	private void guardarSerializadoP(ListPartidosSerializablePyckio listPIO) {
-		File dir = new File(MainCurrentUseFromOP.RUTA_ARCHIVO);
+		File dir = new File(RUTA_ARCHIVO);
 		if(!dir.exists()) {
 			dir.mkdir();
 		}

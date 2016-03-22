@@ -13,4 +13,6 @@ public class ConstantesCurrent {
 	
 	public static final String RESULT_BUSCADO = "BUSCANDO_VISITANTE";
 	
+	public static String RUTA_ARCHIVO = "C:\\DEVTOOLS";
+	
 }

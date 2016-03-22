@@ -6,15 +6,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import static org.idsiom.utilbet.currentuse.constantes.ConstantesCurrent.RUTA_ARCHIVO;
 
-import org.idsiom.utilbet.currentuse.MainCurrentUseFromOP;
+
 
 public class ConfigProperties {
 		 
 	public Properties getPropValues() throws IOException {
  
 		Properties prop = new Properties();
-		String propFileName =  MainCurrentUseFromOP.RUTA_ARCHIVO + "\\config.properties";
+		String propFileName =  RUTA_ARCHIVO + "\\config.properties";
 		
 		File f = new File(propFileName);
 		System.out.println("buscando archivo ... " + f.getAbsolutePath());

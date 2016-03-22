@@ -20,6 +20,9 @@ import org.idsiom.utilbet.currentuse.interlocutor.IOddsPortalCurrentUseInterlocu
 import org.idsiom.utilbet.currentuse.interlocutor.OddsPortalInterCurrentUseImpl;
 import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
 
+import static org.idsiom.utilbet.currentuse.constantes.ConstantesCurrent.RUTA_ARCHIVO;
+
+
 /*
  * MainCurrentUseFromOP
  * */
@@ -27,7 +30,7 @@ public class MainCurrentUseFromOP {
 	
 	static Logger logger = Logger.getLogger(MainCurrentUseFromOP.class);
 	
-	public static String RUTA_ARCHIVO = "C:\\DEVTOOLS";
+	
 
 	public static void main(String[] args) throws IOException {
 		DOMConfigurator.configure("./src/main/java/conf/log4j-config.xml");

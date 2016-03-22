@@ -43,6 +43,29 @@ public class PyckBO {
 		this.acierto = acierto;
 	}
 	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		String result;
+		
+		sb.append("stake = ");
+		sb.append(this.stake);
+		sb.append("; buscado = ");
+		sb.append(this.pyck);
+		sb.append("; fecha = ");
+		sb.append(this.partido.getFecha());
+		sb.append(", equipos = ");
+		sb.append(this.partido.getEquipos());
+		sb.append(", liga = ");
+		sb.append(this.partido.getLeague());
+		sb.append(", country = ");
+		sb.append(this.partido.getCountry());
+		
+		
+		result = sb.toString();
+		sb = null;
+		
+		return result;
+	}
 	
 	
 }

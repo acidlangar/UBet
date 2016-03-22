@@ -20,6 +20,7 @@ import org.idsiom.utilbet.currentuse.bo.PartidoPyckioBO;
 import org.idsiom.utilbet.currentuse.bo.ResultadoPartidoBO;
 import org.idsiom.utilbet.currentuse.interlocutor.OddsPortalInterCurrentUseImpl;
 import org.idsiom.utilbet.currentuse.interlocutor.PickioInterlocutorImpl;
+import static org.idsiom.utilbet.currentuse.constantes.ConstantesCurrent.RUTA_ARCHIVO;
 
 public class MainTest {
 
@@ -211,7 +212,7 @@ public class MainTest {
 	private static ListPartidosSerializable leerSerializadoOP() {
 		ListPartidosSerializable result = null;
 
-		File fichero = new File(MainCurrentUseFromOP.RUTA_ARCHIVO + "/Test_Partidos_OP.srz");
+		File fichero = new File(RUTA_ARCHIVO + "/Test_Partidos_OP.srz");
 		if (!fichero.exists()) {
 			System.out.println("El archivo no existe... " + fichero.getAbsolutePath());
 			return null;
@@ -239,7 +240,7 @@ public class MainTest {
 	private static ListPartidosSerializablePyckio leerSerializadoP() {
 		ListPartidosSerializablePyckio result = null;
 
-		File fichero = new File(MainCurrentUseFromOP.RUTA_ARCHIVO + "/Test_Partidos_P.srz");
+		File fichero = new File(RUTA_ARCHIVO + "/Test_Partidos_P.srz");
 		if (!fichero.exists()) {
 			System.out.println("El archivo no existe... " + fichero.getAbsolutePath());
 			return null;
@@ -266,7 +267,7 @@ public class MainTest {
 	}
 
 	private static void guardarSerializadoOP(ListPartidosSerializable listSer) {
-		File dir = new File(MainCurrentUseFromOP.RUTA_ARCHIVO);
+		File dir = new File(RUTA_ARCHIVO);
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
@@ -294,7 +295,7 @@ public class MainTest {
 	}
 
 	private static void guardarSerializadoP(ListPartidosSerializablePyckio listPIO) {
-		File dir = new File(MainCurrentUseFromOP.RUTA_ARCHIVO);
+		File dir = new File(RUTA_ARCHIVO);
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
