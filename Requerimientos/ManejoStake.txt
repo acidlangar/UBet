@@ -35,6 +35,9 @@ ALGORITMO:
   ETAPAS DE IMPLEMENTACION:
   1era:
   	- Crear la clase que genere y lea el archivo de configuracion de ganancias y perdidas.
+  	      Campos del Archivo Excel:
+  	      		Perdidas; Ganancias; Total
+  	           P/L     Stake    Odds   Pick 	Date 	Country 	MatchOP   MatchPIO 		Sport  		 	
   	- Sacar el manejo actual de la clase y tener en una sola clase el manejo de los Excel.
   	- Punto 3
   	- Crear archivo de configuracion para indicar el type pestaña, y el resultado buscado
