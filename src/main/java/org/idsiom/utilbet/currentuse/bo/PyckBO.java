@@ -66,6 +66,19 @@ public class PyckBO {
 		
 		return result;
 	}
+
+	public double getOdds() {
+		
+		if(this.pyck.equals(ResultadoPartidoBO.LOCAL)) {
+			return this.partido.getC1();
+		} else if(this.pyck.equals(ResultadoPartidoBO.EMPATE)) {
+			return this.partido.getcX();
+		} else {
+			return this.partido.getC2();
+		}
+		
+		
+	}
 	
 	
 }
