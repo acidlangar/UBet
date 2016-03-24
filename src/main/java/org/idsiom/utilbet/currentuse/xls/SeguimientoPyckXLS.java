@@ -7,18 +7,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-
-
-
-
-
-
-
-import java.util.Scanner;
+import java.util.Map;
 
 import org.idsiom.utilbet.currentuse.ISeguimientoPyckPersistencia;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
+import org.idsiom.utilbet.currentuse.bo.EstadoPyck;
 import org.idsiom.utilbet.currentuse.bo.PartidoPyckioBO;
 import org.idsiom.utilbet.currentuse.bo.PyckBO;
 
@@ -37,6 +32,12 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 
 	private static final String PATH_FILE_RENDIMIENTO = RUTA_ARCHIVO + "\\Rendimiento.xls";
 	private static final String PESTANA = "Seguimiento";
+	
+	private static List<PyckBO> pycksPorDefinir = null;
+	private static Map<PyckBO,Integer> mapPycksPorDefinir = null;
+	private static Double rendimiento = null;
+	
+	private static int startRow = 6;
 	
 	/**
 	 * Metodo utilzado, luego de montar un Pyck, que debe guardarse en el Excel.
@@ -67,8 +68,31 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 			}
 			
 			// Mover los pycks existentes hacia abajo
+			sheet = workbook.getSheet(PESTANA);
+
+			HSSFRow row = sheet.getRow(1);
+			HSSFCell celdaF2 = row.getCell(convert('g'));
+			
+			// Buscar en F2, la cantidad total de Pycks
+			Integer cantidadPycks = ((Double)celdaF2.getNumericCellValue()).intValue();
+
+			
+			
+			sheet.shiftRows(startRow, startRow + cantidadPycks - 1, 1);
 			
 			// Agregar el nuevo Pyck
+			row = sheet.createRow(startRow);
+			
+			// Agregar el nuevo Pyck
+			Object[] datos = new Object[] {
+					"", "", pyck.getStake(), pyck.getOdds(),
+					pyck.getPyck().getAbreviatura(), "PDF", partidoOP.getFecha(), partidoOP.getCountry(),
+					partidoOP.getEquipos(), 
+					partidoPIO.getEquipoLocal() + " - " + partidoPIO.getEquipoVisitante(), 
+					partidoOP.getLeague(), "Soccer"
+			};
+			llenarCeldas(row, datos);
+			
 			
 		} else {
 			//--------------------->>>>>>>>>>>>>
@@ -89,7 +113,22 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 			llenarCeldas(row, datos);
 			
 			row = sheet.createRow(numberRow++);
+			
+			// Se agregan las formulas para el calculo del rendimiento
+			Cell cellA = row.createCell('a');
+			cellA.setCellFormula("SUM(A" + startRow + ":A100)");
+
+			Cell cellB = row.createCell('b');
+			cellB.setCellFormula("SUM(B" + startRow + ":B100)");
+			
+			Cell cellC = row.createCell('c');
+			cellC.setCellFormula("A2 + B2");
+
+			
+			//Dejar linea en Blanco
 			row = sheet.createRow(numberRow++);
+			
+			//Agregar linea para titulos
 			row = sheet.createRow(numberRow++);
 			
 			datos = new Object[] {
@@ -112,19 +151,17 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 			};
 			llenarCeldas(row, datos);
 			
+			
+						
 
 		} // fin if - else Archivo Existe
 
-		
-		
-		
-		
 		// Pone cada Columna AutoSize
 		for(int i = 1; i <= 12; i++) {
 			sheet.autoSizeColumn(i);
 		}
 		
-		
+		agregarStaticsObjs(pyck);
 		
 		FileOutputStream out;
 		try {
@@ -141,19 +178,28 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 		    throw new XLSException();
 		}
 		
+	}
+
+	private void agregarStaticsObjs(PyckBO pyck) {
+		if(pycksPorDefinir == null) {
+			pycksPorDefinir = new ArrayList<PyckBO>();
+		}
 		
-		/*
-		HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream("c:/input.xls"));
+		pycksPorDefinir.add(pyck);
 		
+	}
+	
+	private void actualizarRendimiento(Boolean acierto, int stake, Double odds) {
+		if(rendimiento == null) {
+			rendimiento = 0.0;
+		}
 		
+		if(acierto) {
+			rendimiento = rendimiento + ((odds - 1) * stake );
+		} else {
+			rendimiento = rendimiento - stake;
+		}
 		
-		
-        HSSFSheet sheet = workbook.getSheet("Sheet1");
-        copyRow(workbook, sheet, 0, 1);
-        FileOutputStream out = new FileOutputStream("c:/output.xls");
-        workbook.write(out);
-        out.close();
-		*/
 	}
 
 	private void llenarCeldas(Row row, Object[] datos) {
@@ -185,17 +231,26 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 		}
 	}
 	
+	public List<PyckBO> getPyckPorDefinir() throws IOException {
+		return getPyckPorDefinir(false);
+	}
+	
+	
 	/**
 	 * Devuelve los Pycks en el Excel que estan por definirse.
 	 * @throws IOException 
 	 */
-	public List<PyckBO> getPyckPorDefinir() throws IOException {
-		List<PyckBO> result = new ArrayList<PyckBO>();
+	public List<PyckBO> getPyckPorDefinir(Boolean calcularMaps) throws IOException {
+		
+		if(pycksPorDefinir != null && pycksPorDefinir.size() > 0 && !calcularMaps) {
+			return pycksPorDefinir;
+		}
+		
 		FileInputStream fileInputStream;
 		try {
 			fileInputStream = new FileInputStream(RUTA_ARCHIVO + "\\Rendimiento.xls");
 		} catch (FileNotFoundException e) {
-			return result;
+			return pycksPorDefinir;
 		}
 		
 		HSSFWorkbook workbook = new HSSFWorkbook(fileInputStream);
@@ -206,6 +261,13 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 		
 		// Buscar en F2, la cantidad total de Pycks
 		Integer cantidadPycks = ((Double)celdaF2.getNumericCellValue()).intValue();
+
+		
+		HSSFCell celdaC2 = row.getCell(convert('c'));
+		
+		// Buscar en F2, la cantidad total de Pycks
+		rendimiento = celdaC2.getNumericCellValue();
+
 		
 		String estadoPyck;
 		String resultBuscado;
@@ -218,6 +280,10 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 		String country;
 		String liga;
 		String fecha;
+		
+		pycksPorDefinir = new ArrayList<PyckBO>();
+		mapPycksPorDefinir = new HashMap<PyckBO,Integer>();
+		
 		
 		// Leer el Excel que contiene los juegos pendientes
 		// Proceder a leer cada registro
@@ -253,14 +319,16 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 				bo.setPartido(parOP);
 				
 			     // Agregarlo a la lista
-				result.add(bo);
+				pycksPorDefinir.add(bo);
+				mapPycksPorDefinir.put(bo, 4+i);
+				
 			}
 		}
 		
 		fileInputStream.close();
 		
 		// Devolver la lista
-		return result;
+		return pycksPorDefinir;
 	}
 
 	private int convert(char ch) {
@@ -268,13 +336,101 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 		return pos;
 	}
 	
-	public double getRendimientoAcumulado() {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getRendimientoAcumulado() throws XLSException {
+		if(rendimiento != null && rendimiento != 0.0) {
+			return rendimiento;
+		}
+		
+		FileInputStream fileInputStream;
+		try {
+			fileInputStream = new FileInputStream(RUTA_ARCHIVO + "\\Rendimiento.xls");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			throw new XLSException();
+		}
+		
+		HSSFWorkbook workbook;
+		try {
+			workbook = new HSSFWorkbook(fileInputStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new XLSException();
+		}
+		
+		HSSFSheet worksheet = workbook.getSheet(PESTANA);
+		
+		HSSFRow row = worksheet.getRow(1);
+		HSSFCell celdaC2 = row.getCell(convert('c'));
+		
+		// Buscar en F2, la cantidad total de Pycks
+		rendimiento = celdaC2.getNumericCellValue();
+		
+		return rendimiento;
 	}
 
-	public void guardarResultadosPycks(List<PyckBO> pycks) {
-		// TODO Auto-generated method stub
+	public void guardarResultadosPycks(List<PyckBO> pycks) throws XLSException {
+		try {
+			this.getPyckPorDefinir(true);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new XLSException();
+		}
+		
+		FileInputStream fileInputStream;
+		try {
+			fileInputStream = new FileInputStream(RUTA_ARCHIVO + "\\Rendimiento.xls");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			throw new XLSException();
+		}
+		
+		HSSFWorkbook workbook;
+		try {
+			workbook = new HSSFWorkbook(fileInputStream);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new XLSException();
+		}
+		
+		HSSFSheet worksheet = workbook.getSheet(PESTANA);
+		
+		HSSFRow row;
+		
+		Integer lineExcel;
+		for(PyckBO p : pycks) {
+			lineExcel = mapPycksPorDefinir.get(p);
+			
+			if(lineExcel != null) {
+				row = worksheet.getRow(lineExcel);
+				
+				if(p.getEstado() == null) {
+					// No hacer nada
+				} else if(p.getEstado().equals(EstadoPyck.FINALIZADO)) {
+					
+					row.getCell(convert('f')).setCellValue("FIN");
+					
+					if(p.getAcierto()) {
+						row.getCell(convert('a')).setCellValue(0.0);
+						row.getCell(convert('b')).setCellValue( (p.getOdds()-1 )*p.getStake() );
+					} else {
+						row.getCell(convert('a')).setCellValue(-1.0 * p.getStake() );
+						row.getCell(convert('b')).setCellValue( 0.0 );
+						
+					}
+					
+					actualizarRendimiento(p.getAcierto(), p.getStake(), p.getOdds());
+					
+					
+				} else if(p.getEstado().equals(EstadoPyck.SUSPENDIDO)) {
+					row.getCell(convert('f')).setCellValue("SUS");
+				} else { // POR_DEFINIR
+					// No hacer nada
+				}
+			
+			
+			}
+		}
 		
 	}
 

@@ -358,6 +358,20 @@ public class CurrentPOddsPortal implements Serializable {
 	public TipoPartidoPorCuotas getType() {
 		return TipoPartidoPorCuotas.getClasificacionPorCuotas(c1, cX, c2);
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof CurrentPOddsPortal) {
+			CurrentPOddsPortal p = (CurrentPOddsPortal)obj;
+			if(p.country.equals(this.country) && p.getFecha().equals(this.getFecha()) && p.getEquipos().equals(this.getEquipos())) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
 
 	
 	

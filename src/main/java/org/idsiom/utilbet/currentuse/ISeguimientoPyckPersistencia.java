@@ -14,7 +14,7 @@ public interface ISeguimientoPyckPersistencia {
 	
 	public List<PyckBO> getPyckPorDefinir() throws IOException;
 	
-	public double getRendimientoAcumulado();
+	public double getRendimientoAcumulado() throws XLSException;
 	
-	public void guardarResultadosPycks(List<PyckBO> pycks);
+	public void guardarResultadosPycks(List<PyckBO> pycks) throws XLSException;
 }

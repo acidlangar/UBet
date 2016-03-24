@@ -3,6 +3,8 @@ package org.idsiom.utilbet.currentuse.bo;
 public class PyckBO {
 	private CurrentPOddsPortal partido;
 	
+	private EstadoPyck estado;
+	
 	private ResultadoPartidoBO pyck;
 	
 	private int stake;
@@ -79,6 +81,26 @@ public class PyckBO {
 		
 		
 	}
+
+	public EstadoPyck getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoPyck estado) {
+		this.estado = estado;
+	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if(obj instanceof PyckBO) {
+			PyckBO pyck = (PyckBO)obj;
+			return this.partido.equals(pyck.getPartido());
+		} else {
+			return false;
+		}
+		
+		
+	}
 	
 }
