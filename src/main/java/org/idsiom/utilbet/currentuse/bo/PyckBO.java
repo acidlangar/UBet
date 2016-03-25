@@ -7,13 +7,13 @@ public class PyckBO {
 	
 	private ResultadoPartidoBO pyck;
 	
-	private int stake;
+	private Integer stake;
 	
 	private Boolean acierto;
 
 	
 	
-	public int getStake() {
+	public Integer getStake() {
 		return stake;
 	}
 

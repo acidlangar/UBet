@@ -1,14 +1,18 @@
 package org.idsiom.utilbet.currentuse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
+import org.idsiom.utilbet.currentuse.bo.EstadoPyck;
 import org.idsiom.utilbet.currentuse.bo.PartidoPyckioBO;
 import org.idsiom.utilbet.currentuse.bo.PyckBO;
+import org.idsiom.utilbet.currentuse.bo.ResultadoPartidoBO;
 import org.idsiom.utilbet.currentuse.xls.SeguimientoPyckXLS;
 import org.idsiom.utilbet.currentuse.xls.XLSException;
 
+import java.io.File;
 import java.io.FileOutputStream;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -58,12 +62,6 @@ public class TestXLSRendimiento {
 		
 	}
 	
-	
-	
-	
-	
-
-	@Test
 	public void testShiftRows() throws Exception {
 	        Workbook wb = new HSSFWorkbook();
 	        Sheet sheet = wb.createSheet("Sheet1");
@@ -94,6 +92,90 @@ public class TestXLSRendimiento {
 	    }
 
 
+	@Test
+	public void testCompleto() {
+		// Asegurarme que no exista archivo, por tanto en caso de existir, eliminar 
+		File fileRend = new File(RUTA_ARCHIVO + "\\Rendimiento.xls");
+		
+		if(fileRend.exists()) {
+			if(fileRend.delete()) {
+				System.out.println("delete sucessfull");
+			} else {
+				System.out.println("Imposible to delete");				
+			}
+		}
+		
+		ISeguimientoPyckPersistencia seg = new SeguimientoPyckXLS();
+		// Imprimir el Rendimiento, los pycks pendientes, Revisar el Excel
+		imprimirStatus(seg);
+		
+		try {
+			//CurrentPOddsPortal partidoOP, PartidoPyckioBO partidoPIO, PyckBO pyck
+			CurrentPOddsPortal partidoOP = new CurrentPOddsPortal();
+			PartidoPyckioBO partidoPIO = new PartidoPyckioBO(); 
+			PyckBO pyck = new PyckBO();
+			
+			partidoOP.setEquipos("Argentina - Chile");
+			partidoOP.setFecha("20160325 20:00");
+			partidoOP.setCountry("Mundial");
+			partidoOP.setLeague("Eliminatorias Suramericanas");
+			partidoOP.setC1(3.2);
+			partidoOP.setC2(3.1);
+			partidoOP.setcX(3.4);
+			
+			partidoPIO.setEquipoLocal("Argentina");
+			partidoPIO.setEquipoVisitante("Chile");
+			
+			pyck.setEstado(EstadoPyck.POR_DEFINIR);
+			pyck.setPyck(ResultadoPartidoBO.VISITANTE);
+			pyck.setStake(1);
+			pyck.setPartido(partidoOP);
+			
+			seg.guardarApuesta(partidoOP, partidoPIO, pyck);
+			
+			List<PyckBO> listResultados = new ArrayList<PyckBO>();
+			
+			pyck.setAcierto(false);
+			pyck.setEstado(EstadoPyck.FINALIZADO);
+			listResultados.add(pyck);
+			
+			seg.guardarResultadosPycks(listResultados);
+			
+			
+		} catch (XLSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+
+	private void imprimirStatus(ISeguimientoPyckPersistencia seg)  {
+		
+		try {
+			System.out.println("Rendimiento :: " + seg.getRendimientoAcumulado());
+		
+			List<PyckBO> listPendientes = seg.getPyckPorDefinir();
+			
+			if(listPendientes != null) {
+				System.out.println("Cant Pycks Pendientes :: " + listPendientes.size());
+				
+				for(PyckBO p : listPendientes) {
+					System.out.println(p);
+				}
+			} else {
+				System.out.println("Pendientes NULL" );
+			}
+		
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		System.out.println(" ---  ");
+		System.out.println(" ---  ");
+		System.out.println("   ");
+	}
 	
 	
 	

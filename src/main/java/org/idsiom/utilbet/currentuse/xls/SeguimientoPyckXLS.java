@@ -37,7 +37,7 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 	private static Map<PyckBO,Integer> mapPycksPorDefinir = null;
 	private static Double rendimiento = null;
 	
-	private static int startRow = 6;
+	private static int startRow = 5;
 	
 	/**
 	 * Metodo utilzado, luego de montar un Pyck, que debe guardarse en el Excel.
@@ -89,7 +89,7 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 					pyck.getPyck().getAbreviatura(), "PDF", partidoOP.getFecha(), partidoOP.getCountry(),
 					partidoOP.getEquipos(), 
 					partidoPIO.getEquipoLocal() + " - " + partidoPIO.getEquipoVisitante(), 
-					partidoOP.getLeague(), "Soccer"
+					partidoOP.getLeague(), "Soccer", new Integer(1)
 			};
 			llenarCeldas(row, datos);
 			
@@ -115,14 +115,17 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 			row = sheet.createRow(numberRow++);
 			
 			// Se agregan las formulas para el calculo del rendimiento
-			Cell cellA = row.createCell('a');
+			Cell cellA = row.createCell(convert('a'));
 			cellA.setCellFormula("SUM(A" + startRow + ":A100)");
 
-			Cell cellB = row.createCell('b');
+			Cell cellB = row.createCell(convert('b'));
 			cellB.setCellFormula("SUM(B" + startRow + ":B100)");
 			
-			Cell cellC = row.createCell('c');
+			Cell cellC = row.createCell(convert('c'));
 			cellC.setCellFormula("A2 + B2");
+			
+			Cell cellG = row.createCell(convert('g'));
+			cellG.setCellFormula("SUM(M" + startRow + ":M100)");
 
 			
 			//Dejar linea en Blanco
@@ -147,7 +150,7 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 					pyck.getPyck().getAbreviatura(), "PDF", partidoOP.getFecha(), partidoOP.getCountry(),
 					partidoOP.getEquipos(), 
 					partidoPIO.getEquipoLocal() + " - " + partidoPIO.getEquipoVisitante(), 
-					partidoOP.getLeague(), "Soccer"
+					partidoOP.getLeague(), "Soccer", new Integer(1)
 			};
 			llenarCeldas(row, datos);
 			
@@ -228,6 +231,9 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 	        else if(datos[i] instanceof Double) {
 	            cell.setCellValue((Double)datos[i]);
 	        }
+	        else if(datos[i] instanceof Integer) {
+	            cell.setCellValue((Integer)datos[i]);
+	        }
 		}
 	}
 	
@@ -259,9 +265,12 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 		HSSFRow row = worksheet.getRow(1);
 		HSSFCell celdaF2 = row.getCell(convert('g'));
 		
+		//System.out.println("IMPL celdaF2 = " + celdaF2.getNumericCellValue());
+		
 		// Buscar en F2, la cantidad total de Pycks
 		Integer cantidadPycks = ((Double)celdaF2.getNumericCellValue()).intValue();
 
+		//System.out.println("IMPL cantidadPycks = " + cantidadPycks);
 		
 		HSSFCell celdaC2 = row.getCell(convert('c'));
 		
@@ -288,7 +297,7 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 		// Leer el Excel que contiene los juegos pendientes
 		// Proceder a leer cada registro
 		for(int i = 0; i < cantidadPycks; i++) {
-			rowPicks = worksheet.getRow(4+i);
+			rowPicks = worksheet.getRow(5+i);
 			
 			estadoPyck = rowPicks.getCell(convert('f')).getStringCellValue();
 			
@@ -320,7 +329,7 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 				
 			     // Agregarlo a la lista
 				pycksPorDefinir.add(bo);
-				mapPycksPorDefinir.put(bo, 4+i);
+				mapPycksPorDefinir.put(bo, 5+i);
 				
 			}
 		}
@@ -345,8 +354,7 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 		try {
 			fileInputStream = new FileInputStream(RUTA_ARCHIVO + "\\Rendimiento.xls");
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			throw new XLSException();
+			return 0.0;
 		}
 		
 		HSSFWorkbook workbook;
@@ -363,6 +371,10 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 		HSSFCell celdaC2 = row.getCell(convert('c'));
 		
 		// Buscar en F2, la cantidad total de Pycks
+		if(celdaC2 == null) {
+			return 0.0;
+		}
+		
 		rendimiento = celdaC2.getNumericCellValue();
 		
 		return rendimiento;
@@ -430,6 +442,22 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 			
 			
 			}
+		}
+		
+		
+		FileOutputStream out;
+		try {
+		    out = new FileOutputStream(new File(PATH_FILE_RENDIMIENTO));
+		    workbook.write(out);
+		    out.close();
+		    System.out.println("Excel written successfully..");
+		     
+		} catch (FileNotFoundException e) {
+		    e.printStackTrace();
+		    throw new XLSException();
+		} catch (IOException e) {
+		    e.printStackTrace();
+		    throw new XLSException();
 		}
 		
 	}
