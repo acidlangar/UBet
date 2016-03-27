@@ -19,6 +19,8 @@ public interface IPyckioInterlocutor {
 	
 	public PartidoPyckioBO findTraduction(List<PartidoPyckioBO> list,
 			CurrentPOddsPortal pop);
+
+	public void close();
 	
 	/*
      2) traducirA_PickIO(DefPO_OddsPortal)

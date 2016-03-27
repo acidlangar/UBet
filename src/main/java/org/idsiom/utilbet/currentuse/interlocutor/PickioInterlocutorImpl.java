@@ -233,6 +233,16 @@ btn-signin
 		
 		return listHora_Pais;
 	}
+
+	public void close() {
+		// TODO Auto-generated method stub
+		
+		this.driver.close();
+		
+		instance = null;
+		
+		
+	}
 	
 	
 	

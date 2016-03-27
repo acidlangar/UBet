@@ -45,12 +45,12 @@ public class MainCurrentUseTest {
 		
 	}
 	
-	@Test
+	/*
 	public void testWriteExcel() {
 		
 		List<CurrentPOddsPortal> lista = createMockList();
 		
 		MainCurrentUseFromOP.writeExcelFile(lista);
 	}
-
+*/
 }

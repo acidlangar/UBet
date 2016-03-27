@@ -13,12 +13,17 @@ import java.util.Date;
 import java.util.List;
 
 import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
+import org.idsiom.utilbet.currentuse.bo.PartidoPyckioBO;
+import org.idsiom.utilbet.currentuse.bo.PyckBO;
 import org.idsiom.utilbet.currentuse.bo.ResultadoPartidoBO;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
+import org.idsiom.utilbet.currentuse.bo.EstadoPyck;
 import org.idsiom.utilbet.currentuse.interlocutor.IOddsPortalCurrentUseInterlocutor;
 import org.idsiom.utilbet.currentuse.interlocutor.IPyckioInterlocutor;
 import org.idsiom.utilbet.currentuse.interlocutor.OddsPortalInterCurrentUseImpl;
 import org.idsiom.utilbet.currentuse.interlocutor.PickioInterlocutorImpl;
+import org.idsiom.utilbet.currentuse.xls.CurrentDesviacionXLS;
+import org.idsiom.utilbet.currentuse.xls.SeguimientoPyckXLS;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.idsiom.utilbet.mail.pruebas.MainSendMail;
@@ -41,14 +46,18 @@ public class MainFromFileCurrentP {
 		DOMConfigurator.configure("./src/main/java/conf/log4j-config.xml");
 
 	    IOddsPortalCurrentUseInterlocutor interlocutor = OddsPortalInterCurrentUseImpl.getInstance();
-	    interlocutorPyckio = PickioInterlocutorImpl.getInstance();
+	    
+	    
+	    ISeguimientoPyckPersistencia segPyck = new SeguimientoPyckXLS();
 	    
 	    
 		//IOddsPortalCurrentUseInterlocutor interlocutor = new InterlocutorPruebaProximosJuegosImpl();
-		Boolean seguir = true;
+		Boolean sinGanancias = true;
 
-		while (seguir) {
-
+		Boolean newPyckMontado;
+		while (sinGanancias) {
+			newPyckMontado = false;	
+			interlocutorPyckio = PickioInterlocutorImpl.getInstance();
 			System.out.println("Procederemos a leer el archivo serializado!!!");
 
 			File fichero = new File(RUTA_ARCHIVO + "/PartidosCurrent.srz");
@@ -80,6 +89,93 @@ public class MainFromFileCurrentP {
 					listDefinitiva.addAll(lAux.getPartidosHistory());
 					listDefinitiva.addAll(lNews.getListaPsHoyFuturo());
 					
+					// Buscar los pycks que se encuentran pendientes de resolver.
+					List<PyckBO> listPycksPendientes = segPyck.getPyckPorDefinir();
+					List<PyckBO> pycksConResultados = new ArrayList<PyckBO>();
+					for(PyckBO pyck : listPycksPendientes) {
+						pyck = determinarResultado(pyck, lNews);
+						
+						if(pyck != null) {
+							pycksConResultados.add(pyck);
+						}
+						
+					}
+					
+					if(pycksConResultados.size() > 0) {
+						segPyck.guardarResultadosPycks(pycksConResultados);
+					}
+					
+					listPycksPendientes = segPyck.getPyckPorDefinir();
+					double rendAcumulado = segPyck.getRendimientoAcumulado();
+					double odds;
+					
+					if(rendAcumulado <= 0) {
+						sinGanancias = true;
+						System.out.println("Como no hay ganancias hay que seguir");
+					} else {
+						sinGanancias = false;
+						System.out.println("Como ya hay ganancias, hay que parar");
+					}
+					
+					
+					// Si no hay Pycks por Definir
+					if(listPycksPendientes.size() == 0 && rendAcumulado <= 0) {
+						List<CurrentPOddsPortal> listPNotificar = validarSeguimiento( lNews );
+						
+						Thread.sleep(5000);
+						
+						List<PartidoPyckioBO> list = interlocutorPyckio.getPartidosPorHora(0L);
+						
+						for (CurrentPOddsPortal pop : listPNotificar) {
+							PartidoPyckioBO pEquivalente = interlocutorPyckio.findTraduction( list, pop );
+							
+							if(pEquivalente != null) {
+								ResultadoPartidoBO resultBuscado;
+								
+								if(RESULT_BUSCADO.equals("BUSCANDO_VISITANTE")) {
+									resultBuscado = ResultadoPartidoBO.VISITANTE;
+									odds = pop.getC2();
+								} else if(RESULT_BUSCADO.equals("BUSCANDO_LOCAL")) {
+									resultBuscado = ResultadoPartidoBO.LOCAL;
+									odds = pop.getC1();
+								} else {
+									resultBuscado = ResultadoPartidoBO.EMPATE;
+									odds = pop.getcX();
+								}
+								
+								
+								int stake = determinarStake(odds, rendAcumulado);
+								
+								newPyckMontado = false;
+								try {
+									interlocutorPyckio.montarPick(pEquivalente, resultBuscado, stake);
+									newPyckMontado = true;
+								} catch(Exception ex) {
+									ex.printStackTrace();
+								}
+								
+								if(newPyckMontado) {
+									PyckBO pyck = new PyckBO();
+									pyck.setEstado(EstadoPyck.POR_DEFINIR);
+									pyck.setPartido(pop);
+									pyck.setPyck(resultBuscado);
+									pyck.setStake(stake);
+									
+									segPyck.guardarApuesta(pop, pEquivalente, pyck);
+									
+									interlocutorPyckio.close();
+									
+									break;
+								}
+								
+								
+							}
+							
+						}
+						
+					}
+					
+					/*
 					List<CurrentPOddsPortal> listPNotificar = validarSeguimiento( lNews );
 					if(listPNotificar.size() > 0) {
 						prepararPycks(listPNotificar);
@@ -89,6 +185,7 @@ public class MainFromFileCurrentP {
 					} else {
 						System.out.println("La validacion de notificacion no se ejecuto");
 					}
+					*/
 						
 					ObjectOutputStream oos = new ObjectOutputStream(
 							new FileOutputStream(fichero));
@@ -97,11 +194,24 @@ public class MainFromFileCurrentP {
 							+ fichero.getAbsolutePath());
 
 					// Se escribe directamente en el archivo excel
-					MainCurrentUseFromOP.writeExcelFile(listDefinitiva);
-
+					ICurrentDesviacionPersistencia currentDesvPersistencia = new CurrentDesviacionXLS(); 
+					currentDesvPersistencia.writeExcelFile(listDefinitiva);
+					
 					oos.close();
 					oos = null;
 					lAux = null;
+					
+					
+					if(newPyckMontado) {
+						try {
+							// Esperar 110 mins relacionados a los 90 min del juego, mas los 15min del descanso, mas 5 del descuento 
+							Thread.sleep(110 * 60 * 1000);
+						} catch (InterruptedException e) {
+							logger.error(e, e);
+						}
+					}
+					
+					
 
 				} else {
 					System.out.println("No corresponde a instancia esperada");
@@ -123,13 +233,80 @@ public class MainFromFileCurrentP {
 				// Espera hasta la proxima ejecucion para busqueda del Archivo.
 				Thread.sleep(120000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e, e);
 			}
 
-		}
+		} // while sin ganancias
 
 	}
+	
+	
+	private static int determinarStake(double odds, double rendAcumulado) {
+		int stakeNecesitado;
+		double aux = ( Math.abs(rendAcumulado) + 1 ) / (odds - 1);
+		
+		int auxInt = (int)aux;
+		
+		if(aux > auxInt) {
+			stakeNecesitado = auxInt + 1;
+		} else {
+			stakeNecesitado = auxInt;
+		}
+		
+		stakeNecesitado = Math.max(stakeNecesitado, 1);
+		stakeNecesitado = Math.min(stakeNecesitado, 10);
+		
+		return stakeNecesitado;
+	}
+
+
+	/*
+	 * Determina si el pyck fue acertado, y se evaluan los juegos en la lista de lNews.
+	 * Si el juego no fue encontrado en la lista, se devuelve null
+	 * 
+	 * Si el juego fue suspendido o no fue terminado, simplemente indica como suspendido
+	 * */
+	private static PyckBO determinarResultado(PyckBO pyck, ListPartidosSerializable lNews) {
+		for(CurrentPOddsPortal pOP : lNews.getListaPsHoyFuturo()) {
+			if(pyck.getPartido().equals(pOP)) {
+				
+				ResultadoPartidoBO resultadoPartido = null;
+				// Saber Quien Gano en OddsPortal, L, V, E, Suspendido
+				
+				if(pOP.getResultFinal() == 'O') {
+					pyck.setEstado(EstadoPyck.SUSPENDIDO);
+					return pyck;
+				}
+				
+				
+				
+				if(pOP.getResultFinal() == '1') {
+					resultadoPartido = ResultadoPartidoBO.LOCAL;
+				}
+				
+				if(pOP.getResultFinal() == '2') {
+					resultadoPartido = ResultadoPartidoBO.VISITANTE;
+				}
+				
+				if(pOP.getResultFinal() == 'X') {
+					resultadoPartido = ResultadoPartidoBO.EMPATE;
+				}
+				
+				pyck.setEstado(EstadoPyck.FINALIZADO);
+				if(pyck.getPyck().equals(resultadoPartido)) {
+					pyck.setAcierto(true);
+				} else {
+					pyck.setAcierto(false);
+				}
+				
+				return pyck;
+			}
+		}
+		
+		return null;
+		
+	}
+	
 
 	private static void prepararPycks(List<CurrentPOddsPortal> listPNotificar) {
 		// TODO Auto-generated method stub
