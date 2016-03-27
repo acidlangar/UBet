@@ -12,7 +12,7 @@ import org.idsiom.utilbet.currentuse.xls.XLSException;
 public interface ISeguimientoPyckPersistencia {
 	public void guardarApuesta(CurrentPOddsPortal partidoOP, PartidoPyckioBO partidoPIO, PyckBO pyck) throws XLSException;
 	
-	public List<PyckBO> getPyckPorDefinir() throws IOException;
+	public List<PyckBO> getPyckPorDefinir() throws XLSException;
 	
 	public double getRendimientoAcumulado() throws XLSException;
 	

@@ -1,6 +1,5 @@
 package org.idsiom.utilbet.currentuse;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class TestXLSRendimiento {
 		List<PyckBO> list = null;
 		try {
 			list = s.getPyckPorDefinir();
-		} catch (IOException e) {
+		} catch (XLSException e) {
 			System.out.println("Ocurrio un problema inesperado");
 			e.printStackTrace();
 		}
@@ -91,7 +90,6 @@ public class TestXLSRendimiento {
 
 	    }
 
-
 	@Test
 	public void testCompleto() {
 		// Asegurarme que no exista archivo, por tanto en caso de existir, eliminar 
@@ -133,6 +131,52 @@ public class TestXLSRendimiento {
 			
 			seg.guardarApuesta(partidoOP, partidoPIO, pyck);
 			
+			
+			
+			List<PyckBO> listResultados = new ArrayList<PyckBO>();
+			
+			pyck.setAcierto(false);
+			pyck.setEstado(EstadoPyck.FINALIZADO);
+			listResultados.add(pyck);
+			
+			seg.guardarResultadosPycks(listResultados);
+		
+			System.out.println("Fin actualizacion resultado 1");
+			imprimirStatus(seg);
+			
+		} catch (XLSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		try {
+			//CurrentPOddsPortal partidoOP, PartidoPyckioBO partidoPIO, PyckBO pyck
+			CurrentPOddsPortal partidoOP = new CurrentPOddsPortal();
+			PartidoPyckioBO partidoPIO = new PartidoPyckioBO(); 
+			PyckBO pyck = new PyckBO();
+			
+			partidoOP.setEquipos("Peru - Venezuela");
+			partidoOP.setFecha("20160325 22:00");
+			partidoOP.setCountry("Mundial");
+			partidoOP.setLeague("Eliminatorias Suramericanas");
+			partidoOP.setC1(3.2);
+			partidoOP.setC2(3.1);
+			partidoOP.setcX(3.4);
+			
+			partidoPIO.setEquipoLocal("Peru");
+			partidoPIO.setEquipoVisitante("Venezuela");
+			
+			pyck.setEstado(EstadoPyck.POR_DEFINIR);
+			pyck.setPyck(ResultadoPartidoBO.VISITANTE);
+			pyck.setStake(1);
+			pyck.setPartido(partidoOP);
+			
+			seg.guardarApuesta(partidoOP, partidoPIO, pyck);
+			
+			System.out.println("Apuesta nuevo juego");
+			
+			
 			List<PyckBO> listResultados = new ArrayList<PyckBO>();
 			
 			pyck.setAcierto(false);
@@ -146,6 +190,92 @@ public class TestXLSRendimiento {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
+		try {
+			//CurrentPOddsPortal partidoOP, PartidoPyckioBO partidoPIO, PyckBO pyck
+			CurrentPOddsPortal partidoOP = new CurrentPOddsPortal();
+			PartidoPyckioBO partidoPIO = new PartidoPyckioBO(); 
+			PyckBO pyck = new PyckBO();
+			
+			partidoOP.setEquipos("Brasil - Uruguay");
+			partidoOP.setFecha("20160326 08:00");
+			partidoOP.setCountry("Mundial");
+			partidoOP.setLeague("Eliminatorias Suramericanas");
+			partidoOP.setC1(2.3);
+			partidoOP.setC2(3.5);
+			partidoOP.setcX(3.4);
+			
+			partidoPIO.setEquipoLocal("Brasil");
+			partidoPIO.setEquipoVisitante("Uruguay");
+			
+			pyck.setEstado(EstadoPyck.POR_DEFINIR);
+			pyck.setPyck(ResultadoPartidoBO.VISITANTE);
+			pyck.setStake(1);
+			pyck.setPartido(partidoOP);
+			
+			seg.guardarApuesta(partidoOP, partidoPIO, pyck);
+			
+			System.out.println("Apuesta nuevo juego");
+			
+			
+			List<PyckBO> listResultados = new ArrayList<PyckBO>();
+			
+			pyck.setAcierto(false);
+			pyck.setEstado(EstadoPyck.FINALIZADO);
+			listResultados.add(pyck);
+			
+			seg.guardarResultadosPycks(listResultados);
+			
+			
+		} catch (XLSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		try {
+			//CurrentPOddsPortal partidoOP, PartidoPyckioBO partidoPIO, PyckBO pyck
+			CurrentPOddsPortal partidoOP = new CurrentPOddsPortal();
+			PartidoPyckioBO partidoPIO = new PartidoPyckioBO(); 
+			PyckBO pyck = new PyckBO();
+			
+			partidoOP.setEquipos("Barcelona - Villareal");
+			partidoOP.setFecha("20160326 10:00");
+			partidoOP.setCountry("España");
+			partidoOP.setLeague("La Liga");
+			partidoOP.setC1(2.0);
+			partidoOP.setC2(3.8);
+			partidoOP.setcX(3.1);
+			
+			partidoPIO.setEquipoLocal("Barcelona");
+			partidoPIO.setEquipoVisitante("Villareal");
+			
+			pyck.setEstado(EstadoPyck.POR_DEFINIR);
+			pyck.setPyck(ResultadoPartidoBO.VISITANTE);
+			pyck.setStake(2);
+			pyck.setPartido(partidoOP);
+			
+			seg.guardarApuesta(partidoOP, partidoPIO, pyck);
+			
+			System.out.println("Apuesta nuevo juego");
+			
+			
+			List<PyckBO> listResultados = new ArrayList<PyckBO>();
+			
+			pyck.setAcierto(true);
+			pyck.setEstado(EstadoPyck.FINALIZADO);
+			listResultados.add(pyck);
+			
+			seg.guardarResultadosPycks(listResultados);
+			
+			
+		} catch (XLSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 		
 	}

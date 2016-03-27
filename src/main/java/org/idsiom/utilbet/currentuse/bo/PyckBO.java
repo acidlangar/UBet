@@ -92,14 +92,16 @@ public class PyckBO {
 	
 	@Override
 	public boolean equals(Object obj) {
+		//return true;
 		
 		if(obj instanceof PyckBO) {
 			PyckBO pyck = (PyckBO)obj;
+			System.out.println("equals PyckBO.call equlas OP");
 			return this.partido.equals(pyck.getPartido());
 		} else {
+			System.out.println("equals PyckBO.call return false");
 			return false;
 		}
-		
 		
 	}
 	

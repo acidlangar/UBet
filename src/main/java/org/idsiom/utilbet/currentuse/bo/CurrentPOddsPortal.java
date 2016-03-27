@@ -364,11 +364,14 @@ public class CurrentPOddsPortal implements Serializable {
 		if(obj instanceof CurrentPOddsPortal) {
 			CurrentPOddsPortal p = (CurrentPOddsPortal)obj;
 			if(p.country.equals(this.country) && p.getFecha().equals(this.getFecha()) && p.getEquipos().equals(this.getEquipos())) {
+				System.out.println("Equals OP return true");
 				return true;
 			} else {
+				System.out.println("Equals OP return false 1");
 				return false;
 			}
 		} else {
+			System.out.println("Equals OP return false 2");
 			return false;
 		}
 	}
