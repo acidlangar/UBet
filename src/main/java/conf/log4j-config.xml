@@ -11,7 +11,7 @@
 
 	<appender name="infolog" class="org.apache.log4j.RollingFileAppender">
 		<param name="File"	value="C:/DEVTOOLS/logs/ubet.log" />
-		<param name="Threshold" value="ERROR" />
+		<param name="Threshold" value="INFO" />
 		<param name="MaxFileSize" value="1500KB" />
 		<param name="MaxBackupIndex" value="5" />
 		<layout class="org.apache.log4j.PatternLayout">

@@ -100,7 +100,7 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		date = UtilFecha.sumarRestarDiasFecha(new Date(), 2);
 
 		gcFHasta = new GregorianCalendar();
-		// gcFHasta.setTime(date);
+		gcFHasta.setTime(date);
 
 		System.out.println("fechaDesde: " + sdf.format(gcFDesde.getTime()));
 		System.out.println("fechaHasta: " + sdf.format(gcFHasta.getTime()));

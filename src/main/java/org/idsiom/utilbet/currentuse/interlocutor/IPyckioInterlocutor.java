@@ -13,7 +13,7 @@ public interface IPyckioInterlocutor {
 
 	public void montarPick(CurrentPOddsPortal pOP, ResultadoPartidoBO local, int i) throws Exception;
 	
-	public void montarPick(PartidoPyckioBO pIO, ResultadoPartidoBO local, int i) throws Exception;
+	public boolean montarPick(PartidoPyckioBO pIO, ResultadoPartidoBO local, int i) throws Exception;
 	
 	public List<PartidoPyckioBO> getPartidosPorHora(Long momento);
 	

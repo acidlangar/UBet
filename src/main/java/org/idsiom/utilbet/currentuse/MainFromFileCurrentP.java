@@ -57,7 +57,7 @@ public class MainFromFileCurrentP {
 		Boolean newPyckMontado;
 		while (sinGanancias) {
 			newPyckMontado = false;	
-			interlocutorPyckio = PickioInterlocutorImpl.getInstance();
+			
 			System.out.println("Procederemos a leer el archivo serializado!!!");
 
 			File fichero = new File(RUTA_ARCHIVO + "/PartidosCurrent.srz");
@@ -92,13 +92,15 @@ public class MainFromFileCurrentP {
 					// Buscar los pycks que se encuentran pendientes de resolver.
 					List<PyckBO> listPycksPendientes = segPyck.getPyckPorDefinir();
 					List<PyckBO> pycksConResultados = new ArrayList<PyckBO>();
-					for(PyckBO pyck : listPycksPendientes) {
-						pyck = determinarResultado(pyck, lNews);
-						
-						if(pyck != null) {
-							pycksConResultados.add(pyck);
+					if(listPycksPendientes != null) {
+						for(PyckBO pyck : listPycksPendientes) {
+							pyck = determinarResultado(pyck, lNews);
+							
+							if(pyck != null) {
+								pycksConResultados.add(pyck);
+							}
+							
 						}
-						
 					}
 					
 					if(pycksConResultados.size() > 0) {
@@ -119,17 +121,32 @@ public class MainFromFileCurrentP {
 					
 					
 					// Si no hay Pycks por Definir
-					if(listPycksPendientes.size() == 0 && rendAcumulado <= 0) {
+					if((listPycksPendientes == null || listPycksPendientes.size() == 0)
+							&& rendAcumulado <= 0) {
+						
+						System.out.println("No hay pycks pendientes... se revisara si hay prox juegos en " + TIPO_TO_SEGUIR);
+						
 						List<CurrentPOddsPortal> listPNotificar = validarSeguimiento( lNews );
+						
+						System.out.println("La cantidad de juegos es " + listPNotificar.size() + "   dentro de los proximos " + MINS_PROXIMIDAD);
 						
 						Thread.sleep(5000);
 						
-						List<PartidoPyckioBO> list = interlocutorPyckio.getPartidosPorHora(0L);
+						List<PartidoPyckioBO> list = null;
+						interlocutorPyckio = null;
+						if(listPNotificar.size() > 0) {
+							interlocutorPyckio = PickioInterlocutorImpl.getInstance();
+							list = interlocutorPyckio.getPartidosPorHora(0L);
+						}
 						
 						for (CurrentPOddsPortal pop : listPNotificar) {
 							PartidoPyckioBO pEquivalente = interlocutorPyckio.findTraduction( list, pop );
 							
 							if(pEquivalente != null) {
+								
+								System.out.println("Fue encontrado equivalente para " + pop.toString() + " el mismo es " + pEquivalente.toString());
+								logger.info("Fue encontrado equivalente para " + pop.toString() + " el mismo es " + pEquivalente.toString());
+								
 								ResultadoPartidoBO resultBuscado;
 								
 								if(RESULT_BUSCADO.equals("BUSCANDO_VISITANTE")) {
@@ -148,8 +165,7 @@ public class MainFromFileCurrentP {
 								
 								newPyckMontado = false;
 								try {
-									interlocutorPyckio.montarPick(pEquivalente, resultBuscado, stake);
-									newPyckMontado = true;
+									newPyckMontado = interlocutorPyckio.montarPick(pEquivalente, resultBuscado, stake);
 								} catch(Exception ex) {
 									ex.printStackTrace();
 								}
@@ -163,15 +179,21 @@ public class MainFromFileCurrentP {
 									
 									segPyck.guardarApuesta(pop, pEquivalente, pyck);
 									
-									interlocutorPyckio.close();
-									
 									break;
 								}
 								
 								
+							} else {
+								System.out.println("No fue encontrado equivalente para " + pop.toString());
+								logger.info("No fue encontrado equivalente para " + pop.toString());
 							}
 							
+						} // for de cada partido proximo de oddsportal
+						
+						if(interlocutorPyckio != null) {
+							interlocutorPyckio.close();
 						}
+							
 						
 					}
 					
@@ -231,6 +253,7 @@ public class MainFromFileCurrentP {
 
 			try {
 				// Espera hasta la proxima ejecucion para busqueda del Archivo.
+				System.out.println("A la espera de dos mins para la prox ejecucion....  ;)");
 				Thread.sleep(120000);
 			} catch (InterruptedException e) {
 				logger.error(e, e);
