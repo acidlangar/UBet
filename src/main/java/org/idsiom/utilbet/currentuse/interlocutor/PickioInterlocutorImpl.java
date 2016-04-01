@@ -4,13 +4,18 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.idsiom.utilbet.currentuse.MainFromFileCurrentP;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
 import org.idsiom.utilbet.currentuse.bo.PartidoPyckioBO;
 import org.idsiom.utilbet.currentuse.bo.ResultadoPartidoBO;
+import org.idsiom.utilbet.currentuse.util.LevenshteinDistance;
 import org.idsiom.utilbet.currentuse.util.UtilProperties;
 import org.idsiom.utilbet.history.fromoddsportal.UtilSelenium;
 import org.openqa.selenium.By;
@@ -97,13 +102,17 @@ btn-signin
 		}
 		
 		logger.info("href antes de la info " + this.driver.getTitle() + "   " + this.driver.getCurrentUrl());
+		logger.info("seleccionA.getAttribute(href) " + seleccionA.getAttribute("href"));
 		
-		seleccionA.click();
+		//String newUrl = "https://pyckio.com/i/" + seleccionA.getAttribute("href");
+		String newUrl = seleccionA.getAttribute("href");
+		this.driver.get(newUrl);
+		//seleccionA.click();
 		
 		logger.info("href despues de la info " + this.driver.getTitle() + "   " + this.driver.getCurrentUrl());
 		
 		System.out.println("********************************************************************************************" );
-		System.out.println("****************************** SE ACABA DE HACER CLICK EN LA SELECCION " );
+		System.out.println("****************************** SE ACABA DE HACER CLICK EN LA SELECCION CON newUrl " + newUrl );
 		System.out.println("********************************************************************************************* " );
 		
 		try {
@@ -137,8 +146,12 @@ btn-signin
 			} catch(org.openqa.selenium.NoSuchElementException e) {
 				
 				logger.info("href antes de la info " + this.driver.getTitle() + "   " + this.driver.getCurrentUrl());
+				logger.info("seleccionA.getAttribute(href) " + seleccionA.getAttribute("href"));
 				
-				seleccionA.click();
+				//seleccionA.click();
+				
+				newUrl = seleccionA.getAttribute("href");
+				this.driver.get(newUrl);
 				
 				logger.info("href despues de la info " + this.driver.getTitle() + "   " + this.driver.getCurrentUrl());
 				
@@ -265,9 +278,27 @@ btn-signin
 		return listHora_Pais.get(0);
 	}
 
+	private static String obtenerElMasParecido(Set<String> strs, String buscado) {
+		int distancia;
+		HashMap<Integer, String> mapa = new HashMap<Integer,String>();
+		for(String s : strs) {
+			distancia = LevenshteinDistance.computeLevenshteinDistance(s.trim(), buscado.trim());
+			mapa.put(distancia, s);
+		}
+		
+		List<Integer> distancias = new ArrayList<Integer>(mapa.keySet());
+		Collections.sort(distancias);
+		
+		return mapa.get(distancias.get(0));
+		
+	}
+	
 	private static List<PartidoPyckioBO> filtrarPorHora_Pais(
 			List<PartidoPyckioBO> list, CurrentPOddsPortal pop) {
 		List<PartidoPyckioBO> listHora_Pais = new ArrayList<PartidoPyckioBO>();
+		List<PartidoPyckioBO> result = new ArrayList<PartidoPyckioBO>();
+		
+		Set<String> ligas = new HashSet<String>();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
 		String fechaOP;
@@ -280,21 +311,45 @@ btn-signin
 			
 			if(fechaOP.equals(fechaPIO) && pop.getCountry().equals( ppio.getPais() )) {
 				listHora_Pais.add(ppio);
+				ligas.add(ppio.getLiga());  // Identificar las distintas ligas del mismo pais
 			}
 		}
 		
-		return listHora_Pais;
+		
+		
+		// En caso de ser varias ligas, aplicar el algoritmo de distancia a las ligas
+		if(ligas.size() > 1) {
+			String unicaLiga = obtenerElMasParecido(ligas, pop.getLeague());
+			
+			for(PartidoPyckioBO p : listHora_Pais) {
+				if(p.getLiga().trim().equals( unicaLiga )) {
+					result.add(p);
+				}
+			}
+			
+			return result;
+		} else {
+			return listHora_Pais;
+		}
+		
 	}
 
 	public void close() {
+		
+		try {
+			Thread.sleep(10000);
+		} catch(Exception ex) {
+			
+		}
+		
 		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		System.out.println("Se llamo al CLOSE del Interlocutor Pyckio");
 		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		/*
+		
 		this.driver.close();
 		
 		instance = null;
-		*/
+		
 		
 	}
 	

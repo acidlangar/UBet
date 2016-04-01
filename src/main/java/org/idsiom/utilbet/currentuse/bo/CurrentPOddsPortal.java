@@ -363,7 +363,9 @@ public class CurrentPOddsPortal implements Serializable {
 	public boolean equals(Object obj) {
 		if(obj instanceof CurrentPOddsPortal) {
 			CurrentPOddsPortal p = (CurrentPOddsPortal)obj;
-			if(p.country.equals(this.country) && p.getFecha().equals(this.getFecha()) && p.getEquipos().equals(this.getEquipos())) {
+			if(p.getCountry().trim().equals(this.country.trim()) 
+					&& p.getFecha().trim().equals(this.getFecha().trim()) 
+					          && p.getEquipos().trim().equals(this.getEquipos().trim())) {
 				System.out.println("Equals OP return true");
 				return true;
 			} else {

@@ -93,14 +93,27 @@ public class MainFromFileCurrentP {
 					List<PyckBO> listPycksPendientes = segPyck.getPyckPorDefinir();
 					List<PyckBO> pycksConResultados = new ArrayList<PyckBO>();
 					if(listPycksPendientes != null) {
+						
+						logger.info("Hay Pycks pendientes. listPycksPendientes.size() = " + listPycksPendientes.size());
+						
 						for(PyckBO pyck : listPycksPendientes) {
+							
+							logger.info("Se buscara resultado de :: pyck.toString() = " + pyck.toString());
+							
 							pyck = determinarResultado(pyck, lNews);
 							
+							
+							
 							if(pyck != null) {
+								logger.info("Pyck despues de determinar el Resultado = " + pyck.toString());
 								pycksConResultados.add(pyck);
+							} else {
+								logger.info("Pyck despues de determinar el Resultado = " + null);
 							}
 							
 						}
+					} else {
+						logger.info("No hay Pycks pendientes");
 					}
 					
 					if(pycksConResultados.size() > 0) {
@@ -173,8 +186,8 @@ public class MainFromFileCurrentP {
 								if(newPyckMontado) {
 									PyckBO pyck = new PyckBO();
 									pyck.setEstado(EstadoPyck.POR_DEFINIR);
-									pyck.setPartido(pop);
 									pyck.setPyck(resultBuscado);
+									pyck.setPartido(pop);
 									pyck.setStake(stake);
 									
 									segPyck.guardarApuesta(pop, pEquivalente, pyck);
@@ -291,6 +304,10 @@ public class MainFromFileCurrentP {
 	 * */
 	private static PyckBO determinarResultado(PyckBO pyck, ListPartidosSerializable lNews) {
 		for(CurrentPOddsPortal pOP : lNews.getListaPsHoyFuturo()) {
+			
+			logger.info( "pyck.getPartido.getEquipos = " + pyck.getPartido().getEquipos() + "   pOP.getEquipos = " + pOP.getEquipos()
+			      + "    equals = " + pyck.getPartido().equals(pOP) );
+			
 			if(pyck.getPartido().equals(pOP)) {
 				
 				ResultadoPartidoBO resultadoPartido = null;

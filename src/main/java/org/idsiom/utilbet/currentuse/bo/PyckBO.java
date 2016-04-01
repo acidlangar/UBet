@@ -10,6 +10,8 @@ public class PyckBO {
 	private Integer stake;
 	
 	private Boolean acierto;
+	
+	private double odds;
 
 	
 	
@@ -27,6 +29,21 @@ public class PyckBO {
 
 	public void setPartido(CurrentPOddsPortal partido) {
 		this.partido = partido;
+		
+		if(this.pyck != null && this.partido.getC1() != null) {
+			if(this.pyck.equals(ResultadoPartidoBO.LOCAL)) {
+				odds = this.partido.getC1();
+			} else if(this.pyck.equals(ResultadoPartidoBO.EMPATE)) {
+				odds = this.partido.getcX();
+			} else {
+				odds = this.partido.getC2();
+			}
+		}
+		
+	}
+	
+	public void setOdds(double odds) {
+		this.odds = odds;
 	}
 
 	public ResultadoPartidoBO getPyck() {
@@ -71,13 +88,7 @@ public class PyckBO {
 
 	public double getOdds() {
 		
-		if(this.pyck.equals(ResultadoPartidoBO.LOCAL)) {
-			return this.partido.getC1();
-		} else if(this.pyck.equals(ResultadoPartidoBO.EMPATE)) {
-			return this.partido.getcX();
-		} else {
-			return this.partido.getC2();
-		}
+		return odds;
 		
 		
 	}

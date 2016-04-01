@@ -326,6 +326,7 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 		String country;
 		String liga;
 		String fecha;
+		double odds;
 		
 		pycksPorDefinir = new ArrayList<PyckBO>();
 		mapPycksPorDefinir = new HashMap<PyckBO,Integer>();
@@ -351,6 +352,7 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 			    country = rowPicks.getCell(convert('h')).getStringCellValue();
 				liga =	rowPicks.getCell(convert('k')).getStringCellValue();	
 				fecha = rowPicks.getCell(convert('g')).getStringCellValue();
+				odds = rowPicks.getCell(convert('d')).getNumericCellValue();
 				
 				System.out.println("iteracion = " + i + "  es " + estadoPyck + "   startrow+i " + (startRow+i) + "  GAMEOP = " + gameOP);
 				
@@ -369,6 +371,7 @@ public class SeguimientoPyckXLS implements ISeguimientoPyckPersistencia {
 				bo.setPyck(resulP);
 				bo.setStake(stake);
 				bo.setPartido(parOP);
+				bo.setOdds(odds);
 				
 			     // Agregarlo a la lista
 				pycksPorDefinir.add(bo);

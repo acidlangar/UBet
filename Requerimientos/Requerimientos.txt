@@ -1,15 +1,12 @@
 //----------------------------->>>>>>
 //--- Nueva Prioridad
-- PSeudoLenguaje para el manejo del Stake
+- Armado de Enum equivalencias, entre ligas de OddsPortal, y ligas de Pyckio.
+- Hacer Multi-Pestañas el aplicativo para incrementar el número de Pycks
 
 //----------------------------->>>>>>
 //--- Cambios a nivel de Código
-- Resolver el tema de que se queda esperando por el facebook
-- Aprovechamiento de tiempo, cómo hacer mejoras del código a medida que al mismo tiempo se está ejecutando el app
-- [Un Excel Adicional para no renombrar] Un mejor excel que haga la lectura y selección más rápido (Filtro de pestañas, lectura de desviación como lo primero, y renombramiento de archivo, y que 
-el excel, la desviación como porcentaje)
-Ancho de las columnas
-- La idea es que el aplicativo corra solo en casa/trabajo, sin necesidad de que todos los días, vuelva a pedirme el cargar la historia.
+- Cómo hacer?, para poner a correr el proyecto, aún cuando yo no estoy trabajando. Que el proyecto se siga moviendo aún cuando duermo,
+cuando estoy en Accusys, etc. Asegurar avances diarios. Cambios de estado diarios.
 
 - Include tensorflow to Arquitecture,  
 http://www.infoq.com/news/2015/11/tensorflow
