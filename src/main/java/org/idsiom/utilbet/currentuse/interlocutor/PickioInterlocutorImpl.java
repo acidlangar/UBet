@@ -7,11 +7,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.idsiom.utilbet.currentuse.MainFromFileCurrentP;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
 import org.idsiom.utilbet.currentuse.bo.PartidoPyckioBO;
 import org.idsiom.utilbet.currentuse.bo.ResultadoPartidoBO;
@@ -305,14 +303,22 @@ btn-signin
 		String fechaPIO;
 		
 		for(PartidoPyckioBO ppio : list) {
-			fechaOP = sdf.format(pop.getFechaGC().getTime());
-			fechaPIO = sdf.format(ppio.getFechaGC().getTime());
-			//System.out.println("op = " + fechaOP + "   ppio = " + fechaPIO + "  ppio : " + ppio.getPais() );
-			
-			if(fechaOP.equals(fechaPIO) && pop.getCountry().equals( ppio.getPais() )) {
-				listHora_Pais.add(ppio);
-				ligas.add(ppio.getLiga());  // Identificar las distintas ligas del mismo pais
+			if(ppio != null) {
+				try {
+					fechaOP = sdf.format(pop.getFechaGC().getTime());
+					fechaPIO = sdf.format(ppio.getFechaGC().getTime());
+					//System.out.println("op = " + fechaOP + "   ppio = " + fechaPIO + "  ppio : " + ppio.getPais() );
+					
+					if(fechaOP.equals(fechaPIO) && pop.getCountry().equals( ppio.getPais() )) {
+						listHora_Pais.add(ppio);
+						ligas.add(ppio.getLiga());  // Identificar las distintas ligas del mismo pais
+					}				
+				} catch(Exception ex) {
+					logger.error("Problema inesperado al evaluar la fecha y el pais de este partido en Pyckio :: " + ppio.toString(), ex);
+				}	
 			}
+			
+
 		}
 		
 		

@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
 import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
+import org.idsiom.utilbet.currentuse.xls.CurrentDesviacionXLS;
 import org.junit.Test;
 
 /**
@@ -42,7 +43,7 @@ public class MainCurrentUseTestFromSRZ {
 			           
 			if (aux instanceof ListPartidosSerializable) {
 				ListPartidosSerializable lista = (ListPartidosSerializable)aux;
-				//partidosResult = lista.getListaPs();
+				partidosResult = lista.getListaPs();
 		    }
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -56,12 +57,15 @@ public class MainCurrentUseTestFromSRZ {
 		
 	}
 	
-	/*
+
+	@Test
 	public void testWriteExcel() {
 		
 		List<CurrentPOddsPortal> lista = createMockList();
 		
-		MainCurrentUseFromOP.writeExcelFile(lista);
+		CurrentDesviacionXLS instance = new CurrentDesviacionXLS(); 
+		
+		instance.writeExcelFile(lista);
 	}
-*/
+
 }

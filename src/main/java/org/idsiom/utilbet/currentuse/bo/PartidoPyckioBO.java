@@ -7,12 +7,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
+import org.apache.log4j.Logger;
 import org.idsiom.utilbet.currentuse.util.LevenshteinDistance;
 import org.openqa.selenium.WebElement;
 
 public class PartidoPyckioBO implements Serializable, Comparable<PartidoPyckioBO> {
     private static final long serialVersionUID = 6171090211553693547L;
+    
+    static Logger logger = Logger.getLogger(PartidoPyckioBO.class);
 
 	private String fechaStr;
      
@@ -137,7 +141,7 @@ public class PartidoPyckioBO implements Serializable, Comparable<PartidoPyckioBO
 		//SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd HH:mm");
 		//EEEE MMMM d HH:mm:ss z yyyy
 		//15 Mar 14:30
-		SimpleDateFormat formatter = new SimpleDateFormat("dd MMM HH:mm");
+		SimpleDateFormat formatter = new SimpleDateFormat("dd MMM HH:mm", new Locale("en", "US"));
 		GregorianCalendar result = new GregorianCalendar();
 		
 		
@@ -159,7 +163,7 @@ public class PartidoPyckioBO implements Serializable, Comparable<PartidoPyckioBO
 			}
 			
         } catch (ParseException e) {
-        	//logger.error(e,e);
+        	logger.error(e,e);
         	e.printStackTrace();
         	return null;
         }

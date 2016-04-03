@@ -10,6 +10,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
+import org.idsiom.utilbet.currentuse.interlocutor.exception.ResultPartidoInesperadoException;
 
 
 public class CurrentPOddsPortal implements Serializable {
@@ -159,7 +160,7 @@ public class CurrentPOddsPortal implements Serializable {
 		return rStr;
 	}
 
-	public void setrStr(String rStr) throws Exception {
+	public void setrStr(String rStr) throws ResultPartidoInesperadoException {
 		this.rStr = rStr;
 		
 		// Interpretando el resultado para asignar goles y resultado final
@@ -183,7 +184,7 @@ public class CurrentPOddsPortal implements Serializable {
 						this.resultFinal = 'X';
 					}
 				} else {
-					throw new Exception("Resultado no esperado :: " + this.rStr);
+					throw new ResultPartidoInesperadoException("Resultado no esperado :: " + this.rStr);
 				}
 			} else {
 				String array[] = this.rStr.split(":");

@@ -24,6 +24,8 @@ public void writeExcelFile(List<CurrentPOddsPortal> listaPs) {
 		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		
+		HSSFSheet sheetResumen = workbook.createSheet("Resumen");
+		
 		HSSFSheet sheetLocal50 = workbook.createSheet("Local 50%");
 		
 		HSSFSheet sheetVisitante50 = workbook.createSheet("Visitante 50%");
@@ -48,10 +50,11 @@ public void writeExcelFile(List<CurrentPOddsPortal> listaPs) {
 		
 		HSSFSheet sheetOtros = workbook.createSheet("Otros");
 
-		int rowLocal50 = 0, rowVisitante50 = 0, rowLocalParejos = 0,
-				rowVisitanteParejos = 0, rowOtros = 0, rowLocal58 = 0, rowVisitante58 = 0,
-						rowLoParejos2 = 0, rowVisParejos2 = 0, rowLoSuperFav = 0,
-						    rowLocMuyFav = 0, rowLocFav = 0;
+		int lineInicial = 3;
+		int rowLocal50 = lineInicial, rowVisitante50 = lineInicial, rowLocalParejos = lineInicial,
+				rowVisitanteParejos = lineInicial, rowOtros = lineInicial, rowLocal58 = lineInicial, rowVisitante58 = lineInicial,
+						rowLoParejos2 = lineInicial, rowVisParejos2 = lineInicial, rowLoSuperFav = lineInicial,
+						    rowLocMuyFav = lineInicial, rowLocFav = lineInicial;
 		
 		for (CurrentPOddsPortal item : listaPs) {
 
@@ -113,7 +116,7 @@ public void writeExcelFile(List<CurrentPOddsPortal> listaPs) {
 					row = sheetOtros.createRow(rowOtros++);
 				}
 				
-				Object[] datos = new Object[] {item.getFecha(), item.getLeague(), 
+				Object[] datos = new Object[] {item.getFecha(), item.getCountry(), item.getLeague(), 
 						item.getEquipos(), item.getrStr(), item.getC1(), 
 						item.getcX(), item.getC2(), item.getResultFinal()};
 	
@@ -176,6 +179,42 @@ public void writeExcelFile(List<CurrentPOddsPortal> listaPs) {
 		calcularDesviacion(sheetLocMuyFav, rowLocMuyFav, 0.60, 0.30, 0.10);
 		calcularDesviacion(sheetLocFav, rowLocFav, 0.60, 0.30, 0.10);
 		
+		// Pone cada Columna AutoSize
+		for(int i = 1; i <= 9; i++) {
+			sheetLocal50.autoSizeColumn(i);
+			sheetVisitante50.autoSizeColumn(i);
+			sheetLocalParejos.autoSizeColumn(i);
+			sheetVisitanteParejos.autoSizeColumn(i);
+			sheetLocal58.autoSizeColumn(i);
+			sheetVisitante58.autoSizeColumn(i);
+			sheetLocalParejos2.autoSizeColumn(i);
+			sheetVisitanteParejos2.autoSizeColumn(i);
+			sheetLocSuperFav.autoSizeColumn(i);
+			sheetLocMuyFav.autoSizeColumn(i);
+			sheetLocFav.autoSizeColumn(i);
+		}
+		
+		
+		
+		
+		int rowCount = 0;
+		
+		addFilaResumen(++rowCount, sheetLocal50, sheetResumen);
+		addFilaResumen(++rowCount, sheetVisitante50, sheetResumen);
+		addFilaResumen(++rowCount, sheetLocalParejos, sheetResumen);
+		addFilaResumen(++rowCount, sheetVisitanteParejos, sheetResumen);
+		addFilaResumen(++rowCount, sheetLocal58, sheetResumen);
+		addFilaResumen(++rowCount, sheetVisitante58, sheetResumen);
+		addFilaResumen(++rowCount, sheetLocalParejos2, sheetResumen);
+		addFilaResumen(++rowCount, sheetVisitanteParejos2, sheetResumen);
+		addFilaResumen(++rowCount, sheetLocSuperFav, sheetResumen);
+		addFilaResumen(++rowCount, sheetLocMuyFav, sheetResumen);
+		addFilaResumen(++rowCount, sheetLocFav, sheetResumen);
+		
+		for(int i = 1; i <= 7; i++) {
+			sheetResumen.setColumnWidth(i, 2000);
+		}
+		
 		
 		FileOutputStream out;
 		try {
@@ -231,6 +270,36 @@ public void writeExcelFile(List<CurrentPOddsPortal> listaPs) {
 		
 	}
 	
+    private void addFilaResumen(int rowCount, HSSFSheet sheetOrigen, HSSFSheet sheetDestino) {
+    	Row row = sheetDestino.createRow(rowCount);
+		String name = sheetOrigen.getSheetName();
+    	
+		Object[] datos = new Object[] {
+				name,
+				"'" + name + "'!G1",
+				"'" + name + "'!H1",
+				"'" + name + "'!I1",
+				null,
+				"MIN(B" + (rowCount+1) + ":D" + (rowCount+1) + ")",
+				"'" + name + "'!A1",
+			};
+		
+		
+		int cellnum = 0;
+		
+		// Columnas para datos de los partidos
+		for (int i=0; i < datos.length; i++) {
+
+			Cell cell = row.createCell(cellnum++);
+			
+			if(i == 0) {
+				cell.setCellValue((String)datos[i]);
+	        }
+			else if(datos[i] instanceof String) {
+				cell.setCellFormula((String)datos[i]);
+	        }
+	    }
+    }
 	
 	private void calcularDesviacion(HSSFSheet sheet, int rowCount, double difOverL, double difOverX, double difOverV) {
 		int cellNum = 0;
@@ -239,56 +308,56 @@ public void writeExcelFile(List<CurrentPOddsPortal> listaPs) {
 		
 		if (cantJuegos > 0) {
 			Cell cellA = row.createCell(cellNum);
-			cellA.setCellFormula("SUM(A1:A"+cantJuegos+")");
-			
-			cellNum = 5;
-			Cell cellF = row.createCell(cellNum);
-			cellF.setCellFormula("AVERAGE(F1:F"+cantJuegos+")");
+			cellA.setCellFormula("SUM(A4:A"+cantJuegos+")");
 			
 			cellNum = 6;
-			Cell cellG = row.createCell(cellNum);
-			cellG.setCellFormula("AVERAGE(G1:G"+cantJuegos+")");
+			Cell cellF = row.createCell(cellNum);
+			cellF.setCellFormula("AVERAGE(G4:G"+cantJuegos+")");
 			
 			cellNum = 7;
-			Cell cellH = row.createCell(cellNum);
-			cellH.setCellFormula("AVERAGE(H1:H"+cantJuegos+")");
+			Cell cellG = row.createCell(cellNum);
+			cellG.setCellFormula("AVERAGE(H4:H"+cantJuegos+")");
 			
-			cellNum = 9;
-			Cell cellJ = row.createCell(cellNum);
-			cellJ.setCellFormula("SUM(J1:J"+cantJuegos+")");
+			cellNum = 8;
+			Cell cellH = row.createCell(cellNum);
+			cellH.setCellFormula("AVERAGE(I4:I"+cantJuegos+")");
 			
 			cellNum = 10;
-			Cell cellK = row.createCell(cellNum);
-			cellK.setCellFormula("SUM(K1:K"+cantJuegos+")");
+			Cell cellJ = row.createCell(cellNum);
+			cellJ.setCellFormula("SUM(K4:K"+cantJuegos+")");
 			
 			cellNum = 11;
+			Cell cellK = row.createCell(cellNum);
+			cellK.setCellFormula("SUM(L4:L"+cantJuegos+")");
+			
+			cellNum = 12;
 			Cell cellL = row.createCell(cellNum);
-			cellL.setCellFormula("SUM(L1:L"+cantJuegos+")");
+			cellL.setCellFormula("SUM(M4:M"+cantJuegos+")");
 			
 			
 			//----------------------->>>>>
 			// Se calculan las inversas de los promedios
 			row = sheet.createRow(rowCount++);
 			
-			cellNum = 5;
-			cellF = row.createCell(cellNum);
-			cellF.setCellFormula("1/F"+(cantJuegos+1));
-			
 			cellNum = 6;
-			cellG = row.createCell(cellNum);
-			cellG.setCellFormula("1/G"+(cantJuegos+1));
+			cellF = row.createCell(cellNum);
+			cellF.setCellFormula("1/G"+(cantJuegos+1));
 			
 			cellNum = 7;
+			cellG = row.createCell(cellNum);
+			cellG.setCellFormula("1/H"+(cantJuegos+1));
+			
+			cellNum = 8;
 			cellH = row.createCell(cellNum);
-			cellH.setCellFormula("1/H"+(cantJuegos+1));
+			cellH.setCellFormula("1/I"+(cantJuegos+1));
+			
+			cellNum = 4;
+			Cell cellD = row.createCell(cellNum);
+			cellD.setCellFormula("G"+rowCount+" + H"+rowCount + " + I"+(rowCount));
 			
 			cellNum = 3;
-			Cell cellD = row.createCell(cellNum);
-			cellD.setCellFormula("F"+rowCount+" + G"+rowCount + " + H"+(rowCount));
-			
-			cellNum = 2;
 			Cell cellC = row.createCell(cellNum);
-			cellC.setCellFormula("D"+rowCount+" - 1");
+			cellC.setCellFormula("E"+rowCount+" - 1");
 			
 			//----------------------->>>>>
 			// Se estima el overround usado
@@ -306,17 +375,17 @@ public void writeExcelFile(List<CurrentPOddsPortal> listaPs) {
 			cellC = row.createCell(cellNum);
 			cellC.setCellValue(difOverV);
 			
-			cellNum = 5;
-			cellF = row.createCell(cellNum);
-			cellF.setCellFormula("A"+rowCount+" * C"+(rowCount-1) );
-			
 			cellNum = 6;
-			cellG = row.createCell(cellNum);
-			cellG.setCellFormula("B"+rowCount+" * C"+(rowCount-1) );
+			cellF = row.createCell(cellNum);
+			cellF.setCellFormula("A"+rowCount+" * D"+(rowCount-1) );
 			
 			cellNum = 7;
+			cellG = row.createCell(cellNum);
+			cellG.setCellFormula("B"+rowCount+" * D"+(rowCount-1) );
+			
+			cellNum = 8;
 			cellH = row.createCell(cellNum);
-			cellH.setCellFormula("C"+rowCount+" * C"+(rowCount-1) );
+			cellH.setCellFormula("C"+rowCount+" * D"+(rowCount-1) );
 			
 			
 			//----------------------->>>>>
@@ -324,107 +393,120 @@ public void writeExcelFile(List<CurrentPOddsPortal> listaPs) {
 			row = sheet.createRow(rowCount++); // Se deja intencionalmente una linea intermedio en blanco
 			row = sheet.createRow(rowCount++); 
 			
-			cellNum = 2;
-			cellC = row.createCell(cellNum);
-			cellC.setCellFormula("F"+rowCount+" + G"+rowCount+" + H"+rowCount);
-			
 			cellNum = 3;
+			cellC = row.createCell(cellNum);
+			cellC.setCellFormula("I"+rowCount+" + G"+rowCount+" + H"+rowCount);
+			
+			cellNum = 4;
 			cellD = row.createCell(cellNum);
 			cellD.setCellValue("Expectativa");
 			
-			cellNum = 5;
-			cellF = row.createCell(cellNum);
-			cellF.setCellFormula("F"+(rowCount-3)+" - F"+(rowCount-2) );
-			
 			cellNum = 6;
-			cellG = row.createCell(cellNum);
-			cellG.setCellFormula("G"+(rowCount-3)+" - G"+(rowCount-2) );
+			cellF = row.createCell(cellNum);
+			cellF.setCellFormula("G"+(rowCount-3)+" - G"+(rowCount-2) );
 			
 			cellNum = 7;
-			cellH = row.createCell(cellNum);
-			cellH.setCellFormula("H"+(rowCount-3)+" - H"+(rowCount-2) );
+			cellG = row.createCell(cellNum);
+			cellG.setCellFormula("H"+(rowCount-3)+" - H"+(rowCount-2) );
 			
-			cellNum = 9;
-			cellJ = row.createCell(cellNum);
-			cellJ.setCellFormula("F"+(rowCount)+"*A"+(cantJuegos+1));
+			cellNum = 8;
+			cellH = row.createCell(cellNum);
+			cellH.setCellFormula("I"+(rowCount-3)+" - I"+(rowCount-2) );
 			
 			cellNum = 10;
-			cellK = row.createCell(cellNum);
-			cellK.setCellFormula("G"+(rowCount)+"*A"+(cantJuegos+1));
+			cellJ = row.createCell(cellNum);
+			cellJ.setCellFormula("G"+(rowCount)+"*A"+(cantJuegos+1));
 			
 			cellNum = 11;
+			cellK = row.createCell(cellNum);
+			cellK.setCellFormula("H"+(rowCount)+"*A"+(cantJuegos+1));
+			
+			cellNum = 12;
 			cellL = row.createCell(cellNum);
-			cellL.setCellFormula("H"+(rowCount)+"*A"+(cantJuegos+1));
+			cellL.setCellFormula("I"+(rowCount)+"*A"+(cantJuegos+1));
 			
 			
 			//--------------------->>>>
 			//-- Se coloca la realidad
 			row = sheet.createRow(rowCount++);
 			
-			cellNum = 2;
-			cellC = row.createCell(cellNum);
-			cellC.setCellFormula("F"+rowCount+" + G"+rowCount+" + H"+rowCount);
-			
 			cellNum = 3;
+			cellC = row.createCell(cellNum);
+			cellC.setCellFormula("I"+rowCount+" + G"+rowCount+" + H"+rowCount);
+			
+			cellNum = 4;
 			cellD = row.createCell(cellNum);
 			cellD.setCellValue("Realidad");
 			
-			cellNum = 5;
-			cellF = row.createCell(cellNum);
-			cellF.setCellFormula("J"+(cantJuegos+1)+"/A"+(cantJuegos+1));
-			
 			cellNum = 6;
-			cellG = row.createCell(cellNum);
-			cellG.setCellFormula("K"+(cantJuegos+1)+"/A"+(cantJuegos+1));
+			cellF = row.createCell(cellNum);
+			cellF.setCellFormula("K"+(cantJuegos+1)+"/A"+(cantJuegos+1));
 			
 			cellNum = 7;
-			cellH = row.createCell(cellNum);
-			cellH.setCellFormula("L"+(cantJuegos+1)+"/A"+(cantJuegos+1));
+			cellG = row.createCell(cellNum);
+			cellG.setCellFormula("L"+(cantJuegos+1)+"/A"+(cantJuegos+1));
 			
-			cellNum = 9;
-			cellJ = row.createCell(cellNum);
-			cellJ.setCellFormula("J"+(cantJuegos+1));
+			cellNum = 8;
+			cellH = row.createCell(cellNum);
+			cellH.setCellFormula("M"+(cantJuegos+1)+"/A"+(cantJuegos+1));
 			
 			cellNum = 10;
-			cellK = row.createCell(cellNum);
-			cellK.setCellFormula("K"+(cantJuegos+1));
+			cellJ = row.createCell(cellNum);
+			cellJ.setCellFormula("K"+(cantJuegos+1));
 			
 			cellNum = 11;
+			cellK = row.createCell(cellNum);
+			cellK.setCellFormula("L"+(cantJuegos+1));
+			
+			cellNum = 12;
 			cellL = row.createCell(cellNum);
-			cellL.setCellFormula("L"+(cantJuegos+1));
+			cellL.setCellFormula("M"+(cantJuegos+1));
 			
 			//-------------------------->>>>>>>>>>>>>
 			// --- Se Calcula la Desviacion
 			row = sheet.createRow(rowCount++);
+			agregarDesviacion(row, rowCount);
 			
-			cellNum = 3;
-			cellD = row.createCell(cellNum);
-			cellD.setCellValue("Desviacion");
+			row = sheet.createRow(0);
+			agregarDesviacion(row, rowCount);
 			
-			cellNum = 5;
-			cellF = row.createCell(cellNum);
-			cellF.setCellFormula("F"+(rowCount-1)+" - F"+(rowCount-2));
-			
-			cellNum = 6;
-			cellG = row.createCell(cellNum);
-			cellG.setCellFormula("G"+(rowCount-1)+" - G"+(rowCount-2));
-			
-			cellNum = 7;
-			cellH = row.createCell(cellNum);
-			cellH.setCellFormula("H"+(rowCount-1)+" - H"+(rowCount-2));
-			
-			cellNum = 9;
-			cellJ = row.createCell(cellNum);
-			cellJ.setCellFormula("J"+(rowCount-1)+" - J"+(rowCount-2));
-			
-			cellNum = 10;
-			cellK = row.createCell(cellNum);
-			cellK.setCellFormula("K"+(rowCount-1)+" - K"+(rowCount-2));
-			
-			cellNum = 11;
-			cellL = row.createCell(cellNum);
-			cellL.setCellFormula("L"+(rowCount-1)+" - L"+(rowCount-2));
+			cellA = row.createCell(0);
+			cellA.setCellFormula("SUM(A4:A"+cantJuegos+")");
+
 		}
 	}
 
+	
+	private void agregarDesviacion(Row row, int rowCount) {
+		int cellNum = 0;
+		
+		cellNum = 4;
+		Cell cellD = row.createCell(cellNum);
+		cellD.setCellValue("Desviacion");
+		
+		cellNum = 6;
+		Cell cellF = row.createCell(cellNum);
+		cellF.setCellFormula("(K"+(rowCount)+" * 100)/K"+(rowCount-2));
+		
+		cellNum = 7;
+		Cell cellG = row.createCell(cellNum);
+		cellG.setCellFormula("(L"+(rowCount)+" * 100)/L"+(rowCount-2));
+		
+		cellNum = 8;
+		Cell cellH = row.createCell(cellNum);
+		cellH.setCellFormula("(M"+(rowCount)+" * 100)/M"+(rowCount-2));
+		
+		cellNum = 10;
+		Cell cellJ = row.createCell(cellNum);
+		cellJ.setCellFormula("K"+(rowCount-1)+" - K"+(rowCount-2));
+		
+		cellNum = 11;
+		Cell cellK = row.createCell(cellNum);
+		cellK.setCellFormula("L"+(rowCount-1)+" - L"+(rowCount-2));
+		
+		cellNum = 12;
+		Cell cellL = row.createCell(cellNum);
+		cellL.setCellFormula("M"+(rowCount-1)+" - M"+(rowCount-2));		
+	}
+	
 }

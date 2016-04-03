@@ -1,5 +1,6 @@
 package org.idsiom.utilbet.currentuse.interlocutor;
 
+import org.idsiom.utilbet.currentuse.interlocutor.exception.ResultPartidoInesperadoException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -198,9 +199,15 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 						}
 
 						if (tr != null && lenTr > 0) {
+							
+							
+								
+							
 							listTHs = tr.findElements(By.tagName("th"));
 
 							if (listTHs != null && listTHs.size() > 0) {
+								
+								
 
 								liga = null;
 								pais = null;
@@ -236,6 +243,9 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 								System.out.println("<<<<<<<<<<<<<<<<<<<<<<         liga :: " + liga + "    , pais :: " + pais);
 
 							} else {
+								
+								try {
+								
 								listTDs = tr.findElements(By.tagName("td"));
 
 								bo = new CurrentPOddsPortal();
@@ -274,8 +284,16 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 									}
 
 								}
-
+								
 								partidosResult.add(bo);
+								
+							} catch(ResultPartidoInesperadoException ex) {
+								logger.error(ex, ex);
+							} catch(Exception ex) {
+								logger.error(ex, ex);
+							}
+
+								
 							}
 						} // validacion de que la linea no sea vacia
 						System.out.print(i + " ; ");
