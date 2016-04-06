@@ -5,9 +5,12 @@
 - Que el LOG sea mucho mas legible. Sobre todo la interaccion con el Pyckio.
 
 
-- Generar gráficos por pestaña, gráficos propios y gráficos de desviación estándar.
+- Generar gráficos por pestaña, gráficos propios y gráficos de desviación estándar.  (Dentro de los graficos propios se necesita
+asignar un nuevo calculo, pick por pick, en columnas siguientes para facilitar las gráficas.)
+(Hacer el ejercicio de tomar fácilmente diez períodos distintos, de fechas distintas, o imaginar la historia de hoy para atrás)
 - Hacer Multi-Pestañas el aplicativo para incrementar el número de Pycks
-- Intentar arreglar el bug de que requiere generar diariamente la historia
+- Intentar arreglar el bug de que requiere generar diariamente la historia, si porque el cambio de fecha afecta, sobre todo si uno deja 
+el aplicativo corriendo de un dia para otro.
 
 
 //----------------------------->>>>>>

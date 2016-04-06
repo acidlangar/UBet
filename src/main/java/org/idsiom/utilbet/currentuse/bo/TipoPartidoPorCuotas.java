@@ -18,6 +18,9 @@ public enum TipoPartidoPorCuotas {
 	public static TipoPartidoPorCuotas getClasificacionPorCuotas(Double c1, Double cX, Double c2) {
 		TipoPartidoPorCuotas row = null;
 		
+		if(c1 == null || c2 == null || cX == null ) 
+			return null;
+		
 		if ((c1 >= 1.7 && c1 <=2) && (cX > c1 && cX < c2) ) {
 			
 			row = LOCAL_50;
