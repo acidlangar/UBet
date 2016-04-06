@@ -5,7 +5,7 @@ import org.idsiom.utilbet.currentuse.bo.TipoPartidoPorCuotas;
 public class ConstantesCurrent {
 	public final static int MINS_PROXIMIDAD = 25; 
 	
-	public static final TipoPartidoPorCuotas TIPO_TO_SEGUIR = TipoPartidoPorCuotas.VISITANTE_PAREJOS;
+	public static final TipoPartidoPorCuotas TIPO_TO_SEGUIR = TipoPartidoPorCuotas.LOCAL_PAREJOS;
 
 	//public static final String RESULT_BUSCADO = "BUSCANDO_LOCAL";
 	

@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
 import org.idsiom.utilbet.currentuse.bo.PartidoPyckioBO;
 import org.idsiom.utilbet.currentuse.bo.ResultadoPartidoBO;
+import org.idsiom.utilbet.currentuse.interlocutor.exception.InteraccionException;
 import org.idsiom.utilbet.currentuse.util.LevenshteinDistance;
 import org.idsiom.utilbet.currentuse.util.UtilProperties;
 import org.idsiom.utilbet.history.fromoddsportal.UtilSelenium;
@@ -29,6 +30,12 @@ public class PickioInterlocutorImpl implements IPyckioInterlocutor {
 	private WebDriver driver;
 	
 	private List<PartidoPyckioBO> listPartidos;
+	
+	private static String basePyckio = "https://pyckio.com/i/#";
+	
+	private static String hrefActivePycks = "https://pyckio.com/i/#picks-active";
+	
+	//private static String hrefActiveArchive = "https://pyckio.com/i/#picks-archive";
 	
 	public static PickioInterlocutorImpl getInstance() throws IOException {
 		if (instance == null) {
@@ -79,6 +86,53 @@ btn-signin
 		 */
 	}
 
+	public int getCantidadPycksActivos() throws InteraccionException {
+		
+		//------------------------>>>>>>>>>>>>>
+		// Pulsar el nombre
+		//*[@id="auth"]/div/div[1]/div/a	tambien serviria buscar la imagen del avatar	// Buscar la imagen con el alt de avatar
+		String xPath = ".//*[@id='auth']/div/div[1]/div/a";
+		WebElement imgAccount = null;
+		
+		boolean reintentar = true;
+		int intentos = 0;
+		while(reintentar) {
+			intentos++;
+			try {
+				imgAccount = this.driver.findElement(By.xpath(xPath));
+				reintentar = false;
+			} catch(org.openqa.selenium.NoSuchElementException e) {
+				logger.info("Se genero un org.openqa.selenium.NoSuchElementException para controlar :: " + e.getMessage());
+				System.out.println("Se genero un org.openqa.selenium.NoSuchElementException para controlar :: " + e.getMessage());
+				
+				espera();
+				
+				if( intentos >= 4 ) {
+					reintentar = false;
+				}
+				
+			}
+		
+		}
+		
+		if( imgAccount == null ) {
+			throw new InteraccionException();
+		}
+		
+		imgAccount.click();
+		
+		espera();
+		
+		//------------------------>>>>>>>>>>>>>
+		// Contar la cantidad de registros en la tabla
+		//*[@id="picks-active"]/div/table/tbody/tr
+		xPath = ".//*[@id='picks-active']/div/table/tbody/tr";
+		
+		List<WebElement> listWE = this.driver.findElements(By.xpath(xPath));
+		return listWE.size();
+		
+	}
+	
 	public void montarPick(CurrentPOddsPortal pOP, ResultadoPartidoBO resultBuscado, int i) throws Exception {
 		PartidoPyckioBO partidoPIO = this.findTraduction(listPartidos, pOP);
 		
@@ -86,6 +140,12 @@ btn-signin
 	}
 	
 	public boolean montarPick(PartidoPyckioBO partidoPIO, ResultadoPartidoBO resultBuscado, int i) throws Exception {
+		int pycks_activos_preview = 0;
+		int pycks_activos_post = 0;
+		
+		//----------------------->>>>>>>>>>>>>
+		//-----------  Primero validamos la cantidad de Pycks - Activos Previos
+		pycks_activos_preview = this.getCantidadPycksActivos();
 		
 		WebElement seleccion = partidoPIO.getWebElement().findElements(By.tagName("td")).get(4);
 		WebElement seleccionA = seleccion.findElement(By.tagName("a"));
@@ -177,7 +237,22 @@ btn-signin
 			xPath = "//*[@id='event']/div/div/div[2]/div[3]/form/button";
 			driver.findElement(By.xpath(xPath)).click();
 			
-			return true;
+			
+			//----------------------->>>>>>>>>>>>>
+			//-----------  Primero validamos la cantidad de Pycks - Activos Previos
+			pycks_activos_post = this.getCantidadPycksActivos();
+			
+			if( (pycks_activos_preview + 1) == pycks_activos_post ) {
+				return true;
+			} else {
+				
+				logger.error("No se montó el Pyck, la cantidad de Pycks activos no fue actualizada");
+				
+				return false;
+			}
+			
+			
+			
 		}
 		
 		return false;
@@ -338,6 +413,14 @@ btn-signin
 			return listHora_Pais;
 		}
 		
+	}
+	
+	private void espera() {
+		try {
+			Thread.sleep(5000);
+		} catch(Exception ex) {
+			
+		}
 	}
 
 	public void close() {
