@@ -181,6 +181,7 @@ public class MainFromFileCurrentP {
 									newPyckMontado = interlocutorPyckio.montarPick(pEquivalente, resultBuscado, stake);
 								} catch(Exception ex) {
 									ex.printStackTrace();
+									logger.error(ex,ex);
 								}
 								
 								if(newPyckMontado) {

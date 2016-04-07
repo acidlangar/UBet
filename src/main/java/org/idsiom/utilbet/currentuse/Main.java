@@ -21,10 +21,10 @@ public class Main {
 			// No hacer nada porque realmente no importa...
 		}
 		
-		System.out.println("Para ayudarte, lo primero que vas hacer es 1 si quieres bajar historia, o 2 si quieres hacer seguimiento");
+		System.out.println("Para ayudarte, lo primero que vas hacer es 1 si quieres bajar historia, o 2 si quieres hacer seguimiento, 3 montar Pycks directos");
 
 		tipoejecucion = in.nextInt();
-		
+		in.close();
 		switch(tipoejecucion) {
 			case 1:
 				MainCurrentUseFromOP.main(args);
@@ -34,6 +34,10 @@ public class Main {
 				MainFromFileCurrentP.main(args);
 				break;
 			
+			case 3:
+				MainMontarPycks.main(args);
+				break;	
+				
 			default:
 				System.out.println("Sos boludo definitivamente... bye bye... vuelve pronto...");
 				break;
@@ -42,7 +46,7 @@ public class Main {
 		
 		System.out.println("Decide bien tus picks!!, mucha suerte!!!... bye bye... vuelve pronto");
 		
-		in.close();
+		
 	}
 
 }
