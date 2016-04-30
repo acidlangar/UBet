@@ -112,6 +112,15 @@ public class OddsPortalInterCurrentUseImpl implements IOddsPortalCurrentUseInter
 		gcHoy_0000.set(Calendar.MINUTE, 0);
 		gcHoy_0000.set(Calendar.SECOND, 0);
 		gcHoy_0000.set(Calendar.MILLISECOND, 0);
+		
+		
+		/*************************************************************************************************************/
+		//********************** PARA TOMAR MUESTRAS A DEDO DEL PASADO
+		//gcFDesde.add(GregorianCalendar.MONTH, -1);
+		//gcFHasta.add(GregorianCalendar.MONTH, -1);
+		
+		
+		/*************************************************************************************************************/
 
 		List<CurrentPOddsPortal> listAux;
 		Boolean makePause = false;

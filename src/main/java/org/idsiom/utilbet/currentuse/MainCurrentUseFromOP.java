@@ -65,7 +65,7 @@ public class MainCurrentUseFromOP {
 			System.out.println("Cant de Futuro " + listaPs.getListaPsHoyFuturo().size());
 			
 			try {
-				if(listaPs.getPartidosHistory().size() > 0 && listaPs.getListaPsHoyFuturo().size() > 0 ) {
+				if(listaPs.getPartidosHistory().size() > 0 && listaPs.getListaPsHoyFuturo().size() >= 0 ) {
 					
 					File dir = new File(RUTA_ARCHIVO);
 					if(!dir.exists()) {
