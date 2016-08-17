@@ -147,12 +147,12 @@ public class PickioInterlocutorImpl implements IPyckioInterlocutor {
 	}
 
 	public boolean montarPick(PartidoPyckioBO partidoPIO, ResultadoPartidoBO resultBuscado, int i) throws Exception {
-		int pycks_activos_preview = 0;
-		int pycks_activos_post = 0;
+		//int pycks_activos_preview = 0;
+		//int pycks_activos_post = 0;
 
 		// ----------------------->>>>>>>>>>>>>
 		// ----------- Primero validamos la cantidad de Pycks - Activos Previos
-		pycks_activos_preview = this.getCantidadPycksActivos();
+		//pycks_activos_preview = this.getCantidadPycksActivos();
 
 		WebElement seleccion = partidoPIO.getWebElement().findElements(By.tagName("td")).get(4);
 		WebElement seleccionA = seleccion.findElement(By.tagName("a"));
@@ -192,6 +192,9 @@ public class PickioInterlocutorImpl implements IPyckioInterlocutor {
 			// no hacer nada
 		}
 
+		return montar(resultBuscado, i);
+		
+		/*
 		int iAux;
 		if (resultBuscado.equals(ResultadoPartidoBO.LOCAL)) {
 			iAux = 1;
@@ -269,7 +272,9 @@ public class PickioInterlocutorImpl implements IPyckioInterlocutor {
 		}
 
 		return false;
-
+        */
+		
+		
 	}
 
 	public Boolean montar(ResultadoPartidoBO resultBuscado, int stake) {

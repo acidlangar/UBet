@@ -19,6 +19,7 @@ import org.idsiom.utilbet.currentuse.bo.CurrentPOddsPortal;
 import org.idsiom.utilbet.currentuse.interlocutor.IOddsPortalCurrentUseInterlocutor;
 import org.idsiom.utilbet.currentuse.interlocutor.OddsPortalInterCurrentUseImpl;
 import org.idsiom.utilbet.currentuse.xls.CurrentDesviacionXLS;
+import org.idsiom.utilbet.currentuse.xls.CurrentSinCoincidenciasXLS;
 import org.idsiom.utilbet.currentuse.bo.ListPartidosSerializable;
 
 import static org.idsiom.utilbet.currentuse.constantes.ConstantesCurrent.RUTA_ARCHIVO;
@@ -90,6 +91,9 @@ public class MainCurrentUseFromOP {
 					//Se escribe directamente en el archivo excel
 					ICurrentDesviacionPersistencia currentDesvPersistencia = new CurrentDesviacionXLS(); 
 					currentDesvPersistencia.writeExcelFile(listaPs.getListaPs());
+					
+					ICurrentSinCoincidencias currentSinCoincidencias = new CurrentSinCoincidenciasXLS();
+					currentSinCoincidencias.writeExcelFile(listaPs.getListaPs());
 					
 					oos.close();
 					oos = null;
